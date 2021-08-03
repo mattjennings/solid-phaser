@@ -9,6 +9,7 @@ import {
 import { useGroup } from "./Group";
 import { useScene } from "./Scene";
 import { createApplyPropsEffect } from "./util/createApplyPropsEffect";
+import { setRef } from "./util/setRef";
 
 export const GameObjectContext = createContext();
 
@@ -26,7 +27,10 @@ export function GameObject<
   const scene = useScene();
   const group = useGroup();
 
-  let instance = props.ref() ?? props.create(scene);
+  let instance = props.create(scene);
+
+  setRef(props, instance);
+
   let listeners = [];
 
   if (scene) {
@@ -79,8 +83,10 @@ export default GameObject;
  **************************/
 
 export interface GameObjectProps<T extends Phaser.GameObjects.GameObject> {
-  ref?: () => T;
+  ref?: T | ((obj?: T) => void);
   children?: JSX.Element;
+  name?: string;
+  active?: boolean;
 
   create?: (scene: Phaser.Scene) => T;
   onUpdate?: (self: T) => any;

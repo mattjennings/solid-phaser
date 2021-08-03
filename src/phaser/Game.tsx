@@ -7,13 +7,19 @@ import {
   splitProps,
   createSignal,
   Show,
+  JSX,
 } from "solid-js";
+import { createApplyPropsEffect } from "./util/createApplyPropsEffect";
 
 const GameContext = createContext<Phaser.Game>();
 
 export const useGame = () => useContext(GameContext);
 
-export default function Game(props) {
+export interface GameProps extends Phaser.Types.Core.GameConfig {
+  children?: JSX.Element;
+}
+
+export default function Game(props: GameProps) {
   const [local, config] = splitProps(props, ["children"]);
   const game = new Phaser.Game({ ...config });
 
