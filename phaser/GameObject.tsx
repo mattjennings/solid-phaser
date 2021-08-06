@@ -1,9 +1,13 @@
-import { createContext, JSX, onCleanup, onMount } from "solid-js";
+import { createContext, JSX, onCleanup, onMount, useContext } from "solid-js";
 import { useGroup } from "./Group";
 import { useScene } from "./Scene";
 import { createApplyPropsEffect } from "./util/createApplyPropsEffect";
 
-export const GameObjectContext = createContext();
+export const GameObjectContext = createContext<Phaser.GameObjects.GameObject>();
+
+export function useGameObject<T extends Phaser.GameObjects.GameObject>() {
+  return useContext(GameObjectContext) as T;
+}
 
 export function GameObject<
   T extends Phaser.GameObjects.GameObject,
@@ -26,12 +30,7 @@ export function GameObject<
 
   let listeners = [];
 
-  if (scene) {
-    // @ts-ignore
-    scene.add.existing(instance);
-  } else {
-    throw new Error("GameObject requires a parent Scene component");
-  }
+  scene.add.existing(instance);
 
   if (group) {
     group.add(instance);
@@ -68,7 +67,11 @@ export function GameObject<
     listeners.push(() => scene.events.off("postupdate", cb));
   }
 
-  return props.children;
+  return (
+    <GameObjectContext.Provider value={instance}>
+      {props.children}
+    </GameObjectContext.Provider>
+  );
 }
 
 export default GameObject;
@@ -200,7 +203,6 @@ export interface AnimationProps {
 export interface AccelerationProps {
   accelerationX?: number;
   accelerationY?: number;
-  acceleration?: number | Point;
 }
 
 export interface AngularProps {
@@ -212,7 +214,6 @@ export interface AngularProps {
 export interface BounceProps {
   bounceX?: number;
   bounceY?: number;
-  bounce?: number | Point;
   collideWorldBounds?: boolean;
   onWorldBounds?: boolean;
 }
@@ -227,7 +228,6 @@ export interface DragProps {
   damping?: number;
   dragX?: number;
   dragY?: number;
-  drag?: number | Point;
   allowDrag?: boolean;
 }
 
@@ -238,14 +238,12 @@ export interface EnableProps {
 export interface FrictionProps {
   frictionX?: number;
   frictionY?: number;
-  friction?: number | Point;
 }
 
 export interface GravityProps {
   allowGravity?: boolean;
   gravityX?: number;
   gravityY?: number;
-  gravity?: number | Point;
 }
 
 export interface ImmovableProps {
@@ -274,7 +272,6 @@ export interface SizeProps {
 }
 
 export interface VelocityProps {
-  velocity?: number | Point;
   velocityX?: number;
   velocityY?: number;
   maxVelocity?: number | Point;

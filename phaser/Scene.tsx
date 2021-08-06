@@ -7,13 +7,22 @@ import {
   splitProps,
   Show,
   createSignal,
+  JSX,
 } from "solid-js";
 import { useGame } from "./Game";
 import { Assets, loadAssets } from "./util/assets";
 
 const SceneContext = createContext<Phaser.Scene>();
 
-export const useScene = () => useContext(SceneContext);
+export const useScene = () => {
+  const scene = useContext(SceneContext);
+
+  if (!scene) {
+    throw new Error(`No parent <Scene /> component found`);
+  }
+
+  return scene;
+};
 
 export interface SceneProps extends Phaser.Types.Scenes.SettingsConfig {
   key: string;
@@ -57,9 +66,11 @@ export interface SceneProps extends Phaser.Types.Scenes.SettingsConfig {
    * @type {function}
    */
   init?: (scene: Phaser.Scene) => any;
+
+  children?: JSX.Element;
 }
 
-export default function Scene<SceneProps>(props) {
+export default function Scene(props: SceneProps) {
   const [local, config] = splitProps(props, [
     "children",
     "assets",

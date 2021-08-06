@@ -1,6 +1,6 @@
 import { createSignal } from "solid-js";
-import { useScene } from "./phaser/Scene";
-import Sprite from "./phaser/Sprite";
+import { useScene } from "solid-phaser/Scene";
+import Sprite from "solid-phaser/Sprite";
 
 export default function Test() {
   const scene = useScene();
@@ -11,7 +11,6 @@ export default function Test() {
     <Sprite
       x={100}
       y={100}
-      name="player"
       texture="assets/sprites/player"
       play={play()}
       repeat={-1}

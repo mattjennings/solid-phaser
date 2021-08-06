@@ -11,6 +11,10 @@ export function createApplyPropsEffect<T = any, P = Record<string, any>>(
   >
 ) {
   Object.keys(props).forEach((prop) => {
+    if (prop === "children") {
+      return;
+    }
+
     createEffect(() => {
       const applyFn = applyProps?.[prop];
       if (applyFn) {

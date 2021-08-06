@@ -1,6 +1,5 @@
 import Phaser from "phaser";
 import {
-  children,
   onCleanup,
   createContext,
   useContext,
@@ -9,11 +8,18 @@ import {
   Show,
   JSX,
 } from "solid-js";
-import { createApplyPropsEffect } from "./util/createApplyPropsEffect";
 
 const GameContext = createContext<Phaser.Game>();
 
-export const useGame = () => useContext(GameContext);
+export const useGame = () => {
+  const game = useContext(GameContext);
+
+  if (!game) {
+    throw new Error(`No parent <Game /> component found`);
+  }
+
+  return game;
+};
 
 export interface GameProps extends Phaser.Types.Core.GameConfig {
   children?: JSX.Element;

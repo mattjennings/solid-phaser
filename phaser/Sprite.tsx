@@ -1,4 +1,4 @@
-import { createEffect, createMemo, on, splitProps } from "solid-js";
+import { children, createEffect, createMemo, on, splitProps } from "solid-js";
 import GameObject, {
   GameObjectProps,
   AlphaProps,
@@ -35,7 +35,7 @@ export interface SpriteProps
   texture?: string;
   x?: number;
   y?: number;
-  frame?: number;
+  frame?: string | number;
 }
 
 export default function Sprite(props: SpriteProps) {
@@ -75,7 +75,7 @@ export default function Sprite(props: SpriteProps) {
         true
       );
     } else {
-      instance.stop();
+      instance?.stop();
     }
   });
 
@@ -96,7 +96,11 @@ export default function Sprite(props: SpriteProps) {
 
   return (
     <GameObject
-      ref={instance}
+      ref={(el) => {
+        instance = el;
+        // @ts-ignore
+        props.ref?.(el);
+      }}
       create={(scene) =>
         scene.add.sprite(props.x, props.y, props.texture, props.frame)
       }
@@ -106,7 +110,7 @@ export default function Sprite(props: SpriteProps) {
         texture: (instance, val, props) =>
           instance.setTexture(val, props.frame),
       }}
-      {...props}
+      {...other}
     >
       {props.children}
     </GameObject>
