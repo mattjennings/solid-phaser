@@ -15,7 +15,6 @@ import GameObject, {
   TransformProps,
   VisibleProps,
 } from "./GameObject";
-import { setRef } from "./util/setRef";
 
 export interface SpriteProps
   extends GameObjectProps<Phaser.GameObjects.Sprite>,
@@ -58,30 +57,30 @@ export default function Sprite(props: SpriteProps) {
   ]);
   let instance: Phaser.GameObjects.Sprite;
 
-  function play() {
+  createEffect(() => {
     if (local.play) {
-      instance?.play({
-        key: local.play,
-        repeat: local.repeat,
-        repeatDelay: local.repeatDelay,
-        delay: local.delay,
-        duration: local.duration,
-        frameRate: local.frameRate,
-        msPerFrame: local.msPerFrame,
-        timeScale: local.timeScale,
-        yoyo: local.yoyo,
-        skipMissedFrames: local.skipMissedFrames,
-      });
+      instance?.play(
+        {
+          key: local.play,
+          repeat: local.repeat,
+          repeatDelay: local.repeatDelay,
+          delay: local.delay,
+          duration: local.duration,
+          frameRate: local.frameRate,
+          msPerFrame: local.msPerFrame,
+          timeScale: local.timeScale,
+          yoyo: local.yoyo,
+          skipMissedFrames: local.skipMissedFrames,
+        },
+        true
+      );
     } else {
       instance.stop();
     }
-  }
-
-  createEffect(() => play());
+  });
 
   if ("originX" in props || "originY" in props) {
     createEffect(() => {
-      console.log(instance);
       instance?.setOrigin(local.originX ?? 0.5, local.originY ?? 0.5);
     });
   }
@@ -97,10 +96,7 @@ export default function Sprite(props: SpriteProps) {
 
   return (
     <GameObject
-      ref={(obj) => {
-        instance = obj;
-        setRef(props, obj);
-      }}
+      ref={instance}
       create={(scene) =>
         scene.add.sprite(props.x, props.y, props.texture, props.frame)
       }

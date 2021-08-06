@@ -1,15 +1,7 @@
-import {
-  Component,
-  createContext,
-  createEffect,
-  JSX,
-  onCleanup,
-  splitProps,
-} from "solid-js";
+import { createContext, JSX, onCleanup, onMount } from "solid-js";
 import { useGroup } from "./Group";
 import { useScene } from "./Scene";
 import { createApplyPropsEffect } from "./util/createApplyPropsEffect";
-import { setRef } from "./util/setRef";
 
 export const GameObjectContext = createContext();
 
@@ -18,7 +10,7 @@ export function GameObject<
   P = Record<string, any>
 >(
   props: GameObjectProps<T> & {
-    props: P;
+    props?: P;
     applyProps?: Partial<
       Record<keyof P, (instance: T, value: any, props: P) => any>
     >;
@@ -29,7 +21,8 @@ export function GameObject<
 
   let instance = props.create(scene);
 
-  setRef(props, instance);
+  // @ts-ignore
+  props.ref?.(instance);
 
   let listeners = [];
 
@@ -50,7 +43,9 @@ export function GameObject<
     listeners.forEach((listener) => listener());
   });
 
-  createApplyPropsEffect(instance, props.props, props.applyProps);
+  if (props.props) {
+    createApplyPropsEffect(instance, props.props, props.applyProps);
+  }
 
   if (props.onUpdate) {
     const cb = () => (instance.active ? props.onUpdate(instance) : void 0);

@@ -12,9 +12,6 @@ export function createApplyPropsEffect<T = any, P = Record<string, any>>(
 ) {
   Object.keys(props).forEach((prop) => {
     createEffect(() => {
-      if (prop === "originY") {
-        debugger;
-      }
       const applyFn = applyProps?.[prop];
       if (applyFn) {
         applyProps[prop](instance, props[prop], props);
