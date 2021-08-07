@@ -1,21 +1,11 @@
-import { createSignal, onMount, Show } from "solid-js";
-import { onInputEvent, onSceneEvent } from "solid-phaser/events";
-import GameObject from "solid-phaser/GameObject";
 import ArcadeCollider from "solid-phaser/physics/ArcadeCollider";
 import ArcadePhysics from "solid-phaser/physics/ArcadePhysics";
-import { useScene } from "solid-phaser/Scene";
 import Sprite, { SpriteProps } from "solid-phaser/Sprite";
-import { forwardRef } from "solid-phaser/util/forwardRef";
-
 export interface BallProps extends SpriteProps {
   onGameOver: () => void;
 }
 
 export default function Ball(props: BallProps) {
-  const scene = useScene();
-
-  let instance;
-
   function handlePaddleCollide(
     self: Phaser.GameObjects.Sprite &
       Phaser.Types.Physics.Arcade.GameObjectWithDynamicBody,
@@ -35,7 +25,7 @@ export default function Ball(props: BallProps) {
 
   return (
     <Sprite
-      ref={forwardRef(props, instance)}
+      ref={props.ref}
       name="ball"
       x={props.x}
       y={props.y}

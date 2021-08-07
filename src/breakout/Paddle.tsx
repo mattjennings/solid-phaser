@@ -1,8 +1,6 @@
 import { createSignal } from "solid-js";
-import { onInputEvent, onSceneEvent } from "solid-phaser/events";
-import ArcadeCollider from "solid-phaser/physics/ArcadeCollider";
+import { onInputEvent } from "solid-phaser/events";
 import ArcadePhysics from "solid-phaser/physics/ArcadePhysics";
-import { useScene } from "solid-phaser/Scene";
 import Sprite, { SpriteProps } from "solid-phaser/Sprite";
 
 export default function Paddle(props: SpriteProps) {
@@ -22,7 +20,6 @@ export default function Paddle(props: SpriteProps) {
       frame="paddle1"
     >
       <ArcadePhysics immovable />
-      {/* <ArcadeCollider /> */}
     </Sprite>
   );
 }

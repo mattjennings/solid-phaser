@@ -7,10 +7,10 @@ import {
 } from "solid-js";
 import { onInputEvent, onSceneEvent } from "solid-phaser/events";
 import Game from "solid-phaser/Game";
-import Scene, { useScene } from "solid-phaser/Scene";
+import Scene from "solid-phaser/Scene";
 import Ball from "./Ball";
-import Paddle from "./Paddle";
 import Block from "./Block";
+import Paddle from "./Paddle";
 
 const Breakout: Component = () => {
   let ball: Phaser.GameObjects.Sprite &
