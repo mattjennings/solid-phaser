@@ -1,28 +1,108 @@
 import { render, waitFor } from "solid-testing-library";
-import { createSignal } from "solid-js";
-import Game from "../src/Game";
-import { GameObject, Scene } from "../src";
-import { waitForValue } from "./_utils/waitForValue";
+import { GameObject } from "../src";
+import TestGame from "./_utils/TestGame";
 
-it("test", async () => {
-  let ref;
+it("creates a game object", async () => {
+  let obj: Phaser.GameObjects.Text;
+  let game: Phaser.Game;
 
   function Test() {
     return (
-      <Game banner={false} type={Phaser.HEADLESS}>
-        <Scene key="main">
-          <GameObject
-            ref={ref}
-            create={(scene) => scene.add.text(0, 0, "123")}
-          />
-        </Scene>
-      </Game>
+      <TestGame ref={game}>
+        <GameObject
+          ref={obj}
+          create={(scene) => scene.add.text(0, 0, "123")}
+          props={{
+            text: "hello",
+          }}
+        />
+      </TestGame>
     );
   }
 
   render(() => <Test />);
 
-  await waitForValue(() => ref);
+  await waitFor(() =>
+    expect(game.scene.scenes[0].children.exists(obj)).toEqual(true)
+  );
+});
 
-  console.log(ref);
+it("assigns props", async () => {
+  let ref: Phaser.GameObjects.Text;
+
+  function Test() {
+    return (
+      <TestGame>
+        <GameObject
+          ref={ref}
+          create={(scene) => scene.add.text(0, 0, "123")}
+          props={{
+            text: "hello",
+          }}
+        />
+      </TestGame>
+    );
+  }
+
+  render(() => <Test />);
+
+  await waitFor(() => expect(ref.text).toEqual("hello"));
+});
+
+it("assigns props via applyProps", async () => {
+  let ref: Phaser.GameObjects.Text;
+
+  function Test() {
+    return (
+      <TestGame>
+        <GameObject
+          ref={ref}
+          create={(scene) => scene.add.text(0, 0, "123")}
+          props={{
+            style: {
+              color: "white",
+            },
+          }}
+          applyProps={{
+            style: (instance, value) => instance.setStyle(value),
+          }}
+        />
+      </TestGame>
+    );
+  }
+
+  render(() => <Test />);
+
+  await waitFor(() => expect(ref.style.color).toEqual("white"));
+});
+
+it("fires onPreUpdate, onUpdate, onPostUpdate in order", async () => {
+  let ref: Phaser.GameObjects.Text;
+
+  let numbers = [];
+  const addNum = (v) => {
+    if (numbers.length < 3) {
+      numbers.push(v);
+    }
+  };
+
+  function Test() {
+    return (
+      <TestGame>
+        <GameObject
+          ref={ref}
+          create={(scene) => scene.add.text(0, 0, "123")}
+          onPreUpdate={() => addNum(1)}
+          onUpdate={() => addNum(2)}
+          onPostUpdate={() => addNum(3)}
+        />
+      </TestGame>
+    );
+  }
+
+  render(() => <Test />);
+
+  await waitFor(() => {
+    expect(numbers).toEqual([1, 2, 3]);
+  });
 });

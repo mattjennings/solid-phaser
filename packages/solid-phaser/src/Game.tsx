@@ -8,6 +8,7 @@ import {
   Show,
   JSX,
 } from "solid-js";
+import { Ref, RefFunction } from "./types";
 
 const GameContext = createContext<Phaser.Game>();
 
@@ -22,6 +23,7 @@ export const useGame = () => {
 };
 
 export interface GameProps extends Phaser.Types.Core.GameConfig {
+  ref?: Ref<Phaser.Game>;
   children?: JSX.Element;
 }
 
@@ -29,8 +31,7 @@ export default function Game(props: GameProps) {
   const [local, config] = splitProps(props, ["children"]);
   const game = new Phaser.Game({ ...config });
 
-  // @ts-ignore
-  window.game = game;
+  (props.ref as RefFunction)?.(game);
 
   onCleanup(() => game.destroy(true));
 

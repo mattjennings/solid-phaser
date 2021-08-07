@@ -32,7 +32,7 @@ export interface GameObjectProps<T extends Phaser.GameObjects.GameObject> {
   active?: boolean;
 
   /**
-   * Called when it's time to insantiate the game object. You can return any
+   * Called when it's time to instantiate the game object. You can return any
    * Phaser GameObject instance.
    */
   create: (scene: Phaser.Scene) => T;
@@ -55,6 +55,8 @@ export interface GameObjectProps<T extends Phaser.GameObjects.GameObject> {
 
 /**
  * The base GameObject component. It can be used to create a component for your own Phaser game object.
+ *
+ * Child components are able to use `useGameObject()` to get the instance.
  */
 export function GameObject<
   T extends Phaser.GameObjects.GameObject,
