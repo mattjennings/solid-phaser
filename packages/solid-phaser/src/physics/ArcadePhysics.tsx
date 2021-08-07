@@ -1,21 +1,8 @@
+import Phaser from "phaser";
 import { JSX, onMount, splitProps } from "solid-js";
-import { useScene } from "solid-phaser/Scene";
-import { createApplyPropsEffect } from "solid-phaser/util/createApplyPropsEffect";
-import {
-  AccelerationProps,
-  AngularProps,
-  BounceProps,
-  DebugProps,
-  DragProps,
-  EnableProps,
-  FrictionProps,
-  GravityProps,
-  ImmovableProps,
-  MassProps,
-  SizeProps,
-  useGameObject,
-  VelocityProps,
-} from "../GameObject";
+import { useScene } from "../Scene";
+import { createApplyPropsEffect } from "../util/createApplyPropsEffect";
+import { useGameObject } from "../GameObject";
 
 export interface ArcadePhysicsProps
   extends AccelerationProps,
@@ -67,6 +54,8 @@ export default function ArcadePhysics(props: ArcadePhysicsProps) {
       offset: (body, { x, y }) => body.setOffset(x, y),
       velocityX: (body, val) => body.setVelocityX(val),
       velocityY: (body, val) => body.setVelocityY(val),
+      maxVelocityX: (body, val) => body.setMaxVelocityX(val),
+      maxVelocityY: (body, val) => body.setMaxVelocityY(val),
     });
   }
 
@@ -79,4 +68,82 @@ export default function ArcadePhysics(props: ArcadePhysicsProps) {
   });
 
   return props.children;
+}
+
+export interface AccelerationProps {
+  accelerationX?: number;
+  accelerationY?: number;
+}
+
+export interface AngularProps {
+  angularAcceleration?: number;
+  angularDrag?: number;
+  angularVelocity?: number;
+}
+
+export interface BounceProps {
+  bounceX?: number;
+  bounceY?: number;
+  collideWorldBounds?: boolean;
+  onWorldBounds?: boolean;
+}
+
+export interface DebugProps {
+  debugBodyColor?: number;
+  debugShowBody?: boolean;
+  debugShowVelocity?: boolean;
+}
+
+export interface DragProps {
+  damping?: number;
+  dragX?: number;
+  dragY?: number;
+  allowDrag?: boolean;
+}
+
+export interface EnableProps {
+  disableBody?: boolean;
+}
+
+export interface FrictionProps {
+  frictionX?: number;
+  frictionY?: number;
+}
+
+export interface GravityProps {
+  allowGravity?: boolean;
+  gravityX?: number;
+  gravityY?: number;
+}
+
+export interface ImmovableProps {
+  immovable?: boolean;
+}
+
+export interface MassProps {
+  mass?: number;
+}
+
+export interface SizeProps {
+  circle?: {
+    radius: number;
+    offsetX?: number;
+    offsetY?: number;
+  };
+  offset?: {
+    x?: number;
+    y?: number;
+  };
+  size?: {
+    width: number;
+    height: number;
+    center?: number;
+  };
+}
+
+export interface VelocityProps {
+  velocityX?: number;
+  velocityY?: number;
+  maxVelocityX?: number;
+  maxVelocityY?: number;
 }

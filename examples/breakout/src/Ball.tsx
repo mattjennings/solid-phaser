@@ -1,6 +1,9 @@
-import ArcadeCollider from "solid-phaser/physics/ArcadeCollider";
-import ArcadePhysics from "solid-phaser/physics/ArcadePhysics";
-import Sprite, { SpriteProps } from "solid-phaser/Sprite";
+import {
+  Sprite,
+  SpriteProps,
+  ArcadePhysics,
+  ArcadeCollider,
+} from "solid-phaser";
 
 export interface BallProps extends SpriteProps {
   onGameOver: () => void;

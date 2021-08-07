@@ -5,9 +5,7 @@ import {
   Index,
   onMount,
 } from "solid-js";
-import { onInputEvent, onSceneEvent } from "solid-phaser/events";
-import Game from "solid-phaser/Game";
-import Scene from "solid-phaser/Scene";
+import { Game, Scene, onSceneEvent, onInputEvent } from "solid-phaser";
 import Ball from "./Ball";
 import Block from "./Block";
 import Paddle from "./Paddle";
@@ -128,13 +126,7 @@ export default () => (
     <Scene
       key="main"
       assets={{
-        atlas: [
-          {
-            key: "breakout",
-            atlasURL: "assets/breakout/breakout.json",
-            textureURL: "assets/breakout/breakout.png",
-          },
-        ],
+        atlas: ["breakout.json"],
       }}
       create={(scene) => {
         scene.physics.world.setBoundsCollision(true, true, true, true);

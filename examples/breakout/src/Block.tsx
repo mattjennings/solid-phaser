@@ -1,6 +1,9 @@
-import Sprite, { SpriteProps } from "solid-phaser/Sprite";
-import ArcadePhysics from "solid-phaser/physics/ArcadePhysics";
-import ArcadeCollider from "solid-phaser/physics/ArcadeCollider";
+import {
+  Sprite,
+  SpriteProps,
+  ArcadePhysics,
+  ArcadeCollider,
+} from "solid-phaser";
 
 export interface BlockProps extends SpriteProps {
   onCollide: () => void;

@@ -1,21 +1,19 @@
 {
-  "name": "vite-template-solid",
-  "version": "0.0.0",
-  "description": "",
+  "name": "solid-phaser-monorepo",
+  "version": "0.0.1",
+  "description": "Create Phaser 3 games with solid-js",
+  "main": "index.js",
   "scripts": {
-    "start": "vite",
-    "dev": "vite",
-    "build": "vite build",
-    "serve": "vite preview"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "license": "MIT",
-  "devDependencies": {
-    "typescript": "~4.2.2",
-    "vite": "^2.4.4",
-    "vite-plugin-solid": "^2.0.1"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mattjennings/solid-phaser.git"
   },
-  "dependencies": {
-    "phaser": "^3.55.2",
-    "solid-js": "^1.0.7"
-  }
+  "author": "Matt Jennings",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mattjennings/solid-phaser/issues"
+  },
+  "homepage": "https://github.com/mattjennings/solid-phaser#readme"
 }

@@ -1,9 +1,10 @@
+import Phaser from "phaser";
 import { createEffect, onMount, splitProps } from "solid-js";
-import { onSceneEvent } from "solid-phaser/events";
-import { useScene } from "solid-phaser/Scene";
-import { createApplyPropsEffect } from "solid-phaser/util/createApplyPropsEffect";
-import { getGameObjectsByName } from "solid-phaser/util/getGameObjectsByName";
-import { toArray } from "solid-phaser/util/toArray";
+import { onSceneEvent } from "../events";
+import { useScene } from "../Scene";
+import { createApplyPropsEffect } from "../util/createApplyPropsEffect";
+import { getGameObjectsByName } from "../util/getGameObjectsByName";
+import { toArray } from "../util/toArray";
 import { useGameObject } from "../GameObject";
 
 export interface ArcadeColliderProps<

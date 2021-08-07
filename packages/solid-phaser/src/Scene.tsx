@@ -1,6 +1,5 @@
 import Phaser from "phaser";
 import {
-  children,
   onCleanup,
   createContext,
   useContext,
@@ -36,7 +35,6 @@ export interface SceneProps extends Phaser.Types.Scenes.SettingsConfig {
    * the LoaderPlugin will start automatically.
    *
    * It is called with the Phaser.Scene scene as the parameter.
-   * @type {function}
    */
   preload?: (scene: Phaser.Scene) => any;
 
@@ -47,14 +45,11 @@ export interface SceneProps extends Phaser.Types.Scenes.SettingsConfig {
    * If the LoaderPlugin started after preload(), then this method is called only after loading is complete.
    *
    * It is called with the Phaser.Scene scene as the parameter.
-   * @type {function}
    */
   create?: (scene: Phaser.Scene) => any;
 
   /**
    * Called with the Scene Manager update loop
-   *
-   * @type {function}
    */
   update?: (scene: Phaser.Scene) => any;
 
@@ -63,7 +58,6 @@ export interface SceneProps extends Phaser.Types.Scenes.SettingsConfig {
    * before preload() and create().
    *
    * It is called with the Phaser.Scene scene as the parameter.
-   * @type {function}
    */
   init?: (scene: Phaser.Scene) => any;
 

@@ -1,4 +1,11 @@
-import { createContext, JSX, onCleanup, onMount, useContext } from "solid-js";
+import Phaser from "phaser";
+import {
+  createContext,
+  JSX,
+  onCleanup,
+  splitProps,
+  useContext,
+} from "solid-js";
 import { useGroup } from "./Group";
 import { useScene } from "./Scene";
 import { createApplyPropsEffect } from "./util/createApplyPropsEffect";
@@ -20,13 +27,20 @@ export function GameObject<
     >;
   }
 ) {
+  const [local, other] = splitProps(props, [
+    "props",
+    "applyProps",
+    "create",
+    "onUpdate",
+    "onPreUpdate",
+    "onPostUpdate",
+  ]);
   const scene = useScene();
   const group = useGroup();
 
-  let instance = props.create(scene);
-  if (props.props) {
-    createApplyPropsEffect(instance, props.props, props.applyProps);
-  }
+  let instance = local.create(scene);
+
+  createApplyPropsEffect(instance, local.props, local.applyProps);
 
   // @ts-ignore
   props.ref?.(instance);
@@ -47,22 +61,22 @@ export function GameObject<
     listeners.forEach((listener) => listener());
   });
 
-  if (props.onUpdate) {
-    const cb = () => (instance.active ? props.onUpdate(instance) : void 0);
+  if (local.onUpdate) {
+    const cb = () => (instance.active ? local.onUpdate(instance) : void 0);
     scene.events.on("update", cb);
 
     listeners.push(() => scene.events.off("update", cb));
   }
 
-  if (props.onPreUpdate) {
-    const cb = () => (instance.active ? props.onPreUpdate(instance) : void 0);
+  if (local.onPreUpdate) {
+    const cb = () => (instance.active ? local.onPreUpdate(instance) : void 0);
     scene.events.on("preupdate", cb);
 
     listeners.push(() => scene.events.off("preupdate", cb));
   }
 
-  if (props.onPostUpdate) {
-    const cb = () => (instance.active ? props.onPostUpdate(instance) : void 0);
+  if (local.onPostUpdate) {
+    const cb = () => (instance.active ? local.onPostUpdate(instance) : void 0);
     scene.events.on("postupdate", cb);
 
     listeners.push(() => scene.events.off("postupdate", cb));
@@ -103,11 +117,6 @@ export type AlphaProps = Partial<
     | "alphaTopRight"
   >
 >;
-
-export type Point = {
-  x: number;
-  y: number;
-};
 
 export type BlendModeProps = Partial<
   Pick<Phaser.GameObjects.Components.BlendMode, "blendMode">
@@ -173,9 +182,8 @@ export type TintProps = Partial<
 export type TransformProps = Partial<
   Pick<
     Phaser.GameObjects.Components.Transform,
-    "angle" | "rotation" | "x" | "y" | "z" | "w"
+    "angle" | "rotation" | "x" | "y" | "z" | "w" | "scale" | "scaleX" | "scaleY"
   > & {
-    scale?: number | (Point & { point?: Point });
     allowRotation?: boolean;
   }
 >;
@@ -198,82 +206,4 @@ export interface AnimationProps {
   repeatDelay?: number;
   timeScale?: number;
   yoyo?: boolean;
-}
-
-// Arcade Physics
-export interface AccelerationProps {
-  accelerationX?: number;
-  accelerationY?: number;
-}
-
-export interface AngularProps {
-  angularAcceleration?: number;
-  angularDrag?: number;
-  angularVelocity?: number;
-}
-
-export interface BounceProps {
-  bounceX?: number;
-  bounceY?: number;
-  collideWorldBounds?: boolean;
-  onWorldBounds?: boolean;
-}
-
-export interface DebugProps {
-  debugBodyColor?: number;
-  debugShowBody?: boolean;
-  debugShowVelocity?: boolean;
-}
-
-export interface DragProps {
-  damping?: number;
-  dragX?: number;
-  dragY?: number;
-  allowDrag?: boolean;
-}
-
-export interface EnableProps {
-  disableBody?: boolean;
-}
-
-export interface FrictionProps {
-  frictionX?: number;
-  frictionY?: number;
-}
-
-export interface GravityProps {
-  allowGravity?: boolean;
-  gravityX?: number;
-  gravityY?: number;
-}
-
-export interface ImmovableProps {
-  immovable?: boolean;
-}
-
-export interface MassProps {
-  mass?: number;
-}
-
-export interface SizeProps {
-  circle?: {
-    radius: number;
-    offsetX?: number;
-    offsetY?: number;
-  };
-  offset?: {
-    x?: number;
-    y?: number;
-  };
-  size?: {
-    width: number;
-    height: number;
-    center?: number;
-  };
-}
-
-export interface VelocityProps {
-  velocityX?: number;
-  velocityY?: number;
-  maxVelocity?: number | Point;
 }
