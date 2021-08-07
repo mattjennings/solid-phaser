@@ -1,10 +1,11 @@
 {
   "name": "solid-phaser-monorepo",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Create Phaser 3 games with solid-js",
   "scripts": {
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "release": "standard-version"
   },
   "repository": {
     "type": "git",
