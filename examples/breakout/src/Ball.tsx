@@ -40,7 +40,6 @@ export default function Ball(props: BallProps) {
         <ArcadeCollider
           with="paddle"
           onCollide={handlePaddleCollide}
-          worldBounds
           onWorldBounds={(self, blocked) => {
             if (blocked.down) {
               props.onGameOver();
