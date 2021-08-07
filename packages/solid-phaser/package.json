@@ -29,17 +29,28 @@
     "dev": "vite build --watch",
     "build": "vite build",
     "prepublishOnly": "vite build",
-    "release": "npm publish"
+    "release": "npm publish",
+    "test": "jest"
   },
   "devDependencies": {
+    "@babel/core": "^7.15.0",
+    "@babel/preset-env": "^7.15.0",
+    "@babel/preset-typescript": "^7.15.0",
     "@rollup/plugin-typescript": "^8.2.5",
+    "@types/jest": "^26.0.24",
     "@types/node": "^16.4.13",
+    "babel-jest": "^27.0.6",
+    "canvas": "^2.8.0",
+    "datauri": "^3.0.0",
+    "jest": "^26.3.3",
+    "phaser": "^3.55.2",
     "rollup-plugin-typescript2": "^0.30.0",
+    "solid-jest": "^0.1.1",
+    "solid-js": "^1.0.7",
+    "solid-testing-library": "^0.2.0",
     "typescript": "~4.2.2",
     "vite": "^2.4.4",
-    "vite-plugin-solid": "^2.0.1",
-    "phaser": "^3.55.2",
-    "solid-js": "^1.0.7"
+    "vite-plugin-solid": "^2.0.1"
   },
   "peerDependencies": {
     "phaser": "^3.55.0",

@@ -19,7 +19,7 @@ export function createApplyPropsEffect<T = any, P = Record<string, any>>(
     deferred?: Array<keyof P>;
   } = {}
 ) {
-  const [, trimmed] = splitProps(props as any, ["children", "ref"]);
+  const [, trimmed] = splitProps((props as any) ?? {}, ["children", "ref"]);
   const [deferredProps, otherProps] = splitProps(
     trimmed as any,
     deferred ?? []
