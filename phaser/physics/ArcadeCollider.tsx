@@ -1,24 +1,10 @@
-import { createEffect, createSignal, onMount, splitProps } from "solid-js";
+import { createEffect, onMount, splitProps } from "solid-js";
 import { onSceneEvent } from "solid-phaser/events";
 import { useScene } from "solid-phaser/Scene";
 import { createApplyPropsEffect } from "solid-phaser/util/createApplyPropsEffect";
 import { getGameObjectsByName } from "solid-phaser/util/getGameObjectsByName";
 import { toArray } from "solid-phaser/util/toArray";
-import {
-  AccelerationProps,
-  AngularProps,
-  BounceProps,
-  DebugProps,
-  DragProps,
-  EnableProps,
-  FrictionProps,
-  GravityProps,
-  ImmovableProps,
-  MassProps,
-  SizeProps,
-  useGameObject,
-  VelocityProps,
-} from "../GameObject";
+import { useGameObject } from "../GameObject";
 
 export interface ArcadeColliderProps<
   Self extends Phaser.Types.Physics.Arcade.GameObjectWithBody,

@@ -47,10 +47,6 @@ export function createApplyPropsEffect<T = any, P = Record<string, any>>(
   });
 
   Object.keys(deferredProps).forEach((prop) => {
-    if (prop === "children") {
-      return;
-    }
-
     createEffect(
       on(
         () => deferredProps[prop],
