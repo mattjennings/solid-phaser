@@ -1,6 +1,5 @@
 import { children, createEffect, createMemo, on, splitProps } from "solid-js";
-import GameObject, {
-  GameObjectProps,
+import {
   AlphaProps,
   AnimationProps,
   BlendModeProps,
@@ -14,7 +13,9 @@ import GameObject, {
   TintProps,
   TransformProps,
   VisibleProps,
-} from "./GameObject";
+} from "./types";
+import GameObject, { GameObjectProps } from "./GameObject";
+import { RefFunction } from "./types";
 
 export interface SpriteProps
   extends GameObjectProps<Phaser.GameObjects.Sprite>,
@@ -98,8 +99,7 @@ export default function Sprite(props: SpriteProps) {
     <GameObject
       ref={(el) => {
         instance = el;
-        // @ts-ignore
-        props.ref?.(el);
+        (props.ref as RefFunction)?.(el);
       }}
       create={(scene) =>
         new Phaser.GameObjects.Sprite(

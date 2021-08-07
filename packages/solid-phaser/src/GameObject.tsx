@@ -8,20 +8,104 @@ import {
 } from "solid-js";
 import { useGroup } from "./Group";
 import { useScene } from "./Scene";
+import { Ref, RefFunction } from "./types";
 import { createApplyPropsEffect } from "./util/createApplyPropsEffect";
 
-export const GameObjectContext = createContext<Phaser.GameObjects.GameObject>();
+export interface GameObjectProps<T extends Phaser.GameObjects.GameObject> {
+  ref?: Ref<T>;
+  children?: JSX.Element;
 
-export function useGameObject<T extends Phaser.GameObjects.GameObject>() {
-  return useContext(GameObjectContext) as T;
+  /**
+   * Assigns a name to the instance. This can helpful when you need to find
+   * other instances by name.
+   *
+   * See: https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.GameObject.html#name__anchor
+   */
+  name?: string;
+
+  /**
+   * Assigns the active property to the instance. Setting this to false
+   * will prevent onUpdate etc. props from running.
+   *
+   * See: https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.GameObject.html#active__anchor
+   */
+  active?: boolean;
+
+  /**
+   * Called when it's time to insantiate the game object. You can return any
+   * Phaser GameObject instance.
+   */
+  create: (scene: Phaser.Scene) => T;
+
+  /**
+   * Called during the scene's update loop
+   */
+  onUpdate?: (self: T) => void;
+
+  /**
+   * Called during the scene's preupdate loop
+   */
+  onPreUpdate?: (self: T) => void;
+
+  /**
+   * Called during the scene's postupdate loop
+   */
+  onPostUpdate?: (self: T) => void;
 }
 
+/**
+ * The base GameObject component. It can be used to create a component for your own Phaser game object.
+ */
 export function GameObject<
   T extends Phaser.GameObjects.GameObject,
   P = Record<string, any>
 >(
   props: GameObjectProps<T> & {
+    /**
+     * The props to apply to the game object instance. By default, each prop is assigned to the
+     * instance inside of an effect. To customize how a prop is set on the instance, see the `applyProps` prop
+     *
+     * The prop application happens immediately after creation and then gets updated in a deferred effect.
+     *
+     * Example:
+     *
+     * ```jsx
+     * props={{
+     *  text: 'hello',
+     *  color: 'blue'
+     * }}
+     * ```
+     *
+     * is equivalent to
+     *
+     * ```js
+     * instance.text = props.text
+     * instance.color = props.color
+     * createEffect(on(props.text, value => instance.text = value), { defer: true })
+     * createEffect(on(props.color, value => instance.color = value), { defer: true })
+     * ```
+     */
     props?: P;
+
+    /**
+     * Defines how props should be assigned to the instance. When a prop key exists in applyProps,
+     * it will run the function provided. It is your responsibility to apply the prop appropriately here.
+     *
+     * Example:
+     *
+     * ```jsx
+     * applyProps={{
+     *  text: (instance, value) => instance.setText(value)
+     * }}
+     * ```
+     *
+     * is equivalent to
+     *
+     * ```js
+     * instance.setText(props.text)
+     * createEffect(on(props.text, value => instance.setText(props.text), { defer: true })
+     * ```
+     */
     applyProps?: Partial<
       Record<keyof P, (instance: T, value: any, props: P) => any>
     >;
@@ -35,15 +119,16 @@ export function GameObject<
     "onPreUpdate",
     "onPostUpdate",
   ]);
+
   const scene = useScene();
   const group = useGroup();
 
   let instance = local.create(scene);
 
   createApplyPropsEffect(instance, local.props, local.applyProps);
+  createApplyPropsEffect(instance, other);
 
-  // @ts-ignore
-  props.ref?.(instance);
+  (props.ref as RefFunction)?.(instance);
 
   let listeners = [];
 
@@ -89,121 +174,10 @@ export function GameObject<
   );
 }
 
+const GameObjectContext = createContext<Phaser.GameObjects.GameObject>();
+
+export function useGameObject<T extends Phaser.GameObjects.GameObject>() {
+  return useContext(GameObjectContext) as T;
+}
+
 export default GameObject;
-
-/**************************
- *        PROPS           *
- **************************/
-
-export interface GameObjectProps<T extends Phaser.GameObjects.GameObject> {
-  ref?: T | ((obj?: T) => void);
-  children?: JSX.Element;
-  name?: string;
-  active?: boolean;
-
-  create?: (scene: Phaser.Scene) => T;
-  onUpdate?: (self: T) => any;
-  onPreUpdate?: (self: T) => any;
-  onPostUpdate?: (self: T) => any;
-}
-
-export type AlphaProps = Partial<
-  Pick<
-    Phaser.GameObjects.Components.Alpha,
-    | "alpha"
-    | "alphaBottomLeft"
-    | "alphaBottomRight"
-    | "alphaTopLeft"
-    | "alphaTopRight"
-  >
->;
-
-export type BlendModeProps = Partial<
-  Pick<Phaser.GameObjects.Components.BlendMode, "blendMode">
->;
-
-export type ComputedSizeProps = Partial<
-  Pick<
-    Phaser.GameObjects.Components.ComputedSize,
-    "displayHeight" | "displayWidth" | "height" | "width"
-  >
->;
-
-export type CropProps = Partial<
-  Pick<Phaser.GameObjects.Components.Crop, "frame" | "isCropped" | "texture">
->;
-
-export type DepthProps = Partial<
-  Pick<Phaser.GameObjects.Components.Depth, "depth">
->;
-
-export type FlipProps = Partial<
-  Pick<Phaser.GameObjects.Components.Flip, "flipX" | "flipY">
->;
-
-export type MaskProps = Partial<
-  Pick<Phaser.GameObjects.Components.Mask, "mask">
->;
-
-export type OriginProps = Partial<
-  Pick<
-    Phaser.GameObjects.Components.Origin,
-    "originX" | "originY" | "displayOriginX" | "displayOriginY"
-  >
->;
-
-export type PipelineProps = Partial<
-  Pick<Phaser.GameObjects.Components.Pipeline, "defaultPipeline" | "pipeline">
->;
-
-export type ScrollFactorProps = Partial<
-  Pick<
-    Phaser.GameObjects.Components.ScrollFactor,
-    "scrollFactorX" | "scrollFactorY"
-  >
->;
-
-export type TextureCropProps = Partial<
-  Pick<Phaser.GameObjects.Components.TextureCrop, "texture" | "frame">
->;
-export type TintProps = Partial<
-  Pick<
-    Phaser.GameObjects.Components.Tint,
-    | "isTinted"
-    | "tint"
-    | "tintBottomLeft"
-    | "tintBottomRight"
-    | "tintFill"
-    | "tintTopLeft"
-    | "tintTopRight"
-  >
->;
-
-export type TransformProps = Partial<
-  Pick<
-    Phaser.GameObjects.Components.Transform,
-    "angle" | "rotation" | "x" | "y" | "z" | "w" | "scale" | "scaleX" | "scaleY"
-  > & {
-    allowRotation?: boolean;
-  }
->;
-
-export type VisibleProps = Partial<
-  Pick<Phaser.GameObjects.Components.Visible, "visible">
->;
-
-export interface AnimationProps {
-  playingAnimation?: string;
-  accumulator?: number;
-  delay?: number;
-  duration?: number;
-  forward?: boolean;
-  frameRate?: number;
-  isPlaying?: boolean;
-  msPerFrame?: number;
-  skipMissedFrames?: boolean;
-  repeat?: number;
-  repeatDelay?: number;
-  timeScale?: number;
-  yoyo?: boolean;
-}

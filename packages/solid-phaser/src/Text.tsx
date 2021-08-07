@@ -1,13 +1,12 @@
 import Phaser from "phaser";
-import type { Component } from "solid-js";
-import GameObject, {
+import GameObject, { GameObjectProps } from "./GameObject";
+import {
   AlphaProps,
   BlendModeProps,
   ComputedSizeProps,
   CropProps,
   DepthProps,
   FlipProps,
-  GameObjectProps,
   MaskProps,
   OriginProps,
   PipelineProps,
@@ -15,7 +14,7 @@ import GameObject, {
   TintProps,
   TransformProps,
   VisibleProps,
-} from "./GameObject";
+} from "./types";
 
 export interface TextProps
   extends GameObjectProps<Phaser.GameObjects.Text>,
