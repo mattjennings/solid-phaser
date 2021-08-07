@@ -36,7 +36,10 @@ export interface ArcadeColliderProps<
   allowCollision?: (self: Self, other: Other) => boolean;
 
   onCollide?: (self: Self, other: Other) => any;
-  onWorldBounds?: (self: Self) => any;
+  onWorldBounds?: (
+    self: Self,
+    blocked: { up: boolean; down: boolean; left: boolean; right: boolean }
+  ) => any;
 }
 
 export default function ArcadeCollider<
@@ -104,9 +107,9 @@ export default function ArcadeCollider<
     // @ts-ignore - so the worldbounds event gets emitted
     instance.body.onWorldBounds = !!props.onWorldBounds;
     if (props.onWorldBounds) {
-      const cb = (body) => {
+      const cb = (body, up, down, left, right) => {
         if (body === instance.body) {
-          props.onWorldBounds(instance as any);
+          props.onWorldBounds(instance as any, { up, down, left, right });
         }
       };
       scene.physics.world.on("worldbounds", cb);

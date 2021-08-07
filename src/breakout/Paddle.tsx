@@ -14,6 +14,7 @@ export default function Paddle(props: SpriteProps) {
 
   return (
     <Sprite
+      ref={props.ref}
       name="paddle"
       x={x()}
       y={props.y}
