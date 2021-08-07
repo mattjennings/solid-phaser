@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { JSX, onMount, splitProps } from "solid-js";
+import { JSX, onCleanup, splitProps } from "solid-js";
 import { useScene } from "../Scene";
 import { createApplyPropsEffect } from "../util/createApplyPropsEffect";
 import { useGameObject } from "../GameObject";
@@ -59,12 +59,10 @@ export default function ArcadePhysics(props: ArcadePhysicsProps) {
     });
   }
 
-  onMount(() => {
-    return () => {
-      if (scene.children.exists(instance)) {
-        scene.physics.world.disable(instance);
-      }
-    };
+  onCleanup(() => {
+    if (scene.children.exists(instance)) {
+      scene.physics.world.disable(instance);
+    }
   });
 
   return props.children;

@@ -25,6 +25,7 @@ const Breakout: Component = () => {
   onMount(() => {
     restart();
   });
+
   // move ball with paddle until user launches
   onSceneEvent("update", () => {
     if (!ballLaunched()) {

@@ -1,4 +1,4 @@
-import { createEffect, onMount } from "solid-js";
+import { onCleanup } from "solid-js";
 import { useGame } from "./Game";
 import { useScene } from "./Scene";
 
@@ -12,7 +12,7 @@ export function onInputEvent(
   const scene = useScene();
 
   scene.input.on(event, callback);
-  onMount(() => () => scene.input.off(event, callback));
+  onCleanup(() => scene.input.off(event, callback));
 }
 
 /**
@@ -25,7 +25,7 @@ export function onSceneEvent(
   const scene = useScene();
 
   scene.events.on(event, callback);
-  onMount(() => () => scene.events.off(event, callback));
+  onCleanup(() => scene.events.off(event, callback));
 }
 
 /**
@@ -38,5 +38,5 @@ export function onGameEvent(
   const game = useGame();
 
   game.events.on(event, callback);
-  onMount(() => () => game.events.off(event, callback));
+  onCleanup(() => game.events.off(event, callback));
 }

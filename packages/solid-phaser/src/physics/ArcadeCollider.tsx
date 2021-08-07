@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { createEffect, onMount, splitProps } from "solid-js";
+import { createEffect, onCleanup, splitProps } from "solid-js";
 import { onSceneEvent } from "../events";
 import { useScene } from "../Scene";
 import { createApplyPropsEffect } from "../util/createApplyPropsEffect";
@@ -58,8 +58,8 @@ export default function ArcadeCollider<
         props.allowCollision
       );
 
-  onMount(() => {
-    return () => collider?.destroy();
+  onCleanup(() => {
+    collider?.destroy();
   });
 
   const [colliderProps] = splitProps(props, [
