@@ -102,7 +102,13 @@ export default function Sprite(props: SpriteProps) {
         props.ref?.(el);
       }}
       create={(scene) =>
-        scene.add.sprite(props.x, props.y, props.texture, props.frame)
+        new Phaser.GameObjects.Sprite(
+          scene,
+          props.x,
+          props.y,
+          props.texture,
+          props.frame
+        )
       }
       props={other}
       applyProps={{

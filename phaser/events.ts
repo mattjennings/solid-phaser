@@ -1,4 +1,4 @@
-import { createEffect } from "solid-js";
+import { createEffect, onMount } from "solid-js";
 import { useGame } from "./Game";
 import { useScene } from "./Scene";
 
@@ -11,12 +11,8 @@ export function onInputEvent(
 ) {
   const scene = useScene();
 
-  createEffect(() => {
-    scene.input.on(event, callback);
-    return () => {
-      scene.input.off(event, callback);
-    };
-  });
+  scene.input.on(event, callback);
+  onMount(() => () => scene.input.off(event, callback));
 }
 
 /**
@@ -28,12 +24,8 @@ export function onSceneEvent(
 ) {
   const scene = useScene();
 
-  createEffect(() => {
-    scene.events.on(event, callback);
-    return () => {
-      scene.events.off(event, callback);
-    };
-  });
+  scene.events.on(event, callback);
+  onMount(() => () => scene.events.off(event, callback));
 }
 
 /**
@@ -45,10 +37,6 @@ export function onGameEvent(
 ) {
   const game = useGame();
 
-  createEffect(() => {
-    game.events.on(event, callback);
-    return () => {
-      game.events.off(event, callback);
-    };
-  });
+  game.events.on(event, callback);
+  onMount(() => () => game.events.off(event, callback));
 }

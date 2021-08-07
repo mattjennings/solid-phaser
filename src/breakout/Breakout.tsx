@@ -1,11 +1,21 @@
 import { Component } from "solid-js";
+import { onSceneEvent } from "solid-phaser/events";
 import Game from "solid-phaser/Game";
 import Scene from "solid-phaser/Scene";
+import Ball from "./Ball";
 import Paddle from "./Paddle";
 
 const Breakout: Component = () => {
+  // onSceneEvent(
+  //   Phaser.Scenes.Events.ADDED_TO_SCENE,
+  //   async (object: Phaser.GameObjects.GameObject) => {
+  //     debugger;
+  //   }
+  // );
+
   return (
     <>
+      <Ball x={400} y={650} />
       <Paddle x={400} y={700} />
     </>
   );
@@ -35,6 +45,7 @@ export default () => (
         ],
       }}
       create={(scene) => {
+        scene.physics.world.setBoundsCollision(true, true, true, false);
         scene.anims.createFromAseprite("assets/sprites/player");
       }}
     >

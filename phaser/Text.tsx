@@ -41,7 +41,13 @@ export default function Text(props: TextProps) {
     <GameObject
       ref={props.ref}
       create={(scene) =>
-        scene.add.text(props.x, props.y, props.text, props.style)
+        new Phaser.GameObjects.Text(
+          scene,
+          props.x,
+          props.y,
+          props.text,
+          props.style
+        )
       }
       props={props}
       applyProps={{

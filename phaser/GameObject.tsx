@@ -24,13 +24,18 @@ export function GameObject<
   const group = useGroup();
 
   let instance = props.create(scene);
+  if (props.props) {
+    createApplyPropsEffect(instance, props.props, props.applyProps);
+  }
 
   // @ts-ignore
   props.ref?.(instance);
 
   let listeners = [];
 
-  scene.add.existing(instance);
+  if (!scene.children.exists(instance)) {
+    scene.add.existing(instance);
+  }
 
   if (group) {
     group.add(instance);
@@ -41,10 +46,6 @@ export function GameObject<
 
     listeners.forEach((listener) => listener());
   });
-
-  if (props.props) {
-    createApplyPropsEffect(instance, props.props, props.applyProps);
-  }
 
   if (props.onUpdate) {
     const cb = () => (instance.active ? props.onUpdate(instance) : void 0);
