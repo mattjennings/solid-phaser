@@ -19,7 +19,11 @@ export function createApplyPropsEffect<T = any, P = Record<string, any>>(
     deferred?: Array<keyof P>;
   } = {}
 ) {
-  const [deferredProps, otherProps] = splitProps(props as any, deferred ?? []);
+  const [, trimmed] = splitProps(props as any, ["children", "ref"]);
+  const [deferredProps, otherProps] = splitProps(
+    trimmed as any,
+    deferred ?? []
+  );
 
   function update(prop, value) {
     const applyFn = applyProps?.[prop];
@@ -31,10 +35,6 @@ export function createApplyPropsEffect<T = any, P = Record<string, any>>(
   }
 
   Object.keys(otherProps).forEach((prop) => {
-    if (prop === "children") {
-      return;
-    }
-
     update(prop, otherProps[prop]);
 
     createEffect(

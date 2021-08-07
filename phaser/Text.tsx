@@ -33,7 +33,7 @@ export interface TextProps
     TransformProps,
     VisibleProps {
   text?: string | string[];
-  style: Phaser.Types.GameObjects.Text.TextStyle;
+  style?: Phaser.Types.GameObjects.Text.TextStyle;
 }
 
 export default function Text(props: TextProps) {
