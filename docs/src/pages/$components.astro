@@ -31,13 +31,13 @@ const { name, docs } = Astro.props;
 const hasDescription = Object.keys(docs.props).some((name: string) => !!docs.props?.[name]?.description);
 
 const sortedProps = Object.keys(docs.props)
-          .map(key => docs.props[key])
-          .sort((a, b) => {
-            if (a.required) { return -1 }
-            if (b.required) { return 1}
+  .map(key => docs.props[key])
+  .sort((a, b) => {
+    if (a.required) { return -1 }
+    if (b.required) { return 1}
 
-            return a.name < b.name ? -1 : 1
-          })
+    return a.name < b.name ? -1 : 1
+  })
 ---
   
 <Base>
@@ -46,10 +46,11 @@ const sortedProps = Object.keys(docs.props)
   <p>{docs.description}</p>
 
   <h2>Props</h2>
-  <table>
+  <div class="overflow-x-scroll">
+    <table>
       <thead>
         <tr>
-          <th>Property</th>
+          <th class="sticky left-0 z-10 bg-white dark:bg-gray-900">Name</th>
           <th>Type</th>
           <th>Default</th>
 
@@ -62,33 +63,28 @@ const sortedProps = Object.keys(docs.props)
             const defaultValue = prop.defaultValue?.value            
             const types = prop.type.name.split('|')
 
-            // workaround for https://github.com/snowpackjs/astro/issues/1061
-            const description = prop.description || '&nbsp;'
-
             return (
               <tr>
-                <td>{prop.name}{prop.required ? '*' : ''}</td>
+                <td class="sticky left-0 bottom-0 z-10 bg-white dark:bg-gray-900 font-medium text-gray-900 dark:text-gray-200">{prop.name}{prop.required ? '*' : ''}</td>
                 <td class="max-w-sm overflow-hidden">
                   <div class="flex flex-wrap gap-1">
                   {types.map(type => <code>{type}</code>)}                  
                   </div>
                 </td>
-                {!defaultValue ? (
-                  <td>
-                    <em>-</em>
-                  </td>
-                ) : (
                 <td>
-                    {defaultValue === "''" ? (
-                      <em>[Empty String]</em>
-                    ) : (
-                      defaultValue
-                    )}
-                  </td>
-                )}
+                  {defaultValue === "''" ? (
+                    <em>[Empty String]</em>
+                  ) : (
+                    defaultValue
+                  )}
+                </td>
                 {hasDescription && (
                   <td>
-                    <Markdown content={description}/>
+                    {prop.description && (
+                      <>
+                        <Markdown content={prop.description}/>
+                      </>
+                    )}
                   </td>
                 )}
               </tr>
@@ -96,11 +92,18 @@ const sortedProps = Object.keys(docs.props)
           })}
       </tbody>
     </table>
+  </div>
 </Base>
 
 <style>
+  table {
+    margin-top: 0;
+  }
   td p {
     white-space: pre-wrap;
     margin: 0
+  }
+  th {
+    @apply font-medium;
   }
 </style>

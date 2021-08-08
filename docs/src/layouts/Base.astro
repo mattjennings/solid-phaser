@@ -6,6 +6,7 @@ import DocSidebar from '../components/DocSidebar.tsx';
 ---
 <html lang="en">
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <slot name="header" />
     
     <link rel="stylesheet" type="text/css" href="/global.css">
@@ -16,16 +17,14 @@ import DocSidebar from '../components/DocSidebar.tsx';
           href="/favicon.svg">
   </head>
 
-  <body>
-    <div class="bg-white flex sm:max-w-6xl mx-auto">
+  <body class="bg-white dark:bg-gray-900">
+    <div class="flex mx-auto">
       <aside id="sidebar-nav">
         <SiteSidebar />
       </aside>
-      <article class="flex-1 w-0 flex flex-col md:px-8 xl:px-0 ">
-        <main class="max-w-full flex-1 relative focus:outline-none">
-          <div class="py-6 pb-24 px-4 sm:px-6 prose prose-sm sm:prose-lg">
-            <slot />
-          </div>    
+      <article class="flex-1 w-0 flex flex-col">
+        <main class="p-4 max-w-full flex-1 relative focus:outline-none prose dark:prose-dark prose-sm sm:prose-lg ">
+          <slot />
         </main>
       </article>
     </div>

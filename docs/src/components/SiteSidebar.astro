@@ -1,13 +1,32 @@
 ---
-import { sidebar } from '../config.ts';
+import { loadComponents } from '../lib/load-components.ts'
+
 const currentPage = Astro.request.url.pathname
+
+const sidebar = [
+  {
+    text: "Getting Started",
+    children: [
+      { text: "Intro", link: "" },
+      { text: "Intro2", link: "getting-started" },
+      { text: "Example", link: "example" },
+    ],
+  },
+  {
+    text: 'Components',
+    children: await loadComponents().then(res => res.map(component => ({
+      text: component.name,
+      link: `components/${component.name.toLowerCase()}`
+    })))
+  }
+];
 ---
 
 <div class="hidden md:flex md:flex-shrink-0 h-screen sticky top-0">
   <div class="w-64 flex flex-col">
-    <div class="border-r border-gray-200  pb-4 flex flex-col flex-grow overflow-y-auto">
-      <div class="flex-grow mt-5 flex flex-col">
-        <nav class="flex-1 bg-white px-2 space-y-1">
+    <div class="border-r border-gray-200 dark:border-gray-800 py-4 flex flex-col flex-grow overflow-y-auto">
+      <div class="flex-grow flex flex-col">
+        <nav class="flex-1 bg-white dark:bg-gray-900 px-4 space-y-1">
           <div class="flex justify-end">
             <!-- <GitHub /> -->
           </div>
@@ -15,10 +34,7 @@ const currentPage = Astro.request.url.pathname
             {sidebar.map(category => (
               <li>
                 <div class="group">
-                  <h4 
-                    class="pb-2 uppercase opacity-50 font-medium" 
-                    data-active={currentPage === (category.link || '/') || currentPage.startsWith(category.link || '/')}
-                  > 
+                  <h4 class="pb-2 font-medium text-lg"> 
                       {category.text}
                   </h4>
                   <ul class="pl-2">
@@ -42,14 +58,14 @@ const currentPage = Astro.request.url.pathname
 
 <style>
   a {
-    @apply text-gray-600 rounded-md py-2 px-2 flex items-center text-sm font-medium;
+    @apply text-gray-900 dark:text-gray-200 rounded-md py-2 px-2 flex items-center font-medium;
   }
 
   a[data-active]:not([data-active-category]) {
-    @apply text-gray-900 bg-gray-200;
+    @apply text-gray-900 bg-gray-200 dark:text-gray-200 dark:bg-gray-800;
   }
 
-  h4[data-active] {
-    @apply opacity-100;
+  h4 {
+    @apply text-gray-800 dark:text-gray-200 opacity-75;
   }
 </style>

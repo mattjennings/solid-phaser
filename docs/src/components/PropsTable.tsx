@@ -11,7 +11,7 @@ export default function PropsTable(p: { props: Props }) {
       <thead>
         <tr>
           <th>Property</th>
-          <th>Type</th>
+          <th class="hidden sm:block">Type</th>
           <th>Required</th>
           <th>Default</th>
 
@@ -27,7 +27,7 @@ export default function PropsTable(p: { props: Props }) {
           return (
             <tr>
               <td>{name}</td>
-              <td>{prop.type.value}</td>
+              <td class="hidden sm:block">{prop.type.value}</td>
               <td>{String(prop.required)}</td>
               {!prop.defaultValue ? (
                 <td>
