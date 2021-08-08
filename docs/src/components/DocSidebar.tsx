@@ -1,4 +1,3 @@
-import EditOnGithub from "./EditOnGithub";
 import { Component, createEffect, createSignal, mergeProps } from "solid-js";
 
 const DocSidebar: Component<{ headers: any[]; editHref: string }> = (p) => {
@@ -56,9 +55,6 @@ const DocSidebar: Component<{ headers: any[]; editHref: string }> = (p) => {
               </li>
             ))}
         </ul>
-      </div>
-      <div>
-        <EditOnGithub href={props.editHref} />
       </div>
     </nav>
   );

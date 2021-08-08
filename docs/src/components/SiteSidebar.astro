@@ -1,5 +1,7 @@
 ---
 import { loadComponents } from '../lib/load-components.ts'
+import GitHub from './Github.tsx'
+import ThemeToggle from './ThemeToggle.tsx'
 
 const currentPage = Astro.request.url.pathname
 
@@ -27,8 +29,9 @@ const sidebar = [
     <div class="border-r border-gray-200 dark:border-gray-800 py-4 flex flex-col flex-grow overflow-y-auto">
       <div class="flex-grow flex flex-col">
         <nav class="flex-1 bg-white dark:bg-gray-900 px-4 space-y-1">
-          <div class="flex justify-end">
-            <!-- <GitHub /> -->
+          <div class="flex justify-between">
+            <GitHub />
+            <ThemeToggle client:idle/>
           </div>
           <ul class="space-y-4">
             {sidebar.map(category => (
