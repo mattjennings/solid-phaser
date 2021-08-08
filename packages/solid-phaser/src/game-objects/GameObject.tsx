@@ -124,7 +124,7 @@ export function GameObject<
     applyProps?: ApplyProps<Instance, Partial<Props>>;
   }
 ) {
-  const [local] = splitProps(props, [
+  const [local, other] = splitProps(props, [
     "props",
     "applyProps",
     "create",
@@ -140,10 +140,13 @@ export function GameObject<
 
   createApplyPropsEffect(
     instance,
-    mergeProps({ name: props.name, active: props.active }, local.props ?? {}),
     mergeProps(
+      { name: props.name, active: props.active ?? true },
+      local.props ?? {}
+    ),
+    mergeProps(
+      // apply GameObject.Component props by default
       {
-        // apply GameObject.Component props by default
         ...applyAlphaProps,
         ...applyCropProps,
         ...applyOriginProps,

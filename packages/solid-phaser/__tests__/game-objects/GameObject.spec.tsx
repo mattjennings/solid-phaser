@@ -1,6 +1,6 @@
 import { render, waitFor } from "solid-testing-library";
-import { GameObject } from "../src";
-import TestGame from "./_utils/TestGame";
+import GameObject from "../../src/game-objects/GameObject";
+import TestGame from "../_utils/TestGame";
 
 it("creates a game object", async () => {
   let obj: Phaser.GameObjects.Text;
