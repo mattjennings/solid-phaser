@@ -14,7 +14,7 @@ import {
   TintProps,
   TransformProps,
   VisibleProps,
-} from "./types";
+} from "./props";
 
 export interface TextProps
   extends GameObjectProps<Phaser.GameObjects.Text>,

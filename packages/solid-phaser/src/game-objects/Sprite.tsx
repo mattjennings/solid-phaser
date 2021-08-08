@@ -1,7 +1,8 @@
-import { children, createEffect, createMemo, on, splitProps } from "solid-js";
+import { createEffect, splitProps } from "solid-js";
+import { RefFunction } from "../types";
+import GameObject, { GameObjectProps } from "./GameObject";
 import {
   AlphaProps,
-  AnimationProps,
   BlendModeProps,
   ComputedSizeProps,
   DepthProps,
@@ -10,17 +11,15 @@ import {
   OriginProps,
   PipelineProps,
   ScrollFactorProps,
+  TextureProps,
   TintProps,
   TransformProps,
   VisibleProps,
-} from "./types";
-import GameObject, { GameObjectProps } from "./GameObject";
-import { RefFunction } from "./types";
+} from "./props";
 
 export interface SpriteProps
   extends GameObjectProps<Phaser.GameObjects.Sprite>,
     AlphaProps,
-    AnimationProps,
     BlendModeProps,
     ComputedSizeProps,
     DepthProps,
@@ -29,22 +28,28 @@ export interface SpriteProps
     OriginProps,
     PipelineProps,
     ScrollFactorProps,
+    TextureProps,
     TintProps,
     TransformProps,
     VisibleProps {
   play?: string;
-  texture?: string;
   x?: number;
   y?: number;
-  frame?: string | number;
+
+  delay?: number;
+  duration?: number;
+  forward?: boolean;
+  frameRate?: number;
+  msPerFrame?: number;
+  skipMissedFrames?: boolean;
+  repeat?: number;
+  repeatDelay?: number;
+  timeScale?: number;
+  yoyo?: boolean;
 }
 
 export default function Sprite(props: SpriteProps) {
   const [local, other] = splitProps(props, [
-    "displayOriginX",
-    "displayOriginY",
-    "originX",
-    "originY",
     "play",
     "repeat",
     "delay",
@@ -80,21 +85,6 @@ export default function Sprite(props: SpriteProps) {
     }
   });
 
-  if ("originX" in props || "originY" in props) {
-    createEffect(() => {
-      instance?.setOrigin(local.originX ?? 0.5, local.originY ?? 0.5);
-    });
-  }
-
-  if ("displayOriginX" in props || "displayOriginY" in props) {
-    createEffect(() => {
-      instance?.setDisplayOrigin(
-        local.displayOriginX ?? 0.5,
-        local.displayOriginY ?? 0.5
-      );
-    });
-  }
-
   return (
     <GameObject
       ref={(el) => {
@@ -111,11 +101,6 @@ export default function Sprite(props: SpriteProps) {
         )
       }
       props={other}
-      applyProps={{
-        frame: (instance, val) => instance.setFrame(val),
-        texture: (instance, val, props) =>
-          instance.setTexture(val, props.frame),
-      }}
       {...other}
     >
       {props.children}

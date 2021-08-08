@@ -7,7 +7,4 @@ export default defineConfig({
     target: "esnext",
     polyfillDynamicImport: false,
   },
-  optimizeDeps: {
-    include: ["solid-phaser"],
-  },
 });

@@ -2,14 +2,27 @@ import Phaser from "phaser";
 import {
   createContext,
   JSX,
+  mergeProps,
   onCleanup,
   splitProps,
   useContext,
 } from "solid-js";
 import { useGroup } from "./Group";
-import { useScene } from "./Scene";
-import { Ref, RefFunction } from "./types";
-import { createApplyPropsEffect } from "./util/createApplyPropsEffect";
+import { useScene } from "../Scene";
+import { Ref, RefFunction } from "../types";
+import {
+  ApplyProps,
+  createApplyPropsEffect,
+} from "../util/createApplyPropsEffect";
+import {
+  applyAlphaProps,
+  applyCropProps,
+  applyOriginProps,
+  applyScrollFactorProps,
+  applyTextureProps,
+  applyTintProps,
+  applyTransformProps,
+} from "./props";
 
 export interface GameObjectProps<T extends Phaser.GameObjects.GameObject> {
   ref?: Ref<T>;
@@ -30,12 +43,6 @@ export interface GameObjectProps<T extends Phaser.GameObjects.GameObject> {
    * See: https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.GameObject.html#active__anchor
    */
   active?: boolean;
-
-  /**
-   * Called when it's time to instantiate the game object. You can return any
-   * Phaser GameObject instance.
-   */
-  create: (scene: Phaser.Scene) => T;
 
   /**
    * Called during the scene's update loop
@@ -59,10 +66,16 @@ export interface GameObjectProps<T extends Phaser.GameObjects.GameObject> {
  * Child components are able to use `useGameObject()` to get the instance.
  */
 export function GameObject<
-  T extends Phaser.GameObjects.GameObject,
-  P = Record<string, any>
+  Instance extends Phaser.GameObjects.GameObject,
+  Props = Record<string, any>
 >(
-  props: GameObjectProps<T> & {
+  props: GameObjectProps<Instance> & {
+    /**
+     * Called when it's time to instantiate the game object. You can return any
+     * Phaser GameObject instance.
+     */
+    create: (scene: Phaser.Scene) => Instance;
+
     /**
      * The props to apply to the game object instance. By default, each prop is assigned to the
      * instance inside of an effect. To customize how a prop is set on the instance, see the `applyProps` prop
@@ -87,7 +100,7 @@ export function GameObject<
      * createEffect(on(props.color, value => instance.color = value), { defer: true })
      * ```
      */
-    props?: P;
+    props?: Props;
 
     /**
      * Defines how props should be assigned to the instance. When a prop key exists in applyProps,
@@ -108,12 +121,10 @@ export function GameObject<
      * createEffect(on(props.text, value => instance.setText(props.text), { defer: true })
      * ```
      */
-    applyProps?: Partial<
-      Record<keyof P, (instance: T, value: any, props: P) => any>
-    >;
+    applyProps?: ApplyProps<Instance, Partial<Props>>;
   }
 ) {
-  const [local, other] = splitProps(props, [
+  const [local] = splitProps(props, [
     "props",
     "applyProps",
     "create",
@@ -127,8 +138,23 @@ export function GameObject<
 
   let instance = local.create(scene);
 
-  createApplyPropsEffect(instance, local.props, local.applyProps);
-  createApplyPropsEffect(instance, other);
+  createApplyPropsEffect(
+    instance,
+    mergeProps({ name: props.name, active: props.active }, local.props ?? {}),
+    mergeProps(
+      {
+        // apply GameObject.Component props by default
+        ...applyAlphaProps,
+        ...applyCropProps,
+        ...applyOriginProps,
+        ...applyScrollFactorProps,
+        ...applyTextureProps,
+        ...applyTintProps,
+        ...applyTransformProps,
+      },
+      local.applyProps ?? {}
+    ) as any
+  );
 
   (props.ref as RefFunction)?.(instance);
 

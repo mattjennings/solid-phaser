@@ -1,14 +1,27 @@
 import { createEffect, on, splitProps } from "solid-js";
 
+export type ApplyProp<Instance, Props, Value> = (
+  instance: Instance,
+  value: Value,
+  props: Props
+) => any;
+
+export type ApplyProps<Instance, Props extends Record<string, any>> = Partial<
+  {
+    [PropKey in keyof Props]: ApplyProp<Instance, Props, Props[PropKey]>;
+  }
+>;
+
 /**
  * Creates an effect for each prop that will apply to the instance initially and when they change
  */
-export function createApplyPropsEffect<T = any, P = Record<string, any>>(
-  instance: T,
-  props: P,
-  applyProps?: Partial<
-    Record<keyof P, (instance: T, value: any, props: P) => any>
-  >,
+export function createApplyPropsEffect<
+  Instance = any,
+  Props = Record<string, any>
+>(
+  instance: Instance,
+  props: Props,
+  applyProps?: ApplyProps<Instance, Props>,
   {
     deferred,
   }: {
@@ -16,7 +29,7 @@ export function createApplyPropsEffect<T = any, P = Record<string, any>>(
      * Keys of the props that should only applied for updates, otherwise
      * they are applied immediately
      */
-    deferred?: Array<keyof P>;
+    deferred?: Array<keyof Props>;
   } = {}
 ) {
   const [, trimmed] = splitProps((props as any) ?? {}, ["children", "ref"]);

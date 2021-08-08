@@ -2,7 +2,7 @@ import Phaser from "phaser";
 import { JSX, onCleanup, splitProps } from "solid-js";
 import { useScene } from "../Scene";
 import { createApplyPropsEffect } from "../util/createApplyPropsEffect";
-import { useGameObject } from "../GameObject";
+import { useGameObject } from "../game-objects/GameObject";
 
 export interface ArcadePhysicsProps
   extends AccelerationProps,
@@ -135,7 +135,7 @@ export interface SizeProps {
   size?: {
     width: number;
     height: number;
-    center?: number;
+    center?: boolean;
   };
 }
 

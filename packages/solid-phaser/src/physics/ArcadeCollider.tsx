@@ -5,7 +5,7 @@ import { useScene } from "../Scene";
 import { createApplyPropsEffect } from "../util/createApplyPropsEffect";
 import { getGameObjectsByName } from "../util/getGameObjectsByName";
 import { toArray } from "../util/toArray";
-import { useGameObject } from "../GameObject";
+import { useGameObject } from "../game-objects/GameObject";
 
 export interface ArcadeColliderProps<
   Self extends Phaser.Types.Physics.Arcade.GameObjectWithBody,
