@@ -27,6 +27,9 @@ export interface GameProps extends Phaser.Types.Core.GameConfig {
   children?: JSX.Element;
 }
 
+/**
+ * Creates a new Phaser.Game instance
+ **/
 export default function Game(props: GameProps) {
   const [local, config] = splitProps(props, ["children"]);
   const game = new Phaser.Game({ ...config });

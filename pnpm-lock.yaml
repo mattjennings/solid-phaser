@@ -19,14 +19,18 @@ importers:
       '@astrojs/renderer-solid': ^0.1.0
       '@tailwindcss/forms': ^0.3.3
       '@tailwindcss/typography': ^0.4.1
+      '@types/marked': ^2.0.4
       astro: ^0.18.9
+      react-docgen-typescript: ^2.1.0
       solid-js: ^1.0.7
       tailwindcss: ^2.2.7
     devDependencies:
       '@astrojs/renderer-solid': 0.1.0
       '@tailwindcss/forms': 0.3.3_tailwindcss@2.2.7
       '@tailwindcss/typography': 0.4.1_tailwindcss@2.2.7
+      '@types/marked': 2.0.4
       astro: 0.18.9
+      react-docgen-typescript: 2.1.0
       solid-js: 1.0.7
       tailwindcss: 2.2.7
 
@@ -2307,6 +2311,10 @@ packages:
     resolution: {integrity: sha512-/FvAK2p4jQOaJ6CGDHJTqZcUtbZe820qIeTg7o0Shg7drB4JHeL+V/dhSaly7NXx6u8eSee+r7coT+yuJEvDLg==}
     dependencies:
       '@types/node': 16.4.13
+    dev: true
+
+  /@types/marked/2.0.4:
+    resolution: {integrity: sha512-L9VRSe0Id8xbPL99mUo/4aKgD7ZoRwFZqUQScNKHi2pFjF9ZYSMNShUHD6VlMT6J/prQq0T1mxuU25m3R7dFzg==}
     dev: true
 
   /@types/mdast/3.0.7:
@@ -8116,6 +8124,12 @@ packages:
     resolution: {integrity: sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ==}
     dependencies:
       safe-buffer: 5.2.1
+    dev: true
+
+  /react-docgen-typescript/2.1.0:
+    resolution: {integrity: sha512-7kpzLsYzVxff//HUVz1sPWLCdoSNvHD3M8b/iQLdF8fgf7zp26eVysRrAUSxiAT4yQv2zl09zHjJEYSYNxQ8Jw==}
+    peerDependencies:
+      typescript: '>= 4.3.x'
     dev: true
 
   /react-dom/17.0.2_react@17.0.2:

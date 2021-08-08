@@ -1,0 +1,106 @@
+---
+import {loadComponents} from '../lib/load-components.ts'
+import {parseComponent} from '../lib/parse-component.ts'
+import Base from '../layouts/Base.astro'
+import { Markdown } from 'astro/components';
+
+export async function createCollection() {
+  const components = await loadComponents()
+
+  return {
+    route: `/components/:name`,
+    paths() {
+      return components.map((component, i) => ({ 
+          params: { 
+            name: component.name.toLowerCase()
+          }
+      }));
+    },
+    async props({ params }) {
+      const component = components.find((component) => component.name.toLowerCase() === params.name.toLowerCase()) 
+      return { 
+        ...component,
+        docs: parseComponent(component.path)[0]
+      };
+    },
+  };
+}
+
+const { name, docs } = Astro.props;
+
+const hasDescription = Object.keys(docs.props).some((name: string) => !!docs.props?.[name]?.description);
+
+const sortedProps = Object.keys(docs.props)
+          .map(key => docs.props[key])
+          .sort((a, b) => {
+            if (a.required) { return -1 }
+            if (b.required) { return 1}
+
+            return a.name < b.name ? -1 : 1
+          })
+---
+  
+<Base>
+  <title slot="header">{name}</title>
+  <h1>{name}</h1>
+  <p>{docs.description}</p>
+
+  <h2>Props</h2>
+  <table>
+      <thead>
+        <tr>
+          <th>Property</th>
+          <th>Type</th>
+          <th>Default</th>
+
+          {hasDescription && <th>Description</th>}
+        </tr>
+      </thead>
+
+      <tbody>      
+        {sortedProps.map((prop) => {
+            const defaultValue = prop.defaultValue?.value            
+            const types = prop.type.name.split('|')
+
+            // workaround for https://github.com/snowpackjs/astro/issues/1061
+            const description = prop.description || '&nbsp;'
+
+            return (
+              <tr>
+                <td>{prop.name}{prop.required ? '*' : ''}</td>
+                <td class="max-w-sm overflow-hidden">
+                  <div class="flex flex-wrap gap-1">
+                  {types.map(type => <code>{type}</code>)}                  
+                  </div>
+                </td>
+                {!defaultValue ? (
+                  <td>
+                    <em>-</em>
+                  </td>
+                ) : (
+                <td>
+                    {defaultValue === "''" ? (
+                      <em>[Empty String]</em>
+                    ) : (
+                      defaultValue
+                    )}
+                  </td>
+                )}
+                {hasDescription && (
+                  <td>
+                    <Markdown content={description}/>
+                  </td>
+                )}
+              </tr>
+            );
+          })}
+      </tbody>
+    </table>
+</Base>
+
+<style>
+  td p {
+    white-space: pre-wrap;
+    margin: 0
+  }
+</style>

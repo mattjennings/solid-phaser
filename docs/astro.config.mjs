@@ -8,5 +8,6 @@ export default {
     port: 4000,
     tailwindConfig: "./tailwind.config.js",
   },
+
   renderers: ["@astrojs/renderer-solid"],
 };
