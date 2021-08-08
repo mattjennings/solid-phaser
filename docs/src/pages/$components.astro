@@ -63,6 +63,8 @@ const sortedProps = Object.keys(docs.props)
             const defaultValue = prop.defaultValue?.value            
             const types = prop.type.name.split('|')
 
+            const isPhaserType = prop.parent?.fileName?.includes('phaser.d.ts')
+
             return (
               <tr>
                 <td class="sticky left-0 bottom-0 z-10 bg-white dark:bg-gray-900 font-medium text-gray-900 dark:text-gray-200">{prop.name}{prop.required ? '*' : ''}</td>
