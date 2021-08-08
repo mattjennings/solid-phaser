@@ -1,0 +1,55 @@
+---
+import { sidebar } from '../config.ts';
+const currentPage = Astro.request.url.pathname
+---
+
+<div class="hidden md:flex md:flex-shrink-0 h-screen sticky top-0">
+  <div class="w-64 flex flex-col">
+    <div class="border-r border-gray-200  pb-4 flex flex-col flex-grow overflow-y-auto">
+      <div class="flex-grow mt-5 flex flex-col">
+        <nav class="flex-1 bg-white px-2 space-y-1">
+          <div class="flex justify-end">
+            <!-- <GitHub /> -->
+          </div>
+          <ul class="space-y-4">
+            {sidebar.map(category => (
+              <li>
+                <div class="group">
+                  <h4 
+                    class="pb-2 uppercase opacity-50 font-medium" 
+                    data-active={currentPage === (category.link || '/') || currentPage.startsWith(category.link || '/')}
+                  > 
+                      {category.text}
+                  </h4>
+                  <ul class="pl-2">
+                    {category.children.map(child => (
+                      <li>
+                        <a href={`${Astro.site}${child.link}`} data-active={currentPage === `/${child.link}`}>
+                        {child.text}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  a {
+    @apply text-gray-600 rounded-md py-2 px-2 flex items-center text-sm font-medium;
+  }
+
+  a[data-active]:not([data-active-category]) {
+    @apply text-gray-900 bg-gray-200;
+  }
+
+  h4[data-active] {
+    @apply opacity-100;
+  }
+</style>
