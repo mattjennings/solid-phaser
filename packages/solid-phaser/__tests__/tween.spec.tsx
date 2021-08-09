@@ -3,7 +3,7 @@ import GameObject from "../src/game-objects/GameObject";
 import { render } from "../src/test";
 import { createTween } from "../src/tween";
 
-it("animates a primitive", async () => {
+it("animates a number", async () => {
   let obj: Phaser.GameObjects.Text;
 
   function Component() {
@@ -31,6 +31,42 @@ it("animates a primitive", async () => {
   expect(Math.round(obj.x * 10) / 10).toEqual(0.5);
   await step(32); // not sure why it takes 62 frames total
   expect(obj.x).toEqual(1);
+});
+
+it("animates an object", async () => {
+  let obj: Phaser.GameObjects.Text;
+
+  function Component() {
+    const [val, setVal] = createTween(
+      { x: 0, y: 0 },
+      {
+        ease: (v) => v,
+        duration: 1000,
+      }
+    );
+
+    setVal({ x: 1, y: 2 });
+
+    return (
+      <GameObject
+        ref={obj}
+        create={(scene) => scene.add.text(0, 0, "123")}
+        x={val().x}
+        y={val().y}
+      />
+    );
+  }
+
+  const { step } = await render(() => <Component />, {
+    paused: true,
+  });
+
+  await step(31);
+  expect(Math.round(obj.x * 10) / 10).toEqual(0.5);
+  expect(Math.round(obj.y * 10) / 10).toEqual(1);
+  await step(32);
+  expect(obj.x).toEqual(1);
+  expect(obj.y).toEqual(2);
 });
 
 it("animates a ref", async () => {
