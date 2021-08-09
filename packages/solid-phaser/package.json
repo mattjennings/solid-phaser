@@ -5,13 +5,17 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/solid-phaser.cjs.js",
-  "module": "./dist/solid-phaser.es.js",
+  "main": "./dist/index.cjs.js",
+  "module": "./dist/index.es.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/solid-phaser.es.js",
-      "require": "./dist/solid-phaser.umd.js"
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.cjs.js"
+    },
+    "./test": {
+      "import": "./dist/test/index.es.js",
+      "require": "./dist/test/index.cjs.js"
     }
   },
   "repository": {
@@ -25,10 +29,9 @@
   "homepage": "https://github.com/mattjennings/solid-phaser#readme",
   "license": "MIT",
   "scripts": {
-    "start": "vite",
-    "dev": "vite build --watch",
-    "build": "vite build",
-    "prepublishOnly": "vite build",
+    "dev": "WATCH=true node build.mjs",
+    "build": "node build.mjs ",
+    "prepublishOnly": "npm run build",
     "release": "npm publish",
     "test": "jest"
   },
@@ -55,7 +58,8 @@
   },
   "peerDependencies": {
     "phaser": "^3.55.0",
-    "solid-js": "^1.0.0"
+    "solid-js": "^1.0.0",
+    "solid-testing-library": "^0.2.0"
   },
   "dependencies": {
     "tiny-warning": "^1.0.3"

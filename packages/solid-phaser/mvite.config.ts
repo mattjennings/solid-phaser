@@ -34,7 +34,6 @@ export default defineConfig({
       external: ["phaser", "solid-js"],
       output: {
         sourcemap: true,
-
         globals: {
           phaser: "Phaser",
         },

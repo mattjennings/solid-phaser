@@ -10,7 +10,7 @@ export type {
   MaskProps,
   OriginProps,
   PipelineProps,
-  TextureCropProps,
+  TextureProps,
   ScrollFactorProps,
   TintProps,
   TransformProps,
