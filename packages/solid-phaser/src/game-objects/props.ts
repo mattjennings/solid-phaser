@@ -1,6 +1,7 @@
 import { ApplyProps } from "../util/createApplyPropsEffect";
 
 export type XY = { x?: number; y?: number };
+
 export type Corners = {
   topLeft?: number;
   topRight?: number;

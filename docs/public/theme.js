@@ -1,12 +1,13 @@
 (() => {
   const root = document.documentElement;
+
   if (
-    localStorage.theme === "dark" ||
+    localStorage.theme === "light" ||
     (!("theme" in localStorage) &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches)
+      window.matchMedia("(prefers-color-scheme: light)").matches)
   ) {
-    root.classList.add("dark");
-  } else {
     root.classList.remove("dark");
+  } else {
+    root.classList.add("dark");
   }
 })();

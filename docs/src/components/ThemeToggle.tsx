@@ -2,7 +2,7 @@ import { createSignal, createEffect, Index, createMemo, Show } from "solid-js";
 import type { Component } from "solid-js";
 
 const ThemeToggle: Component = () => {
-  const themes = createMemo(() => ["light", "dark"]);
+  const themes = createMemo(() => ["dark", "light"]);
   const [theme, setTheme] = createSignal(themes()[0]);
 
   createEffect(() => {

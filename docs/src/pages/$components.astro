@@ -20,7 +20,7 @@ export async function createCollection() {
       const component = components.find((component) => component.name.toLowerCase() === params.name.toLowerCase()) 
       return { 
         ...component,
-        docs: parseComponent(component.path)[0]
+        docs: parseComponent(component.path)[0] ?? { props: {}, description: ''}
       };
     },
   };
@@ -34,7 +34,7 @@ const sortedProps = Object.keys(docs.props)
   .map(key => docs.props[key])
   .sort((a, b) => {
     if (a.required) { return -1 }
-    if (b.required) { return 1}
+    if (b.required) { return 1 }
 
     return a.name < b.name ? -1 : 1
   })
@@ -43,8 +43,7 @@ const sortedProps = Object.keys(docs.props)
 <Base>
   <title slot="header">solid-phaser | {name}</title>
   <h1>{name}</h1>
-  <p>{docs.description}</p>
-
+  <Markdown content={docs.description || '&nbsp;'} />
   <h2>Props</h2>
   <div class="overflow-x-scroll">
     <table>
@@ -63,14 +62,12 @@ const sortedProps = Object.keys(docs.props)
             const defaultValue = prop.defaultValue?.value            
             const types = prop.type.name.split('|')
 
-            const isPhaserType = prop.parent?.fileName?.includes('phaser.d.ts')
-
             return (
               <tr>
                 <td class="sticky left-0 bottom-0 z-10 bg-white dark:bg-gray-900 font-medium text-gray-900 dark:text-gray-200">{prop.name}{prop.required ? '*' : ''}</td>
                 <td class="max-w-sm overflow-hidden">
                   <div class="flex flex-wrap gap-1">
-                  {types.map(type => <code>{type}</code>)}                  
+                    {types.map(type => <code>{type}</code>)}
                   </div>
                 </td>
                 <td>

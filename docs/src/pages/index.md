@@ -27,7 +27,7 @@ const App = () => (
   </Game>
 );
 
-render(() => <Breakout />, document.getElementById("root"));
+render(() => <App />, document.getElementById("root"));
 ```
 
 The component APIs are generated from the source code, so they will be updated as I go. Breaking changes will happen!

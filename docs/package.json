@@ -8,10 +8,10 @@
   },
   "devDependencies": {
     "@astrojs/renderer-solid": "^0.1.0",
+    "astro": "^0.18.9",
     "@tailwindcss/forms": "^0.3.3",
     "@tailwindcss/typography": "^0.4.1",
     "@types/marked": "^2.0.4",
-    "astro": "^0.18.9",
     "react-docgen-typescript": "^2.1.0",
     "solid-js": "^1.0.7",
     "tailwindcss": "^2.2.7"
