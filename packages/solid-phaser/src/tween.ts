@@ -11,7 +11,7 @@ export interface TweenConfig
   ease: keyof typeof Phaser.Math.Easing | ((progress: number) => number);
 }
 
-type TweenTarget<T> = T | (() => T) | T[] | (() => T[]);
+type TweenTarget<T> = T | (() => T) | (() => T[]);
 
 type SetTween<T> = (
   value: T | Partial<T> | ((prev: T) => T | Partial<T>),
@@ -27,12 +27,14 @@ type Unwrap<T> = T extends Array<infer U> ? U : T;
 export function createTween<T>(
   target: TweenTarget<T>,
   config: TweenConfig
-): [Accessor<Unwrap<T>>, SetTween<Unwrap<T>>] {
+): [Accessor<T>, SetTween<Unwrap<T>>] {
   const scene = useScene();
 
-  const [value, setValue] = createSignal<Unwrap<T>>(
-    // @ts-ignore - i've gone too far into the typescript and cannot figure this one out
-    isFunction(target) ? target() : target
+  const [value, setValue] = createSignal<T>(
+    isFunction(target)
+      ? // i've gone too far into the typescript and cannot figure this one out
+        (target() as unknown as T)
+      : target
   );
 
   let tween: Phaser.Tweens.Tween;
@@ -44,6 +46,7 @@ export function createTween<T>(
 
     const _target = isFunction(target) ? target() : target;
     const isObject = typeof _target === "object";
+
     let targets;
 
     if (isFunction(target)) {
@@ -64,19 +67,14 @@ export function createTween<T>(
       ...nextConfig,
       targets,
       onUpdate: (tween, latest, ...args) => {
-        if (isFunction(target)) {
-          setValue(latest);
-        } else if (isObject) {
+        if (isObject) {
           // not sure about this, but value won't update unless we create a new reference
           setValue({ ...latest });
-        } else {
+        } else if (!isFunction(target)) {
+          // don't set value if target is a function, we're mutating it.
           setValue(latest.value);
         }
-        config.onUpdate?.(
-          tween,
-          isObject ? { ...latest } : latest.value,
-          ...args
-        );
+        config.onUpdate?.(tween, isObject ? latest : latest.value, ...args);
       },
 
       // assign values to tween
@@ -86,6 +84,10 @@ export function createTween<T>(
 
   const update: SetTween<Unwrap<T>> = (next, nextConfig) => {
     let nextValue = isFunction(next) ? next(value() as any) : next;
+
+    if (!value() && isFunction(target)) {
+      setValue(target() as any);
+    }
 
     initTween(nextValue, nextConfig);
   };

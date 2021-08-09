@@ -8,6 +8,7 @@ import {
   createSignal,
   JSX,
 } from "solid-js";
+import { Ref, RefFunction } from "./types";
 import { useGame } from "./Game";
 import { Assets, loadAssets } from "./util/assets";
 
@@ -24,6 +25,8 @@ export const useScene = () => {
 };
 
 export interface SceneProps extends Phaser.Types.Scenes.SettingsConfig {
+  ref?: Ref<Phaser.Scene>;
+
   key: string;
 
   /**
@@ -66,6 +69,8 @@ export default function Scene(props: SceneProps) {
   ]);
   const game = useGame();
   const scene = new Phaser.Scene({ ...config });
+
+  (props.ref as RefFunction)?.(scene);
 
   onCleanup(() => game.scene.remove(config.key));
 
