@@ -1,16 +1,10 @@
-import {
-  Component,
-  createEffect,
-  createSignal,
-  Index,
-  onMount,
-} from "solid-js";
-import { Game, Scene, onSceneEvent, onInputEvent } from "solid-phaser";
+import { createEffect, createSignal, Index, onMount, Show } from "solid-js";
+import { createTween, onInputEvent, onSceneEvent, Text } from "solid-phaser";
 import Ball from "./Ball";
 import Block from "./Block";
 import Paddle from "./Paddle";
 
-const Breakout: Component = () => {
+export default function Breakout() {
   let ball: Phaser.GameObjects.Sprite &
     Phaser.Types.Physics.Arcade.GameObjectWithDynamicBody;
   let paddle: Phaser.GameObjects.Sprite &
@@ -21,9 +15,23 @@ const Breakout: Component = () => {
   >([]);
   let [ballLaunched, setBallLaunched] = createSignal(false);
 
+  const [gameOver, setGameOver] = createSignal(false);
+  const [youWin, setYouWin] = createSignal(false);
+
+  // if all blocks are gone, you win
+  createEffect(() => {
+    if (!gameOver() && ballLaunched() && blocks().length === 0) {
+      setYouWin(true);
+    }
+  });
+
   // setup the game
-  onMount(() => {
-    restart();
+  createEffect(() => {
+    if (!gameOver() && !youWin()) {
+      setup();
+    } else {
+      ball.body.setVelocity(0);
+    }
   });
 
   // move ball with paddle until user launches
@@ -41,15 +49,7 @@ const Breakout: Component = () => {
     }
   });
 
-  // if all blocks are gone, you win
-  createEffect(() => {
-    if (ballLaunched() && blocks().length === 0) {
-      alert("You win!");
-      restart();
-    }
-  });
-
-  function restart() {
+  function setup() {
     setBallLaunched(false);
     ball.body.setVelocity(0);
     ball.setX(400);
@@ -81,15 +81,14 @@ const Breakout: Component = () => {
 
   return (
     <>
-      <Ball
-        ref={ball}
-        x={400}
-        y={650}
-        onGameOver={() => {
-          alert("You lose :(");
-          restart();
-        }}
-      />
+      <Show when={gameOver()}>
+        <Message text="Game Over :(" onClick={() => setGameOver(false)} />
+      </Show>
+      <Show when={youWin()}>
+        <Message text="You win!!" onClick={() => setYouWin(false)} />
+      </Show>
+
+      <Ball ref={ball} x={400} y={650} onGameOver={() => setGameOver(true)} />
       <Paddle ref={paddle} x={400} y={700} />
       <Index each={blocks()}>
         {(block, index) => (
@@ -105,29 +104,70 @@ const Breakout: Component = () => {
       </Index>
     </>
   );
-};
+}
 
-// wrap Breakout in <Game /> and <Scene /> so we can consume them through context
-export default () => (
-  <Game
-    width={800}
-    height={800}
-    physics={{
-      default: "arcade",
-    }}
-    scale={{ mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH }}
-  >
-    <Scene
-      key="main"
-      assets={{
-        atlas: ["breakout.json"],
-      }}
-      create={(scene) => {
-        scene.physics.world.setBoundsCollision(true, true, true, true);
-        scene.anims.createFromAseprite("assets/sprites/player");
-      }}
-    >
-      <Breakout />
-    </Scene>
-  </Game>
-);
+function Message(props: { text: string; onClick: () => void }) {
+  let text: Phaser.GameObjects.Text;
+  let tryAgain: Phaser.GameObjects.Text;
+
+  const [, setTryAgainTween] = createTween(() => tryAgain, {
+    ease: Phaser.Math.Easing.Cubic.Out,
+    duration: 500,
+    delay: 1000,
+  });
+
+  const [, setTextTween] = createTween(() => text, {
+    ease: Phaser.Math.Easing.Cubic.Out,
+    duration: 500,
+    onComplete: () => {
+      setTryAgainTween({ alpha: 1 });
+    },
+  });
+
+  onMount(() => {
+    setTextTween({
+      scale: 1,
+      alpha: 1,
+    });
+  });
+
+  onInputEvent("pointerdown", () => {
+    props.onClick();
+  });
+
+  return (
+    <>
+      <Text
+        ref={text}
+        x={400}
+        y={100}
+        text={props.text}
+        origin={{
+          x: 0.5,
+          y: 0.5,
+        }}
+        scale={{ x: 0, y: 0 }}
+        alpha={0}
+        style={{
+          color: "white",
+          fontSize: "48px",
+        }}
+      />
+      <Text
+        ref={tryAgain}
+        x={400}
+        y={150}
+        text="Click anywhere to try again"
+        origin={{
+          x: 0.5,
+          y: 0.5,
+        }}
+        alpha={0}
+        style={{
+          color: "white",
+          fontSize: "16px",
+        }}
+      />
+    </>
+  );
+}
