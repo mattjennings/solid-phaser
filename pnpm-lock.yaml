@@ -22,7 +22,7 @@ importers:
       '@types/marked': ^2.0.4
       astro: ^0.18.9
       react-docgen-typescript: ^2.1.0
-      solid-js: ^1.0.7
+      solid-js: ^1.1.0
       tailwindcss: ^2.2.7
     devDependencies:
       '@astrojs/renderer-solid': 0.1.0
@@ -31,20 +31,37 @@ importers:
       '@types/marked': 2.0.4
       astro: 0.18.9
       react-docgen-typescript: 2.1.0
-      solid-js: 1.0.7
+      solid-js: 1.1.0
       tailwindcss: 2.2.7
 
   examples/breakout:
     specifiers:
       phaser: ^3.55.2
-      solid-js: ^1.0.7
+      solid-js: ^1.1.0
       solid-phaser: ^0.0.1
       typescript: ~4.2.2
       vite: ^2.4.4
       vite-plugin-solid: ^2.0.1
     dependencies:
       phaser: 3.55.2
-      solid-js: 1.0.7
+      solid-js: 1.1.0
+      solid-phaser: link:../../packages/solid-phaser
+    devDependencies:
+      typescript: 4.2.4
+      vite: 2.4.4
+      vite-plugin-solid: 2.0.1
+
+  examples/test:
+    specifiers:
+      phaser: ^3.55.2
+      solid-js: ^1.1.0
+      solid-phaser: ^0.0.1
+      typescript: ~4.2.2
+      vite: ^2.4.4
+      vite-plugin-solid: ^2.0.1
+    dependencies:
+      phaser: 3.55.2
+      solid-js: 1.1.0
       solid-phaser: link:../../packages/solid-phaser
     devDependencies:
       typescript: 4.2.4
@@ -67,7 +84,7 @@ importers:
       phaser: ^3.55.2
       rollup-plugin-typescript2: ^0.30.0
       solid-jest: ^0.1.1
-      solid-js: ^1.0.7
+      solid-js: ^1.1.0
       solid-testing-library: ^0.2.0
       tiny-warning: ^1.0.3
       typescript: ~4.2.2
@@ -90,8 +107,8 @@ importers:
       phaser: 3.55.2
       rollup-plugin-typescript2: 0.30.0_typescript@4.2.4
       solid-jest: 0.1.1_@babel+core@7.15.0
-      solid-js: 1.0.7
-      solid-testing-library: 0.2.0_solid-js@1.0.7
+      solid-js: 1.1.0
+      solid-testing-library: 0.2.0_solid-js@1.1.0
       typescript: 4.2.4
       vite: 2.4.4
       vite-plugin-solid: 2.0.1
@@ -8927,6 +8944,10 @@ packages:
 
   /solid-js/1.0.7:
     resolution: {integrity: sha512-2jHCXLwp/B7P4kh5tl0ospRaC2F++BU0uWwtfgK/8Zc/MROOyCmmkjHpLAQC2u2NWYVGnIclDIJ2FGDXJ0wcYg==}
+    dev: true
+
+  /solid-js/1.1.0:
+    resolution: {integrity: sha512-QcYxp0AnJW3luQKRF/vOhEC5G0ao/f5OqkRuY4JOEmSjWcl4fh8UGiaEOYnri+uJmfGo7KehTKC/+Se40Qh+Lg==}
 
   /solid-refresh/0.2.2_solid-js@1.0.7:
     resolution: {integrity: sha512-oQN3pUJ8fBd4ldMxZVqK7S4PGzAn1yx1B5bRRfANoxoqmHyY2QLfzrOzXsYnAkhh272K+W24oKgFWlmdUZ6HtQ==}
@@ -8936,14 +8957,14 @@ packages:
       solid-js: 1.0.7
     dev: true
 
-  /solid-testing-library/0.2.0_solid-js@1.0.7:
+  /solid-testing-library/0.2.0_solid-js@1.1.0:
     resolution: {integrity: sha512-ZP/z2xZ4qefBUGhQdLCn52P+rgQ/0dqHkZoQTCs2aVQCUJzxcX7omgBSvtqGxopck9v/wws+KbO8eAUIXY91/w==}
     engines: {node: '>= 12'}
     peerDependencies:
       solid-js: ^1.0.0
     dependencies:
       '@testing-library/dom': 7.31.2
-      solid-js: 1.0.7
+      solid-js: 1.1.0
     dev: true
 
   /source-map-js/0.6.2:
