@@ -4,10 +4,24 @@ import solidPlugin from "vite-plugin-solid";
 import typescript from "@rollup/plugin-typescript";
 
 const imports = [
-  { lib: path.resolve(process.cwd(), "src/index.ts"), name: "solid-phaser" },
+  {
+    lib: path.resolve(process.cwd(), "src/index.ts"),
+    name: "index",
+    outDir: "dist",
+    typescript: {
+      include: ["src/**/*"],
+    },
+  },
   {
     lib: path.resolve(process.cwd(), "src/test/index.ts"),
-    name: "test/index",
+    name: "test",
+    outDir: "dist/test",
+    typescript: {
+      include: ["src/test/**/*"],
+      // this will throw a warning, but it's the only way to
+      // get vite to write to dist/test without doing dist/test/test
+      rootDir: "src/test",
+    },
   },
 ];
 
@@ -15,6 +29,7 @@ imports.forEach(async (item, i) => {
   await build({
     configFile: false,
     build: {
+      outDir: item.outDir,
       watch: process.env.WATCH,
       lib: {
         entry: item.lib,
@@ -23,7 +38,7 @@ imports.forEach(async (item, i) => {
         fileName: (format) => `${item.name}.${format}.js`,
       },
       rollupOptions: {
-        external: ["phaser", "solid-js"],
+        external: ["phaser", "solid-js", "solid-testing-library"],
         output: {
           sourcemap: true,
           globals: {
@@ -38,19 +53,17 @@ imports.forEach(async (item, i) => {
     },
     plugins: [
       solidPlugin(),
-      i === 0
-        ? {
-            ...typescript({
-              declaration: true,
-              emitDeclarationOnly: true,
-              outDir: "dist",
-              jsx: "preserve",
-              jsxImportSource: "solid-js",
-              include: ["src/**/*"],
-            }),
-            apply: "build",
-          }
-        : null,
+      {
+        ...typescript({
+          declaration: true,
+          emitDeclarationOnly: true,
+          outDir: item.outDir,
+          jsx: "preserve",
+          jsxImportSource: "solid-js",
+          ...item.typescript,
+        }),
+        apply: "build",
+      },
     ],
   });
 });
