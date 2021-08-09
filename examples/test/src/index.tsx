@@ -1,109 +1,41 @@
 import { render } from "solid-js/web";
-import { Game, Scene, Sprite, createTween, useScene, Text } from "solid-phaser";
-import { For, onMount } from "solid-js";
+import {
+  Game,
+  Scene,
+  GameObject,
+  Sprite,
+  createTween,
+  useScene,
+  Text,
+} from "solid-phaser";
+import {
+  createEffect,
+  createSignal,
+  enableScheduling,
+  For,
+  onMount,
+} from "solid-js";
 import "./index.css";
 
-const arr = Array.from({ length: 5000 }).map((_, i) => ({
-  x: Math.random() * 800,
-  y: Math.random() * 800,
-}));
 function Test() {
-  let refs: Phaser.GameObjects.Sprite[] = [];
+  const [val, setVal] = createSignal(0);
 
-  const [val, setVal] = createTween(() => refs, {
-    ease: "Circular",
-    duration: 1000,
-    repeat: -1,
-    yoyo: false,
-  });
+  setTimeout(() => {
+    setVal(100);
+  }, 100);
 
-  // setVal(2);
-
-  onMount(() => {
-    setVal({ scale: 2 });
+  createEffect(() => {
+    console.log(val());
   });
 
   return (
     <>
-      <FPS />
-      <For each={arr}>
-        {({ x, y }) => (
-          <Sprite
-            ref={(el) => refs.push(el)}
-            x={x}
-            y={y}
-            // scale={{ x: val(), y: val() }}
-            texture="breakout"
-            frame="paddle2"
-          />
-        )}
-      </For>
+      <GameObject
+        create={(scene) => scene.add.text(0, 0, "hello")}
+        x={val()}
+        applyProps={{}}
+      />
     </>
-  );
-}
-
-function Spr(props) {
-  const [val, setVal] = createTween(1, {
-    ease: "Circular",
-    duration: 1000,
-    repeat: -1,
-    yoyo: false,
-  });
-
-  setVal(2);
-
-  return (
-    <Sprite
-      x={props.x}
-      y={props.y}
-      scale={{ x: val(), y: val() }}
-      texture="breakout"
-      frame="paddle2"
-    />
-  );
-}
-
-function Spr2(props) {
-  let ref;
-  const [, setVal] = createTween(() => ref, {
-    ease: "Circular",
-    duration: 1000,
-    repeat: -1,
-    yoyo: false,
-  });
-
-  onMount(() => {
-    setVal({ scale: 2 });
-  });
-
-  return (
-    <Sprite
-      ref={ref}
-      x={props.x}
-      y={props.y}
-      texture="breakout"
-      frame="paddle2"
-    />
-  );
-}
-
-function FPS() {
-  const scene = useScene();
-
-  return (
-    <Text
-      x={700}
-      y={10}
-      text=""
-      onUpdate={(self) => {
-        self.setText(self.scene.game.loop.actualFps.toFixed(0));
-      }}
-      depth={50}
-      style={{
-        color: "white",
-        fontSize: "48px",
-      }}
-    />
   );
 }
 

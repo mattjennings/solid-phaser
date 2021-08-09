@@ -40,6 +40,7 @@ export function createApplyPropsEffect<
 
   function update(prop, value) {
     const applyFn = applyProps?.[prop];
+
     if (applyFn) {
       applyProps[prop](instance, value, props);
     } else if (applyFn !== null) {

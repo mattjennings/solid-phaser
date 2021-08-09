@@ -1,5 +1,8 @@
 import Phaser from "phaser";
-import GameObject, { GameObjectProps } from "./GameObject";
+import GameObject, {
+  ComposedGameObjectProps,
+  GameObjectProps,
+} from "./GameObject";
 import {
   AlphaProps,
   BlendModeProps,
@@ -17,7 +20,7 @@ import {
 } from "./props";
 
 export interface TextProps
-  extends GameObjectProps<Phaser.GameObjects.Text>,
+  extends ComposedGameObjectProps<Phaser.GameObjects.Text>,
     AlphaProps,
     BlendModeProps,
     ComputedSizeProps,
@@ -48,7 +51,6 @@ export default function Text(props: TextProps) {
           props.style
         )
       }
-      props={props}
       applyProps={{
         style: (instance, val) => instance.setStyle(val),
       }}

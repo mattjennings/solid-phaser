@@ -24,8 +24,39 @@ import {
   applyTransformProps,
 } from "./props";
 
-export interface GameObjectProps<T extends Phaser.GameObjects.GameObject> {
-  ref?: Ref<T>;
+export interface GameObjectProps<
+  Instance extends Phaser.GameObjects.GameObject,
+  Props extends Record<string, any>
+> {
+  /**
+   * Called when it's time to instantiate the game object. You can return any
+   * Phaser GameObject instance.
+   */
+  create: (scene: Phaser.Scene) => Instance;
+
+  /**
+   * When extra props are passed on to GameObject, they are assigned to the instance and updated
+   * with an effect. i.e, a prop of `x={1}` would convert to `instance.x = 1`. `applyProps` lets you
+   * customize how each extra prop is applied by providing the key of the prop and a function to run.
+   *
+   * This does not have to provide a method for each prop provided. If a key does not exist for the prop,
+   * it will fallback to assigning the prop to the instance.
+   *
+   * Example:
+   *
+   * ```jsx
+   * applyProps={{
+   *  text: (instance, value) => instance.setText(value),
+   *  style: (instance, value) => instance.setStyle(value)
+   * }}
+   * ```
+   */
+  applyProps?: ApplyProps<
+    Instance,
+    Omit<Partial<Props>, "create" | "applyProps">
+  >;
+
+  ref?: Ref<Instance>;
   children?: JSX.Element;
 
   /**
@@ -47,18 +78,25 @@ export interface GameObjectProps<T extends Phaser.GameObjects.GameObject> {
   /**
    * Called during the scene's update loop
    */
-  onUpdate?: (self: T) => void;
+  onUpdate?: (self: Instance) => void;
 
   /**
    * Called during the scene's preupdate loop
    */
-  onPreUpdate?: (self: T) => void;
+  onPreUpdate?: (self: Instance) => void;
 
   /**
    * Called during the scene's postupdate loop
    */
-  onPostUpdate?: (self: T) => void;
+  onPostUpdate?: (self: Instance) => void;
 }
+
+/**
+ * For components that render a GameObject and inherit GameObjectProps
+ **/
+export interface ComposedGameObjectProps<
+  Instance extends Phaser.GameObjects.GameObject
+> extends Omit<GameObjectProps<Instance, {}>, "create" | "applyProps"> {}
 
 /**
  * The base GameObject component. It can be used to create a component for your own Phaser game object.
@@ -68,64 +106,8 @@ export interface GameObjectProps<T extends Phaser.GameObjects.GameObject> {
 export function GameObject<
   Instance extends Phaser.GameObjects.GameObject,
   Props = Record<string, any>
->(
-  props: GameObjectProps<Instance> & {
-    /**
-     * Called when it's time to instantiate the game object. You can return any
-     * Phaser GameObject instance.
-     */
-    create: (scene: Phaser.Scene) => Instance;
-
-    /**
-     * The props to apply to the game object instance. By default, each prop is assigned to the
-     * instance inside of an effect. To customize how a prop is set on the instance, see the `applyProps` prop
-     *
-     * The prop application happens immediately after creation and then gets updated in a deferred effect.
-     *
-     * Example:
-     *
-     * ```jsx
-     * props={{
-     *  text: 'hello',
-     *  color: 'blue'
-     * }}
-     * ```
-     *
-     * is equivalent to
-     *
-     * ```js
-     * instance.text = props.text
-     * instance.color = props.color
-     * createEffect(on(props.text, value => instance.text = value), { defer: true })
-     * createEffect(on(props.color, value => instance.color = value), { defer: true })
-     * ```
-     */
-    props?: Props;
-
-    /**
-     * Defines how props should be assigned to the instance. When a prop key exists in applyProps,
-     * it will run the function provided. It is your responsibility to apply the prop appropriately here.
-     *
-     * Example:
-     *
-     * ```jsx
-     * applyProps={{
-     *  text: (instance, value) => instance.setText(value)
-     * }}
-     * ```
-     *
-     * is equivalent to
-     *
-     * ```js
-     * instance.setText(props.text)
-     * createEffect(on(props.text, value => instance.setText(props.text), { defer: true })
-     * ```
-     */
-    applyProps?: ApplyProps<Instance, Partial<Props>>;
-  }
-) {
-  const [local, other] = splitProps(props, [
-    "props",
+>(props: GameObjectProps<Instance, Props> & Props) {
+  const [local, restProps] = splitProps(props, [
     "applyProps",
     "create",
     "onUpdate",
@@ -142,7 +124,7 @@ export function GameObject<
     instance,
     mergeProps(
       { name: props.name, active: props.active ?? true },
-      local.props ?? {}
+      restProps ?? {}
     ),
     mergeProps(
       // apply GameObject.Component props by default

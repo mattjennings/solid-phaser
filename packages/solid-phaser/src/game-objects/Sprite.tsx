@@ -1,6 +1,9 @@
 import { createEffect, splitProps } from "solid-js";
 import { RefFunction } from "../types";
-import GameObject, { GameObjectProps } from "./GameObject";
+import GameObject, {
+  ComposedGameObjectProps,
+  GameObjectProps,
+} from "./GameObject";
 import {
   AlphaProps,
   BlendModeProps,
@@ -18,7 +21,7 @@ import {
 } from "./props";
 
 export interface SpriteProps
-  extends GameObjectProps<Phaser.GameObjects.Sprite>,
+  extends ComposedGameObjectProps<Phaser.GameObjects.Sprite>,
     AlphaProps,
     BlendModeProps,
     ComputedSizeProps,
@@ -100,7 +103,6 @@ export default function Sprite(props: SpriteProps) {
           props.frame
         )
       }
-      props={other}
       {...other}
     >
       {props.children}

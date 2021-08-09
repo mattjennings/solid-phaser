@@ -1,3 +1,4 @@
+import { createSignal } from "solid-js";
 import { render, waitFor } from "solid-testing-library";
 import GameObject from "../../src/game-objects/GameObject";
 import TestGame from "../_utils/TestGame";
@@ -9,13 +10,7 @@ it("creates a game object", async () => {
   function Test() {
     return (
       <TestGame ref={game}>
-        <GameObject
-          ref={obj}
-          create={(scene) => scene.add.text(0, 0, "123")}
-          props={{
-            text: "hello",
-          }}
-        />
+        <GameObject ref={obj} create={(scene) => scene.add.text(0, 0, "123")} />
       </TestGame>
     );
   }
@@ -36,9 +31,7 @@ it("assigns props", async () => {
         <GameObject
           ref={ref}
           create={(scene) => scene.add.text(0, 0, "123")}
-          props={{
-            text: "hello",
-          }}
+          text="hello"
         />
       </TestGame>
     );
@@ -47,6 +40,30 @@ it("assigns props", async () => {
   render(() => <Test />);
 
   await waitFor(() => expect(ref.text).toEqual("hello"));
+});
+
+it("updates props", async () => {
+  let ref: Phaser.GameObjects.Text;
+
+  function Test() {
+    const [text, setText] = createSignal("hello");
+
+    setTimeout(() => setText("world"), 50);
+
+    return (
+      <TestGame>
+        <GameObject
+          ref={ref}
+          create={(scene) => scene.add.text(0, 0, "123")}
+          text={text()}
+        />
+      </TestGame>
+    );
+  }
+
+  render(() => <Test />);
+
+  await waitFor(() => expect(ref.text).toEqual("world"));
 });
 
 it("assigns props via applyProps", async () => {
@@ -58,10 +75,8 @@ it("assigns props via applyProps", async () => {
         <GameObject
           ref={ref}
           create={(scene) => scene.add.text(0, 0, "123")}
-          props={{
-            style: {
-              color: "white",
-            },
+          style={{
+            color: "white",
           }}
           applyProps={{
             style: (instance, value) => instance.setStyle(value),
