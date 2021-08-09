@@ -18,6 +18,10 @@ export default defineConfig({
       apply: "build",
     },
   ],
+  define: {
+    // preserve process.env checks for consumer build
+    "process.env.NODE_ENV": "process.env.NODE_ENV",
+  },
   build: {
     minify: false,
     lib: {
