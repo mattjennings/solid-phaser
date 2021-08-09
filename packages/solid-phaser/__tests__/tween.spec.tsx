@@ -9,27 +9,21 @@ it("creates a tween and animates the property", async () => {
 
   let vals = [];
   function Component() {
-    const [val, setVal] = createTween(1, {
-      ease: "Linear",
+    const [val, setVal] = createTween(0, {
+      ease: (v) => v,
       duration: 1000,
       onUpdate(_, latest) {
         vals.push(latest);
       },
     });
 
-    setVal(2);
+    setVal(1);
 
-    createEffect(() => {
-      // console.log(val());
-    });
     return (
       <GameObject
         ref={obj}
         create={(scene) => scene.add.text(0, 0, "123")}
-        props={{
-          text: "hello",
-          x: val(),
-        }}
+        x={val()}
       />
     );
   }
@@ -40,8 +34,14 @@ it("creates a tween and animates the property", async () => {
     </TestGame>
   ));
 
-  await waitFor(() => expect(obj.x).toEqual(2), {
+  await waitFor(() => expect(obj.x).toEqual(1), {
     timeout: 5000,
   });
-  console.log(vals);
+  expect(vals.length).toEqual(61);
+
+  console.log(vals[0], vals[1], vals[2]);
+  console.log(Phaser.Math.Easing.Linear(0.5));
+  // vals.forEach((val, i) => {
+  //   expect(val).toEqual()
+  // })
 });
