@@ -21,28 +21,31 @@ import {
 import "./index.css";
 
 function Test() {
-  const [show, setShow] = createSignal(true);
-
-  onMount(() => {
-    setTimeout(() => {
-      setShow(false);
-    }, 5000);
-  });
+  const [count, setCount] = createSignal(0);
+  const [text, setText] = createSignal("click me 3 times (0)");
 
   return (
-    <Show when={show()}>
+    <Show when={count() < 3}>
       <Text
         x={400}
         y={400}
-        text="ez animation"
+        text={text()}
         interactive
-        alpha={0}
-        scale={{ x: 0, y: 0 }}
         origin={{ x: 0.5, y: 0.5 }}
+        onPointerUp={(self) => {
+          // delay count update so we can update text prop before Show unmounts
+          const nextCount = count() + 1;
+          setTimeout(() => setCount(nextCount));
+
+          setText(
+            nextCount >= 3 ? "goodbye" : `click me 3 times (${nextCount})`
+          );
+        }}
       >
         <Tween
           ease="Bounce"
           duration={300}
+          initial={{ alpha: 0, scale: 0 }}
           animate={{ alpha: 1, scale: 1 }}
           whileTap={{
             alpha: 1,
@@ -52,6 +55,7 @@ function Test() {
             alpha: 0,
             scale: 0,
             transition: {
+              delay: 1000,
               ease: "Linear",
             },
           }}

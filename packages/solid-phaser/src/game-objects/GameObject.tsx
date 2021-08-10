@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import {
   createContext,
+  createEffect,
   JSX,
   mergeProps,
   onCleanup,
@@ -96,6 +97,9 @@ export interface GameObjectProps<
    * Called during the scene's postupdate loop
    */
   onPostUpdate?: (self: Instance) => void;
+
+  onPointerDown?: (self: Instance) => void;
+  onPointerUp?: (self: Instance) => void;
 }
 
 /**
@@ -120,6 +124,8 @@ export function GameObject<
     "onUpdate",
     "onPreUpdate",
     "onPostUpdate",
+    "onPointerDown",
+    "onPointerUp",
   ]);
 
   const scene = useScene();
@@ -209,6 +215,29 @@ export function GameObject<
 
     listeners.push(() => scene.events.off("postupdate", cb));
   }
+
+  createEffect(() => {
+    if (local.onPointerDown) {
+      const cb = () => local.onPointerDown(instance);
+
+      instance.on("pointerdown", cb);
+
+      return () => {
+        instance.off("pointerdown", cb);
+      };
+    }
+  });
+  createEffect(() => {
+    if (local.onPointerUp) {
+      const cb = () => local.onPointerUp(instance);
+
+      instance.on("pointerup", cb);
+
+      return () => {
+        instance.off("pointerup", cb);
+      };
+    }
+  });
 
   return (
     <GameObjectContext.Provider value={instance}>
