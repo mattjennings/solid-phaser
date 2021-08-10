@@ -31,6 +31,7 @@ imports.forEach(async (item, i) => {
     build: {
       outDir: item.outDir,
       watch: process.env.WATCH,
+      minify: process.env.NODE_ENV === "production",
       lib: {
         entry: item.lib,
         name: item.name,

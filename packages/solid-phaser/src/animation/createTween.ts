@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 import { Accessor, createSignal } from "solid-js";
-import { useScene } from "./Scene";
+import { useScene } from "../Scene";
 import warning from "tiny-warning";
 
 export interface TweenConfig
@@ -8,7 +8,7 @@ export interface TweenConfig
     Phaser.Types.Tweens.TweenBuilderConfig,
     "targets" | "paused" | "props"
   > {
-  ease: keyof typeof Phaser.Math.Easing | ((progress: number) => number);
+  ease?: keyof typeof Phaser.Math.Easing | ((progress: number) => number);
 }
 
 type TweenTarget<T> = T | (() => T) | (() => T[]);

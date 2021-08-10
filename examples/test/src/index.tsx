@@ -7,6 +7,8 @@ import {
   createTween,
   useScene,
   Text,
+  Tween,
+  ArcadePhysics,
 } from "solid-phaser";
 import {
   createEffect,
@@ -14,28 +16,48 @@ import {
   enableScheduling,
   For,
   onMount,
+  Show,
 } from "solid-js";
 import "./index.css";
 
 function Test() {
-  const [val, setVal] = createSignal(0);
+  const [show, setShow] = createSignal(true);
 
-  setTimeout(() => {
-    setVal(100);
-  }, 100);
-
-  createEffect(() => {
-    console.log(val());
+  onMount(() => {
+    setTimeout(() => {
+      setShow(false);
+    }, 5000);
   });
 
   return (
-    <>
-      <GameObject
-        create={(scene) => scene.add.text(0, 0, "hello")}
-        x={val()}
-        applyProps={{}}
-      />
-    </>
+    <Show when={show()}>
+      <Text
+        x={400}
+        y={400}
+        text="ez animation"
+        interactive
+        alpha={0}
+        scale={{ x: 0, y: 0 }}
+        origin={{ x: 0.5, y: 0.5 }}
+      >
+        <Tween
+          ease="Bounce"
+          duration={300}
+          animate={{ alpha: 1, scale: 1 }}
+          whileTap={{
+            alpha: 1,
+            scale: 2,
+          }}
+          exit={{
+            alpha: 0,
+            scale: 0,
+            transition: {
+              ease: "Linear",
+            },
+          }}
+        />
+      </Text>
+    </Show>
   );
 }
 

@@ -68,6 +68,13 @@ export interface GameObjectProps<
   name?: string;
 
   /**
+   * Enables input events on the GameObject. Phaser will use the texture to determine the
+   * hit area. If this GameObject does not have a texture then you will need to manually
+   * set the hit area by passing in an object
+   **/
+  interactive?: boolean | Phaser.Types.Input.InputConfiguration;
+
+  /**
    * Assigns the active property to the instance. Setting this to false
    * will prevent onUpdate etc. props from running.
    *
@@ -123,7 +130,11 @@ export function GameObject<
   createApplyPropsEffect(
     instance,
     mergeProps(
-      { name: props.name, active: props.active ?? true },
+      {
+        name: props.name,
+        active: props.active ?? true,
+        interactive: props.interactive,
+      },
       restProps ?? {}
     ),
     mergeProps(
@@ -136,6 +147,22 @@ export function GameObject<
         ...applyTextureProps,
         ...applyTintProps,
         ...applyTransformProps,
+        interactive: (
+          instance: Phaser.GameObjects.GameObject,
+          value: GameObjectProps<Instance, Props>["interactive"]
+        ) => {
+          if (!value) {
+            instance.disableInteractive();
+          } else {
+            if (typeof value === "boolean") {
+              if (value) {
+                instance.setInteractive();
+              }
+            } else {
+              instance.setInteractive(value);
+            }
+          }
+        },
       },
       local.applyProps ?? {}
     ) as any
@@ -154,7 +181,10 @@ export function GameObject<
   }
 
   onCleanup(() => {
-    instance.destroy();
+    // @ts-ignore - another component (such as <Tween /> will handle the removal of the game object)
+    if (!instance.__solid_deferred_unmount) {
+      instance.destroy();
+    }
 
     listeners.forEach((listener) => listener());
   });

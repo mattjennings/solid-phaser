@@ -9,4 +9,4 @@ export * from "./events";
 export * from "./physics";
 export * from "./util/assets";
 export * from "./types";
-export * from "./tween";
+export * from "./animation";
