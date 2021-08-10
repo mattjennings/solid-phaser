@@ -2,8 +2,8 @@ import { createSignal, createEffect, Index, createMemo, Show } from "solid-js";
 import type { Component } from "solid-js";
 
 const ThemeToggle: Component = () => {
-  const themes = createMemo(() => ["dark", "light"]);
-  const [theme, setTheme] = createSignal(themes()[0]);
+  const themes = ["dark", "light"];
+  const [theme, setTheme] = createSignal(themes[0]);
 
   createEffect(() => {
     const user = localStorage.getItem("theme");
@@ -13,21 +13,11 @@ const ThemeToggle: Component = () => {
 
   createEffect(() => {
     const root = document.documentElement;
-    if (theme() === "system") {
-      localStorage.removeItem("theme");
-      if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-        root.classList.add("dark");
-      } else {
-        root.classList.remove("dark");
-      }
-    } else {
-      localStorage.setItem("theme", theme());
-      if (theme() === "light") {
-        root.classList.remove("dark");
-      } else {
-        root.classList.add("dark");
-      }
-    }
+    localStorage.setItem("theme", theme());
+
+    theme() === "dark"
+      ? root.classList.add("dark")
+      : root.classList.remove("dark");
   });
 
   return (
