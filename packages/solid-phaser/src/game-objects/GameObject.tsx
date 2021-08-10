@@ -251,5 +251,3 @@ const GameObjectContext = createContext<Phaser.GameObjects.GameObject>();
 export function useGameObject<T extends Phaser.GameObjects.GameObject>() {
   return useContext(GameObjectContext) as T;
 }
-
-export default GameObject;

@@ -1,8 +1,5 @@
 import Phaser from "phaser";
-import GameObject, {
-  ComposedGameObjectProps,
-  GameObjectProps,
-} from "./GameObject";
+import { GameObject, ComposedGameObjectProps } from "./GameObject";
 import {
   AlphaProps,
   BlendModeProps,
@@ -38,7 +35,7 @@ export interface TextProps
   style?: Phaser.Types.GameObjects.Text.TextStyle;
 }
 
-export default function Text(props: TextProps) {
+export function Text(props: TextProps) {
   return (
     <GameObject
       ref={props.ref}

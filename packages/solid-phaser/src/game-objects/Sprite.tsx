@@ -1,6 +1,7 @@
 import { createEffect, splitProps } from "solid-js";
 import { RefFunction } from "../types";
-import GameObject, {
+import {
+  GameObject,
   ComposedGameObjectProps,
   GameObjectProps,
 } from "./GameObject";
@@ -51,7 +52,7 @@ export interface SpriteProps
   yoyo?: boolean;
 }
 
-export default function Sprite(props: SpriteProps) {
+export function Sprite(props: SpriteProps) {
   const [local, other] = splitProps(props, [
     "play",
     "repeat",

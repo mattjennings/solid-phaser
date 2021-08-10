@@ -58,7 +58,7 @@ export interface SceneProps extends Phaser.Types.Scenes.SettingsConfig {
   children?: JSX.Element;
 }
 
-export default function Scene(props: SceneProps) {
+export function Scene(props: SceneProps) {
   const [local, config] = splitProps(props, [
     "children",
     "assets",
