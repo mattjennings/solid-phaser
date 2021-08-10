@@ -13,7 +13,6 @@
     "@tailwindcss/typography": "^0.4.1",
     "@types/marked": "^2.0.4",
     "react-docgen-typescript": "^2.1.0",
-    "solid-js": "^1.1.0",
     "tailwindcss": "^2.2.7"
   }
 }
