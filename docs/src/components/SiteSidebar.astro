@@ -23,7 +23,13 @@ const sidebar = [
         text: pascal(name),
         link: `components/${kebab(name)}`
       }))
-  }
+  },
+  {
+    text: 'Examples',
+    children: [
+      { text: 'Breakout', link :'examples/breakout'}
+    ]
+  },
 ];
 ---
 
