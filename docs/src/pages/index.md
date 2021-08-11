@@ -23,7 +23,7 @@ function App() {
       scale={{ mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH }}
     >
       <Scene key="main">
-        <Text x={300} y={400} text="Hello World" />
+        <Text x={300} y={400} text="Hello World" style={{ fontSize: "48px" }} />
       </Scene>
     </Game>
   );
@@ -44,7 +44,7 @@ export default function App() {
       scale={{ mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH }}
     >
       <Scene key="main">
-        <Text x={300} y={400} text="Hello World" />
+        <Text x={300} y={400} text="Hello World" style={{ fontSize: "48px" }} />
       </Scene>
     </Game>
   );
