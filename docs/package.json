@@ -8,11 +8,17 @@
   },
   "devDependencies": {
     "@astrojs/renderer-solid": "^0.1.0",
-    "astro": "^0.18.9",
     "@tailwindcss/forms": "^0.3.3",
     "@tailwindcss/typography": "^0.4.1",
     "@types/marked": "^2.0.4",
+    "astro": "^0.18.9",
+    "case": "^1.6.3",
     "react-docgen-typescript": "^2.1.0",
+    "remark-codesandbox": "^0.10.0",
     "tailwindcss": "^2.2.7"
+  },
+  "dependencies": {
+    "phaser": "^3.55.2",
+    "solid-phaser": "workspace:^0.0.1-alpha.0"
   }
 }

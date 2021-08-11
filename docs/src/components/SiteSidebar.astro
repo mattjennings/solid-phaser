@@ -2,6 +2,9 @@
 import { loadComponents } from '../lib/load-components.ts'
 import GitHub from './Github.tsx'
 import ThemeToggle from './ThemeToggle.tsx'
+import { resolve } from 'node:path'
+import { readdirSync } from 'node:fs'
+import { pascal, kebab } from 'case'
 
 const currentPage = Astro.request.url.pathname
 
@@ -14,10 +17,12 @@ const sidebar = [
   },
   {
     text: 'Components',
-    children: await loadComponents().then(res => res.map(component => ({
-      text: component.name,
-      link: `components/${component.name.toLowerCase()}`
-    })))
+    children: readdirSync(resolve(process.cwd(), './src/pages/components'))
+      .map(name => name.split('.md')[0])
+      .map(name => ({
+        text: pascal(name),
+        link: `components/${kebab(name)}`
+      }))
   }
 ];
 ---

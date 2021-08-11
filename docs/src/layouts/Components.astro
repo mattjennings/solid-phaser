@@ -1,32 +1,13 @@
 ---
-import {loadComponents} from '../lib/load-components.ts'
-import {parseComponent} from '../lib/parse-component.ts'
-import Base from '../layouts/Base.astro'
+import Base from './Base.astro'
 import { Markdown } from 'astro/components';
+import { parseComponent } from '../lib/parse-component.ts'
+import { resolve } from 'node:path'
 
-export async function createCollection() {
-  const components = await loadComponents()
+const { content } = Astro.props;
 
-  return {
-    route: `/components/:name`,
-    paths() {
-      return components.map((component, i) => ({ 
-          params: { 
-            name: component.name.toLowerCase()
-          }
-      }));
-    },
-    async props({ params }) {
-      const component = components.find((component) => component.name.toLowerCase() === params.name.toLowerCase()) 
-      return { 
-        ...component,
-        docs: parseComponent(component.path)[0] ?? { props: {}, description: ''}
-      };
-    },
-  };
-}
-
-const { name, docs } = Astro.props;
+const componentPath = resolve(process.cwd(), `../packages/solid-phaser/src${content.component}`)
+const docs = parseComponent(componentPath)[0] ?? { props: {}, description: ''}
 
 const hasDescription = Object.keys(docs.props).some((name: string) => !!docs.props?.[name]?.description);
 
@@ -38,12 +19,21 @@ const sortedProps = Object.keys(docs.props)
 
     return a.name < b.name ? -1 : 1
   })
+
 ---
-  
 <Base>
-  <title slot="header">solid-phaser | {name}</title>
-  <h1>{name}</h1>
-  <Markdown content={docs.description || '&nbsp;'} />
+  <title slot="header">solid-phaser | {content.title}</title>
+
+  <h1>{content.title}</h1>
+
+  <Fragment>
+    <Markdown content={docs.description || '&nbsp;'} />
+  </Fragment>
+
+  <Fragment>
+    <slot />
+  </Fragment>
+  
   <h2>Props</h2>
   <div class="overflow-x-scroll">
     <table>
@@ -79,11 +69,7 @@ const sortedProps = Object.keys(docs.props)
                 </td>
                 {hasDescription && (
                   <td>
-                    {prop.description && (
-                      <>
-                        <Markdown content={prop.description}/>
-                      </>
-                    )}
+                    <Markdown content={prop.description || '&nbsp;'}/>
                   </td>
                 )}
               </tr>

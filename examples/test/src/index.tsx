@@ -25,9 +25,6 @@ function Test() {
   const [count, setCount] = createSignal(0);
   const [text, setText] = createSignal("click me 3 times (0)");
 
-  function dir(el: Phaser.GameObjects.Text, value: string) {
-    console.log(el, value);
-  }
   return (
     <Show when={count() < 3}>
       <Text

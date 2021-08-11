@@ -1,6 +1,6 @@
 {
   "name": "solid-phaser",
-  "version": "0.0.1",
+  "version": "0.0.1-alpha.0",
   "description": "Create Phaser 3 games with solid-js",
   "files": [
     "dist"

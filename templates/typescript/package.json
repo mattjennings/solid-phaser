@@ -1,0 +1,22 @@
+{
+  "name": "solid-phaser-ts",
+  "version": "0.0.1",
+  "scripts": {
+    "start": "vite",
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "devDependencies": {
+    "typescript": "~4.2.2",
+    "vite": "^2.4.4",
+    "vite-plugin-solid": "^2.0.1"
+  },
+  "dependencies": {
+    "solid-phaser": "^0.0.1-alpha.0",
+    "phaser": "^3.55.2",
+    "solid-js": "^1.1.0"
+  },
+  "keywords": [],
+  "description": "Template for creating a solid-phaser app with typescript"
+}

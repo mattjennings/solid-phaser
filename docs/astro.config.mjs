@@ -12,5 +12,23 @@ export default {
     tailwindConfig: "./tailwind.config.js",
   },
 
+  markdownOptions: {
+    remarkPlugins: [
+      [
+        import("remark-codesandbox"),
+        {
+          mode: "iframe",
+          customTemplates: {
+            "solid-phaser": {
+              extends: "file:../templates/typescript",
+              entry: "src/App.tsx",
+              query: { codemirror: 1 },
+            },
+          },
+        },
+      ],
+    ],
+  },
+
   renderers: ["@astrojs/renderer-solid"],
 };

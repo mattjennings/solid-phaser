@@ -25,7 +25,8 @@
   },
   "pnpm": {
     "overrides": {
-      "solid-js": "1.1.0"
+      "solid-js": "1.1.0",
+      "solid-phaser": "workspace:^0.0.1-alpha.0"
     }
   }
 }
