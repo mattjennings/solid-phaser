@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build"
+    "build": "NODE_ENV=production astro build"
   },
   "devDependencies": {
     "@astrojs/renderer-solid": "^0.1.0",

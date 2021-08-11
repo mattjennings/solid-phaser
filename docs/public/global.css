@@ -9,3 +9,8 @@ button:not(.unstyled) {
 .prose {
   max-width: none;
 }
+
+iframe {
+  max-width: 1200px;
+  margin: 0 auto;
+}
