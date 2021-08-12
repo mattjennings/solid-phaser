@@ -1,6 +1,6 @@
 import { Component, createSignal, onMount } from "solid-js";
-import Game, { GameProps } from "../Game";
-import Scene, { SceneProps } from "../Scene";
+import { Game, GameProps } from "../Game";
+import { Scene, SceneProps } from "../Scene";
 import { render as _render, waitFor } from "solid-testing-library";
 
 export async function render(

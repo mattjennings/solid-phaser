@@ -1,7 +1,7 @@
 import { onMount } from "solid-js";
-import GameObject from "../src/game-objects/GameObject";
-import { render } from "../src/test";
-import { createTween } from "../src/tween";
+import { GameObject } from "../../src/game-objects/GameObject";
+import { render } from "../../src/test";
+import { createTween } from "../../src/animation";
 
 it("animates a number", async () => {
   let obj: Phaser.GameObjects.Text;
