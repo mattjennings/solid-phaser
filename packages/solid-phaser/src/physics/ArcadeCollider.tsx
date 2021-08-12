@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { createEffect, onCleanup, splitProps } from "solid-js";
+import { createEffect, onCleanup, onMount, splitProps } from "solid-js";
 import { onSceneEvent } from "../events";
 import { useScene } from "../Scene";
 import { createApplyPropsEffect } from "../util/createApplyPropsEffect";
@@ -85,7 +85,7 @@ export default function ArcadeCollider<
   });
 
   // onWorldBounds
-  createEffect(() => {
+  onMount(() => {
     (instance.body as Phaser.Physics.Arcade.Body).setCollideWorldBounds(
       !!props.onWorldBounds
     );
@@ -99,9 +99,9 @@ export default function ArcadeCollider<
       };
       scene.physics.world.on("worldbounds", cb);
 
-      return () => {
+      onCleanup(() => {
         scene.physics.world.off("worldbounds", cb);
-      };
+      });
     }
   });
 
