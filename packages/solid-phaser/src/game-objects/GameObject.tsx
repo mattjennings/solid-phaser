@@ -98,10 +98,85 @@ export interface GameObjectProps<
    */
   onPostUpdate?: (self: Instance) => void;
 
-  onPointerDown?: (self: Instance) => void;
-  onPointerUp?: (self: Instance) => void;
-  onPointerOver?: (self: Instance) => void;
-  onPointerOut?: (self: Instance) => void;
+  onDrag?: (
+    self: Instance,
+    pointer: Phaser.Input.Pointer,
+    dragX: number,
+    dragY: number
+  ) => void;
+  onDragEnd?: (
+    self: Instance,
+    pointer: Phaser.Input.Pointer,
+    dragX: number,
+    dragY: number
+  ) => void;
+  onDragEnter?: (
+    self: Instance,
+    pointer: Phaser.Input.Pointer,
+    target: Phaser.GameObjects.GameObject
+  ) => void;
+  onDragLeave?: (
+    self: Instance,
+    pointer: Phaser.Input.Pointer,
+    target: Phaser.GameObjects.GameObject
+  ) => void;
+  onDragOver?: (
+    self: Instance,
+    pointer: Phaser.Input.Pointer,
+    target: Phaser.GameObjects.GameObject
+  ) => void;
+  onDragStart?: (
+    self: Instance,
+    pointer: Phaser.Input.Pointer,
+    dragX: number,
+    dragY: number
+  ) => void;
+  onDrop?: (
+    self: Instance,
+    pointer: Phaser.Input.Pointer,
+    target: Phaser.GameObjects.GameObject
+  ) => void;
+  onPointerDown?: (
+    self: Instance,
+    pointer: Phaser.Input.Pointer,
+    localX: number,
+    localY: number,
+    event: Phaser.Types.Input.EventData
+  ) => void;
+  onPointerMove?: (
+    self: Instance,
+    pointer: Phaser.Input.Pointer,
+    localX: number,
+    localY: number,
+    event: Phaser.Types.Input.EventData
+  ) => void;
+  onPointerOver?: (
+    self: Instance,
+    pointer: Phaser.Input.Pointer,
+    localX: number,
+    localY: number,
+    event: Phaser.Types.Input.EventData
+  ) => void;
+  onPointerOut?: (
+    self: Instance,
+    pointer: Phaser.Input.Pointer,
+    event: Phaser.Types.Input.EventData
+  ) => void;
+  onPointerUp?: (
+    self: Instance,
+    pointer: Phaser.Input.Pointer,
+    localX: number,
+    localY: number,
+    event: Phaser.Types.Input.EventData
+  ) => void;
+  onPointerWheel?: (
+    self: Instance,
+    pointer: Phaser.Input.Pointer,
+    deltaX: number,
+    deltaY: number,
+    deltaZ: number,
+    event: Phaser.Types.Input.EventData
+  ) => void;
 }
 
 /**
@@ -126,8 +201,19 @@ export function GameObject<
     "onUpdate",
     "onPreUpdate",
     "onPostUpdate",
+    "onDrag",
+    "onDragEnd",
+    "onDragEnter",
+    "onDragLeave",
+    "onDragOver",
+    "onDragStart",
+    "onDrop",
     "onPointerDown",
+    "onPointerMove",
+    "onPointerOut",
+    "onPointerOver",
     "onPointerUp",
+    "onPointerWheel",
   ]);
 
   const scene = useScene();
@@ -190,6 +276,7 @@ export function GameObject<
     instance.destroy();
   });
 
+  ////////////////// EVENTS //////////////////////
   if (local.onUpdate) {
     const cb = () => (instance.active ? local.onUpdate(instance) : void 0);
     scene.events.on("update", cb);
@@ -205,21 +292,72 @@ export function GameObject<
     scene.events.on("postupdate", cb);
   }
 
-  createEffect(() => {
-    if (local.onPointerDown) {
-      const cb = () => local.onPointerDown(instance);
+  if (local.onDrag) {
+    // @ts-ignore
+    const cb = (...args) => local.onDrag(instance, ...args);
+    instance.on("drag", cb);
+  }
+  if (local.onDragEnd) {
+    // @ts-ignore
+    const cb = (...args) => local.onDragEnd(instance, ...args);
+    instance.on("dragend", cb);
+  }
+  if (local.onDragEnter) {
+    // @ts-ignore
+    const cb = (...args) => local.onDragEnter(instance, ...args);
+    instance.on("dragenter", cb);
+  }
+  if (local.onDragLeave) {
+    // @ts-ignore
+    const cb = (...args) => local.onDragLeave(instance, ...args);
+    instance.on("dragleave", cb);
+  }
+  if (local.onDragOver) {
+    // @ts-ignore
+    const cb = (...args) => local.onDragOver(instance, ...args);
+    instance.on("dragover", cb);
+  }
+  if (local.onDragStart) {
+    // @ts-ignore
+    const cb = (...args) => local.onDragStart(instance, ...args);
+    instance.on("dragstart", cb);
+  }
+  if (local.onDrop) {
+    // @ts-ignore
+    const cb = (...args) => local.onDrop(instance, ...args);
+    instance.on("drop", cb);
+  }
 
-      instance.on("pointerdown", cb);
-    }
-  });
-
-  createEffect(() => {
-    if (local.onPointerUp) {
-      const cb = () => local.onPointerUp(instance);
-
-      instance.on("pointerup", cb);
-    }
-  });
+  if (local.onPointerDown) {
+    // @ts-ignore
+    const cb = (...args) => local.onPointerDown(instance, ...args);
+    instance.on("pointerdown", cb);
+  }
+  if (local.onPointerMove) {
+    // @ts-ignore
+    const cb = (...args) => local.onPointerMove(instance, ...args);
+    instance.on("pointermove", cb);
+  }
+  if (local.onPointerOut) {
+    // @ts-ignore
+    const cb = (...args) => local.onPointerOut(instance, ...args);
+    instance.on("pointerout", cb);
+  }
+  if (local.onPointerOver) {
+    // @ts-ignore
+    const cb = (...args) => local.onPointerOver(instance, ...args);
+    instance.on("pointerover", cb);
+  }
+  if (local.onPointerUp) {
+    // @ts-ignore
+    const cb = (...args) => local.onPointerUp(instance, ...args);
+    instance.on("pointerup", cb);
+  }
+  if (local.onPointerWheel) {
+    // @ts-ignore
+    const cb = (...args) => local.onPointerWheel(instance, ...args);
+    instance.on("wheel", cb);
+  }
 
   return (
     <GameObjectContext.Provider value={instance}>
