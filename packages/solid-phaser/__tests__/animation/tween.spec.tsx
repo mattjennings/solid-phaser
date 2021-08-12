@@ -1,6 +1,6 @@
 import { onMount } from "solid-js";
 import { GameObject } from "../../src/game-objects/GameObject";
-import { render } from "../../src/test";
+import { render, waitFor } from "../../src/test";
 import { createTween } from "../../src/animation";
 
 it("animates a number", async () => {
@@ -23,14 +23,14 @@ it("animates a number", async () => {
     );
   }
 
-  const { step } = await render(() => <Component />, {
-    paused: true,
-  });
+  await render(() => <Component />);
 
-  await step(30);
-  expect(Math.round(obj.x * 10) / 10).toEqual(0.5);
-  await step(32); // not sure why it takes 62 frames total
-  expect(obj.x).toEqual(1);
+  await waitFor(
+    () => {
+      expect(obj.x).toEqual(1);
+    },
+    { timeout: 1500 }
+  );
 });
 
 it("animates an object", async () => {
@@ -57,16 +57,15 @@ it("animates an object", async () => {
     );
   }
 
-  const { step } = await render(() => <Component />, {
-    paused: true,
-  });
+  await render(() => <Component />);
 
-  await step(31);
-  expect(Math.round(obj.x * 10) / 10).toEqual(0.5);
-  expect(Math.round(obj.y * 10) / 10).toEqual(1);
-  await step(32);
-  expect(obj.x).toEqual(1);
-  expect(obj.y).toEqual(2);
+  await waitFor(
+    () => {
+      expect(obj.x).toEqual(1);
+      expect(obj.y).toEqual(2);
+    },
+    { timeout: 1500 }
+  );
 });
 
 it("animates a ref", async () => {
@@ -91,14 +90,14 @@ it("animates a ref", async () => {
     );
   }
 
-  const { step } = await render(() => <Component />, {
-    paused: true,
-  });
+  await render(() => <Component />);
 
-  await step(30);
-  expect(Math.round(obj.x * 10) / 10).toEqual(0.5);
-  await step(33);
-  expect(obj.x).toEqual(1);
+  await waitFor(
+    () => {
+      expect(obj.x).toEqual(1);
+    },
+    { timeout: 1500 }
+  );
 });
 
 it("animates an array of refs", async () => {
@@ -131,14 +130,13 @@ it("animates an array of refs", async () => {
     );
   }
 
-  const { step } = await render(() => <Component />, {
-    paused: true,
-  });
+  await render(() => <Component />);
 
-  await step(30);
-  expect(Math.round(obj.x * 10) / 10).toEqual(0.5);
-  expect(Math.round(obj2.x * 10) / 10).toEqual(0.5);
-  await step(33);
-  expect(obj.x).toEqual(1);
-  expect(obj2.x).toEqual(1);
+  await waitFor(
+    () => {
+      expect(obj.x).toEqual(1);
+      expect(obj2.x).toEqual(1);
+    },
+    { timeout: 1500 }
+  );
 });
