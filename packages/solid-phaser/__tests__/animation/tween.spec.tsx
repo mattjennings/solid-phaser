@@ -29,7 +29,7 @@ it("animates a number", async () => {
     () => {
       expect(obj.x).toEqual(1);
     },
-    { timeout: 1500 }
+    { timeout: 5000 }
   );
 });
 
@@ -64,7 +64,7 @@ it("animates an object", async () => {
       expect(obj.x).toEqual(1);
       expect(obj.y).toEqual(2);
     },
-    { timeout: 1500 }
+    { timeout: 5000 }
   );
 });
 
@@ -96,7 +96,7 @@ it("animates a ref", async () => {
     () => {
       expect(obj.x).toEqual(1);
     },
-    { timeout: 1500 }
+    { timeout: 5000 }
   );
 });
 
@@ -137,6 +137,6 @@ it("animates an array of refs", async () => {
       expect(obj.x).toEqual(1);
       expect(obj2.x).toEqual(1);
     },
-    { timeout: 1500 }
+    { timeout: 5000 }
   );
 });
