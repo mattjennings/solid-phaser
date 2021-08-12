@@ -10,4 +10,6 @@ module.exports = {
     resources: "usable",
     pretendToBeVisual: true,
   },
+  maxWorkers: process.env.CI ? 2 : 1,
+  collectCoverage: !!process.env.CI,
 };

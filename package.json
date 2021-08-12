@@ -5,7 +5,9 @@
   "description": "Create Phaser 3 games with solid-js",
   "scripts": {
     "prepare": "husky install",
-    "release": "standard-version"
+    "release": "standard-version",
+    "test": "pnpm recursive test",
+    "build": "pnpm recursive run build"
   },
   "repository": {
     "type": "git",
