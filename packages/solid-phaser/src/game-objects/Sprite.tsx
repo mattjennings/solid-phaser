@@ -1,10 +1,6 @@
 import { createEffect, splitProps } from "solid-js";
 import { RefFunction } from "../types";
-import {
-  GameObject,
-  ComposedGameObjectProps,
-  GameObjectProps,
-} from "./GameObject";
+import { ComposedGameObjectProps, GameObject } from "./GameObject";
 import {
   AlphaProps,
   BlendModeProps,

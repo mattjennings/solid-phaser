@@ -1,20 +1,19 @@
 import Phaser from "phaser";
 import {
   createContext,
-  createEffect,
   JSX,
   mergeProps,
   onCleanup,
   splitProps,
   useContext,
 } from "solid-js";
-import { useGroup } from "./Group";
 import { useScene } from "../Scene";
 import { Ref, RefFunction } from "../types";
 import {
   ApplyProps,
   createApplyPropsEffect,
 } from "../util/createApplyPropsEffect";
+import { useGroup } from "./Group";
 import {
   applyAlphaProps,
   applyCropProps,
@@ -219,7 +218,7 @@ export function GameObject<
   const scene = useScene();
   const group = useGroup();
 
-  let instance = local.create(scene);
+  const instance = local.create(scene);
 
   createApplyPropsEffect(
     instance,

@@ -1,24 +1,6 @@
+import { createSignal, Show } from "solid-js";
 import { render } from "solid-js/web";
-import {
-  Game,
-  Scene,
-  GameObject,
-  Sprite,
-  createTween,
-  useScene,
-  Text,
-  Tween,
-  ArcadePhysics,
-  Use,
-} from "solid-phaser";
-import {
-  createEffect,
-  createSignal,
-  enableScheduling,
-  For,
-  onMount,
-  Show,
-} from "solid-js";
+import { Game, Scene, Text, Tween } from "solid-phaser";
 import "./index.css";
 
 function Test() {

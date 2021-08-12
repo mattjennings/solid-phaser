@@ -3,11 +3,9 @@ import {
   createSignal,
   on,
   onCleanup,
-  onMount,
   splitProps,
-  untrack,
 } from "solid-js";
-import { createTween, TweenConfig, useScene } from "..";
+import { createTween, TweenConfig } from "./createTween";
 import { useGameObject } from "../game-objects/GameObject";
 import { pick } from "../util/pick";
 
@@ -68,7 +66,7 @@ export function Tween(p: TweenProps) {
 
   // set initial values on gameObject
   if (props.initial) {
-    const { transition, ...values } = props.initial;
+    const { transition: _, ...values } = props.initial;
     // this is what tween does, so we'll do it too. feels dangerous though.
     Object.assign(gameObject, values);
   }

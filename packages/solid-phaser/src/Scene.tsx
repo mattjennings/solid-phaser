@@ -74,8 +74,8 @@ export function Scene(props: SceneProps) {
 
   onCleanup(() => game.scene.remove(config.key));
 
-  let [loading, setLoading] = createSignal(true);
-  let [loadingProgress, setLoadingProgress] = createSignal(0);
+  const [loading, setLoading] = createSignal(true);
+  const [loadingProgress, setLoadingProgress] = createSignal(0);
 
   // @ts-ignore
   scene.preload = () => {

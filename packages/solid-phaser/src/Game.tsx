@@ -38,7 +38,7 @@ export function Game(props: GameProps) {
 
   onCleanup(() => game.destroy(true));
 
-  let [booting, setBooting] = createSignal(!game.isRunning);
+  const [booting, setBooting] = createSignal(!game.isRunning);
 
   game.events.on("ready", () => {
     setBooting(false);

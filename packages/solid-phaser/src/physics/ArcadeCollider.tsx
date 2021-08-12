@@ -1,11 +1,11 @@
 import Phaser from "phaser";
-import { createEffect, onCleanup, onMount, splitProps } from "solid-js";
+import { onCleanup, onMount, splitProps } from "solid-js";
 import { onSceneEvent } from "../events";
+import { useGameObject } from "../game-objects/GameObject";
 import { useScene } from "../Scene";
 import { createApplyPropsEffect } from "../util/createApplyPropsEffect";
 import { getGameObjectsByName } from "../util/getGameObjectsByName";
 import { toArray } from "../util/toArray";
-import { useGameObject } from "../game-objects/GameObject";
 
 export interface ArcadeColliderProps<
   Self extends Phaser.Types.Physics.Arcade.GameObjectWithBody,
@@ -44,7 +44,7 @@ export default function ArcadeCollider<
 
   const self = [instance];
   const other = createObjectsArray(scene, props.with);
-  let collider: Phaser.Physics.Arcade.Collider = props.overlap
+  const collider: Phaser.Physics.Arcade.Collider = props.overlap
     ? scene.physics.add.overlap(
         self,
         other,

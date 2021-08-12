@@ -84,7 +84,7 @@ it("assigns props via applyProps", async () => {
 it("fires onPreUpdate, onUpdate, onPostUpdate in order", async () => {
   let ref: Phaser.GameObjects.Text;
 
-  let numbers = [];
+  const numbers = [];
   const addNum = (v) => {
     if (numbers.length < 3) {
       numbers.push(v);

@@ -10,10 +10,10 @@ export default function Breakout() {
   let paddle: Phaser.GameObjects.Sprite &
     Phaser.Types.Physics.Arcade.GameObjectWithDynamicBody;
 
-  let [blocks, setBlocks] = createSignal<
+  const [blocks, setBlocks] = createSignal<
     Array<{ x: number; y: number; key: number; frame: string }>
   >([]);
-  let [ballLaunched, setBallLaunched] = createSignal(false);
+  const [ballLaunched, setBallLaunched] = createSignal(false);
 
   const [gameOver, setGameOver] = createSignal(false);
   const [youWin, setYouWin] = createSignal(false);

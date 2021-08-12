@@ -83,7 +83,7 @@ export function createTween<T>(
   }
 
   const update: SetTween<Unwrap<T>> = (next, nextConfig) => {
-    let nextValue = isFunction(next) ? next(value() as any) : next;
+    const nextValue = isFunction(next) ? next(value() as any) : next;
 
     if (!value() && isFunction(target)) {
       setValue(target() as any);

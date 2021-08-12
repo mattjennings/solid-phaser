@@ -1,7 +1,7 @@
-import { Component, createSignal, onMount } from "solid-js";
+import { Component, createSignal } from "solid-js";
+import { render as _render, waitFor } from "solid-testing-library";
 import { Game, GameProps } from "../Game";
 import { Scene, SceneProps } from "../Scene";
-import { render as _render, waitFor } from "solid-testing-library";
 
 export async function render(
   component: Component,
@@ -59,7 +59,7 @@ export async function render(
 
   async function waitFrames(frames: number) {
     return new Promise((res) => {
-      let starting = elapsedFrames();
+      const starting = elapsedFrames();
 
       const update = () => {
         if (elapsedFrames() >= starting + frames) {

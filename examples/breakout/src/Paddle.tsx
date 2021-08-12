@@ -2,7 +2,7 @@ import { createSignal } from "solid-js";
 import { onInputEvent, ArcadePhysics, Sprite, SpriteProps } from "solid-phaser";
 
 export default function Paddle(props: SpriteProps) {
-  let [x, setX] = createSignal(props.x);
+  const [x, setX] = createSignal(props.x);
 
   onInputEvent("pointermove", (pointer: { x: number }) => {
     setX(pointer.x);

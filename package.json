@@ -6,7 +6,8 @@
   "scripts": {
     "prepare": "husky install",
     "release": "standard-version",
-    "test": "pnpm recursive test",
+    "lint": "pnpm recursive run lint",
+    "test": "pnpm recursive run test",
     "build": "pnpm recursive run build"
   },
   "repository": {
@@ -22,12 +23,19 @@
   "devDependencies": {
     "@commitlint/cli": "^13.1.0",
     "@commitlint/config-conventional": "^13.1.0",
+    "@typescript-eslint/eslint-plugin": "^4.29.1",
+    "@typescript-eslint/parser": "^4.29.1",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
     "husky": "^7.0.1",
-    "standard-version": "^9.3.1"
+    "prettier": "^2.3.2",
+    "standard-version": "^9.3.1",
+    "typescript": "^4.3.5"
   },
   "pnpm": {
     "overrides": {
       "solid-js": "1.1.0",
+      "eslint": "^7.32.0",
       "solid-phaser": "workspace:^0.0.1-alpha.0"
     }
   }
