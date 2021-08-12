@@ -100,6 +100,8 @@ export interface GameObjectProps<
 
   onPointerDown?: (self: Instance) => void;
   onPointerUp?: (self: Instance) => void;
+  onPointerOver?: (self: Instance) => void;
+  onPointerOut?: (self: Instance) => void;
 }
 
 /**
@@ -176,8 +178,6 @@ export function GameObject<
 
   (props.ref as RefFunction)?.(instance);
 
-  let listeners = [];
-
   if (!scene.children.exists(instance)) {
     scene.add.existing(instance);
   }
@@ -187,33 +187,22 @@ export function GameObject<
   }
 
   onCleanup(() => {
-    // @ts-ignore - another component (such as <Tween /> will handle the removal of the game object)
-    if (!instance.__solid_deferred_unmount) {
-      instance.destroy();
-    }
-
-    listeners.forEach((listener) => listener());
+    instance.destroy();
   });
 
   if (local.onUpdate) {
     const cb = () => (instance.active ? local.onUpdate(instance) : void 0);
     scene.events.on("update", cb);
-
-    listeners.push(() => scene.events.off("update", cb));
   }
 
   if (local.onPreUpdate) {
     const cb = () => (instance.active ? local.onPreUpdate(instance) : void 0);
     scene.events.on("preupdate", cb);
-
-    listeners.push(() => scene.events.off("preupdate", cb));
   }
 
   if (local.onPostUpdate) {
     const cb = () => (instance.active ? local.onPostUpdate(instance) : void 0);
     scene.events.on("postupdate", cb);
-
-    listeners.push(() => scene.events.off("postupdate", cb));
   }
 
   createEffect(() => {
@@ -221,21 +210,14 @@ export function GameObject<
       const cb = () => local.onPointerDown(instance);
 
       instance.on("pointerdown", cb);
-
-      return () => {
-        instance.off("pointerdown", cb);
-      };
     }
   });
+
   createEffect(() => {
     if (local.onPointerUp) {
       const cb = () => local.onPointerUp(instance);
 
       instance.on("pointerup", cb);
-
-      return () => {
-        instance.off("pointerup", cb);
-      };
     }
   });
 

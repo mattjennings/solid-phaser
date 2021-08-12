@@ -9,6 +9,7 @@ import {
 } from "solid-js";
 import { createTween, TweenConfig, useScene } from "..";
 import { useGameObject } from "../game-objects/GameObject";
+import { pick } from "../util/pick";
 
 type TweenAnimation = Record<string, any> & { transition?: TweenConfig };
 
@@ -18,36 +19,33 @@ export interface TweenProps extends TweenConfig {
   exit?: TweenAnimation;
 
   whileTap?: TweenAnimation;
-  // whileHover?: TweenAnimation;
+  whileHover?: TweenAnimation;
 }
 
 export function Tween(p: TweenProps) {
-  const scene = useScene();
   const gameObject = useGameObject();
 
-  // @ts-ignore - inform <GameObject /> that we will handle unmounting (destroying)
-  gameObject.__solid_deferred_unmount = true;
+  // prevent gameObject from being destroyed when parent <GameObject /> unmounts
+  gameObject.ignoreDestroy = true;
 
   const [props, config] = splitProps(p, [
     "initial",
     "animate",
     "exit",
     "whileTap",
-    // "whileHover",
+    "whileHover",
   ]);
   const [isExiting, setExiting] = createSignal(false);
 
-  function mergeTweenConfig(newConfig?: TweenConfig): TweenConfig {
-    return {
-      ...config,
-      ...newConfig,
-    };
-  }
+  // when animating whileTap or whileHover, if no initial/animate is set
+  // we need to track the values they were before the animation
+  const [tapFallback, setTapFallback] = createSignal({});
+  const [hoverFallback, setHoverFallback] = createSignal({});
 
-  const mergedConfig = mergeTweenConfig(config);
   const [, setTween] = createTween(() => gameObject, {
-    ...mergedConfig,
-    onStart: (tween) => {
+    ...config,
+    onStart: (tween, ...args) => {
+      config?.onStart?.(tween, ...args);
       if (isExiting()) {
         tween.remove();
       }
@@ -55,13 +53,15 @@ export function Tween(p: TweenProps) {
   });
 
   const [, setExitTween] = createTween(() => gameObject, {
-    ...mergedConfig,
+    ...config,
     onStart: () => {
       setExiting(true);
+      // clear the tween
       setTween({}, { duration: 0 });
     },
     onComplete: (...args) => {
-      mergedConfig?.onComplete?.(...args);
+      config?.onComplete?.(...args);
+      gameObject.ignoreDestroy = false;
       gameObject.destroy();
     },
   });
@@ -73,46 +73,69 @@ export function Tween(p: TweenProps) {
     Object.assign(gameObject, values);
   }
 
+  // animate when props.animate updates
   createEffect(
     on(
       () => props.animate,
       () => {
-        const { transition, ...values } = props.animate;
-        setTween(values, mergeTweenConfig(transition));
+        if (props.animate) {
+          const { transition, ...values } = props.animate;
+          setTween(values, { ...config, ...transition });
+        }
       }
     )
   );
 
-  createEffect(() => {
-    const { transition, ...values } = props.whileTap;
-    const config = mergeTweenConfig(transition);
+  // whileTap
+  const animatePointerDown = () => {
+    const { transition, ...newValues } = props.whileTap;
+    setTapFallback(pick(gameObject, Object.keys(newValues) as any));
+    setTween(newValues, { ...config, ...transition });
+  };
 
-    const animateDown = () => {
-      setTween(values, config);
-    };
-
-    const animateUp = () => {
+  const animatePointerUp = () => {
+    if (props.animate) {
       // animate to props.animate values but with props.whileTap transition
-      const { transition: animateTransition, ...values } = props.animate;
-      const config = mergeTweenConfig(transition);
+      const { transition: _, ...newValues } = props.animate;
+      setTween(newValues, { ...config, ...props.whileTap.transition });
+    } else {
+      setTween(tapFallback(), { ...config, ...props.whileTap.transition });
+      setTapFallback({});
+    }
+  };
 
-      setTween(values, config);
-    };
-    gameObject.on("pointerdown", animateDown);
-    gameObject.on("pointerup", animateUp);
+  // whileHover
+  const animatePointerOver = () => {
+    const { transition, ...newValues } = props.whileHover;
+    setHoverFallback(pick(gameObject, Object.keys(newValues) as any));
+    setTween(newValues, { ...config, ...transition });
+  };
 
-    return () => {
-      gameObject.off("pointerdown", animateDown);
-      gameObject.off("pointerup", animateUp);
-    };
-  });
+  const animatePointerOut = () => {
+    if (props.animate) {
+      // animate to props.animate values but with props.whileHover transition
+      const { transition: _, ...newValues } = props.animate;
+      setTween(newValues, { ...config, ...props.whileHover.transition });
+    } else {
+      setTween(hoverFallback(), { ...config, ...props.whileHover.transition });
+      setHoverFallback({});
+    }
+  };
+
+  if (props.whileTap) {
+    gameObject.on("pointerdown", animatePointerDown);
+    gameObject.on("pointerup", animatePointerUp);
+  }
+
+  if (props.whileHover) {
+    gameObject.on("pointerover", animatePointerOver);
+    gameObject.on("pointerout", animatePointerOut);
+  }
 
   onCleanup(() => {
     if (props.exit) {
       const { transition, ...values } = props.exit;
-      setExitTween(values, mergeTweenConfig(transition));
-    } else {
-      gameObject.destroy();
+      setExitTween(values, { ...config, ...transition });
     }
   });
 

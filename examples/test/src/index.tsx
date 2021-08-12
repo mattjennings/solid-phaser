@@ -25,6 +25,14 @@ function Test() {
   const [count, setCount] = createSignal(0);
   const [text, setText] = createSignal("click me 3 times (0)");
 
+  function handleClick() {
+    // delay count update so we can update text prop before it unmounts
+    const nextCount = count() + 1;
+    setTimeout(() => setCount(nextCount));
+
+    setText(nextCount >= 3 ? "goodbye" : `click me 3 times (${nextCount})`);
+  }
+
   return (
     <Show when={count() < 3}>
       <Text
@@ -33,24 +41,17 @@ function Test() {
         text={text()}
         interactive
         origin={{ x: 0.5, y: 0.5 }}
-        onPointerUp={(self) => {
-          // delay count update so we can update text prop before Show unmounts
-          const nextCount = count() + 1;
-          setTimeout(() => setCount(nextCount));
-
-          setText(
-            nextCount >= 3 ? "goodbye" : `click me 3 times (${nextCount})`
-          );
-        }}
+        style={{ fontSize: "32px" }}
+        onPointerUp={handleClick}
       >
         <Tween
           ease="Bounce"
           duration={300}
-          initial={{ alpha: 0, scale: 0 }}
-          animate={{ alpha: 1, scale: 1 }}
           whileTap={{
-            alpha: 1,
-            scale: 2,
+            scale: 0.8,
+          }}
+          whileHover={{
+            scale: 1.2,
           }}
           exit={{
             alpha: 0,
