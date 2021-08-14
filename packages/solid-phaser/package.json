@@ -8,23 +8,14 @@
     "app.d.ts"
   ],
   "bin": {
-    "solid-phaser": "bin/solid-phaser.mjs"
+    "solid-phaser": "bin/solid-phaser.js"
   },
-  "main": "./dist/index.cjs.js",
-  "module": "./dist/index.es.js",
+  "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "import": "./dist/index.es.js",
-      "require": "./dist/index.cjs.js"
-    },
-    "./test": {
-      "import": "./dist/test/index.es.js",
-      "require": "./dist/test/index.cjs.js"
-    },
-    "./cli": {
-      "import": "./dist/test/cli.es.js"
-    }
+    ".": "./dist/index.js",
+    "./test": "./dist/test/index.js",
+    "./cli": "./dist/cli/index.js"
   },
   "repository": {
     "type": "git",
@@ -39,8 +30,7 @@
   "scripts": {
     "solid-phaser": "node bin/solid-phaser.js",
     "dev": "node scripts/build",
-    "types": "tsc",
-    "build": "node build.mjs ",
+    "build": "NODE_ENV=production node scripts/build",
     "prepublishOnly": "npm run build",
     "release": "npm publish",
     "test": "jest",

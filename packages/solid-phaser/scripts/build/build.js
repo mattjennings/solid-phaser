@@ -1,10 +1,9 @@
 const { solidPlugin } = require("esbuild-plugin-solid");
 const esbuild = require("esbuild");
-const path = require("path");
 const { performance } = require("perf_hooks");
-const { green } = require("kleur");
-
+const { green, red } = require("kleur");
 const start = performance.now();
+const { Worker } = require("worker_threads");
 
 const external = [
   ...Object.keys(require("../../package.json").dependencies),
@@ -14,6 +13,22 @@ const external = [
 ];
 
 module.exports = ({ name, entry, outdir }) => {
+  //Create new worker
+  const worker = new Worker("./scripts/build/types-worker.js", {
+    workerData: {
+      name,
+      entry,
+      outdir,
+      dev: process.env.NODE_ENV !== "production",
+    },
+  });
+
+  //Listen for a message from worker
+  worker.postMessage("build");
+  worker.on("error", (error) => {
+    console.error(red(error.stack));
+  });
+
   esbuild
     .build({
       plugins: [solidPlugin()],
