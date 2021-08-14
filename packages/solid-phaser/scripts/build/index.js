@@ -1,3 +1,3 @@
-require("./core");
+require("./main");
 require("./cli");
 require("./test");

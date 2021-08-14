@@ -2,7 +2,7 @@ const path = require("path");
 const build = require("./build.js");
 
 build({
-  name: "core",
-  entry: path.resolve(__dirname, "../../src/core/index.ts"),
+  name: "index",
+  entry: path.resolve(__dirname, "../../src/index.ts"),
   outdir: path.join(__dirname, "../../dist"),
 });
