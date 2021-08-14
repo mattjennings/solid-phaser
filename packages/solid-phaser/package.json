@@ -3,8 +3,13 @@
   "version": "0.0.1-alpha.0",
   "description": "Create Phaser 3 games with solid-js",
   "files": [
-    "dist"
+    "bin",
+    "dist",
+    "app.d.ts"
   ],
+  "bin": {
+    "solid-phaser": "bin/solid-phaser.mjs"
+  },
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.es.js",
   "types": "./dist/index.d.ts",
@@ -16,6 +21,9 @@
     "./test": {
       "import": "./dist/test/index.es.js",
       "require": "./dist/test/index.cjs.js"
+    },
+    "./cli": {
+      "import": "./dist/test/cli.es.js"
     }
   },
   "repository": {
@@ -29,7 +37,9 @@
   "homepage": "https://github.com/mattjennings/solid-phaser#readme",
   "license": "MIT",
   "scripts": {
-    "dev": "WATCH=true node build.mjs",
+    "solid-phaser": "node bin/solid-phaser.js",
+    "dev": "node scripts/build",
+    "types": "tsc",
     "build": "node build.mjs ",
     "prepublishOnly": "npm run build",
     "release": "npm publish",
@@ -47,15 +57,16 @@
     "babel-jest": "^27.0.6",
     "canvas": "^2.8.0",
     "datauri": "^3.0.0",
+    "esbuild": "^0.12.20",
+    "esbuild-plugin-solid": "^0.3.1",
     "jest": "^26.3.3",
     "phaser": "^3.55.2",
+    "rollup-plugin-node-externals": "^2.2.0",
     "rollup-plugin-typescript2": "^0.30.0",
     "solid-jest": "^0.1.1",
     "solid-js": "^1.1.0",
     "solid-testing-library": "^0.2.0",
-    "typescript": "~4.2.2",
-    "vite": "^2.4.4",
-    "vite-plugin-solid": "^2.0.1"
+    "typescript": "~4.2.2"
   },
   "peerDependencies": {
     "phaser": "^3.55.0",
@@ -63,6 +74,12 @@
     "solid-testing-library": "^0.2.0"
   },
   "dependencies": {
-    "tiny-warning": "^1.0.3"
+    "chokidar": "^3.5.1",
+    "deepmerge": "^4.2.2",
+    "kleur": "^4.1.4",
+    "sade": "^1.7.4",
+    "tiny-warning": "^1.0.3",
+    "vite": "^2.4.4",
+    "vite-plugin-solid": "^2.0.1"
   }
 }
