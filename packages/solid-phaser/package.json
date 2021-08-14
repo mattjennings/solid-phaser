@@ -17,6 +17,14 @@
     "./test": "./dist/test/index.js",
     "./cli": "./dist/cli/index.js"
   },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "dist/*/index.d.ts",
+        "dist/index.d.ts"
+      ]
+    }
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mattjennings/solid-phaser.git"
