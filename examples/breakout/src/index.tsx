@@ -20,7 +20,6 @@ render(
         }}
         create={(scene) => {
           scene.physics.world.setBoundsCollision(true, true, true, true);
-          scene.anims.createFromAseprite("assets/sprites/player");
         }}
       >
         <Breakout />

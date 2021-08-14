@@ -28,7 +28,7 @@ export async function getConfig({
         publicDir: solidPhaserConfig.files.assets,
         plugins: [solid()],
         optimizeDeps: {
-          include: ["phaser"],
+          include: ["phaser", "solid-phaser", "solid-phaser/router"],
         },
         build: {
           minify: true,
@@ -68,7 +68,7 @@ async function getSolidPhaserConfig(): Promise<SolidPhaserConfig> {
   const defaultConfig: SolidPhaserConfig = {
     files: {
       assets: "src/assets",
-      game: "src/game.tsx",
+      game: "src/_game.tsx",
       scenes: "src/scenes",
       components: "src/components",
     },

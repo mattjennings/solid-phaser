@@ -15,7 +15,8 @@
   "exports": {
     ".": "./dist/index.js",
     "./test": "./dist/test/index.js",
-    "./cli": "./dist/cli/index.js"
+    "./cli": "./dist/cli/index.js",
+    "./router": "./dist/router/index.js"
   },
   "typesVersions": {
     "*": {

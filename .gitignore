@@ -3,5 +3,6 @@ dist
 .vercel
 coverage
 .tmp
+.solid-phaser
 
 .DS_Store

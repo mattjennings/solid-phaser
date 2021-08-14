@@ -20,12 +20,13 @@ export default async function dev({ cwd = process.cwd(), port = 3000 } = {}) {
   const server = await createViteServer(
     mergeConfig(
       {
+        configFile: false,
         root: cwd,
         server: {
           port,
         },
       },
-      config
+      config.vite
     )
   );
 
@@ -50,6 +51,7 @@ async function watcher({
       manifestData,
       dir,
     });
+    console.log(manifestData);
   }
   const dirs = [
     config.files.scenes,
@@ -60,18 +62,18 @@ async function watcher({
 
   update();
 
-  chokidar
-    .watch(dirs)
-    .on("add", async (filePath) => {
-      await update();
-    })
-    .on("change", async (filePath) => {
-      if (filePath.includes("solid-phaser.config.js")) {
-        console.warn(
-          yellow("solid-phaser.config.js was changed. Restart is required")
-        );
-      } else {
-        await update();
-      }
-    });
+  // chokidar
+  //   .watch(dirs)
+  //   .on("add", async (filePath) => {
+  //     await update();
+  //   })
+  //   .on("change", async (filePath) => {
+  //     if (filePath.includes("solid-phaser.config.js")) {
+  //       console.warn(
+  //         yellow("solid-phaser.config.js was changed. Restart is required")
+  //       );
+  //     } else {
+  //       await update();
+  //     }
+  //   });
 }

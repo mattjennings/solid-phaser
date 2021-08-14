@@ -1,14 +1,17 @@
 import type { Assets } from "../../";
 import type { Component } from "solid-js";
+import { SceneProps } from "../../Scene";
 
-export type SceneComponent = Component<{
+export type SceneComponent = Component<SceneProps>;
+
+export type SceneExports = {
   preload?: (scene: Phaser.Scene) => any;
   create?: (scene: Phaser.Scene) => any;
   init?: (scene: Phaser.Scene) => any;
   assets?: Assets;
   physics?: Phaser.Types.Core.PhysicsConfig;
   plugins?: any[];
-}>;
+};
 
 export type ComponentLoader = () => Promise<Component>;
 export type SceneComponentLoader = () => Promise<SceneComponent>;
