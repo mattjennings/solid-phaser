@@ -1,7 +1,7 @@
 import { Component, createSignal } from "solid-js";
 import { render as _render, waitFor } from "solid-testing-library";
-import { Game, GameProps } from "../Game";
-import { Scene, SceneProps } from "../Scene";
+import { Game, GameProps } from "../core/Game";
+import { Scene, SceneProps } from "../core/Scene";
 
 export async function render(
   component: Component,
