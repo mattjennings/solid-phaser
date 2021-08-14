@@ -1,8 +1,22 @@
 import { createEffect, createSignal, Index, onMount, Show } from "solid-js";
-import { createTween, onInputEvent, onSceneEvent, Text } from "solid-phaser";
-import Ball from "./Ball";
-import Block from "./Block";
-import Paddle from "./Paddle";
+import {
+  Assets,
+  createTween,
+  onInputEvent,
+  onSceneEvent,
+  Text,
+} from "solid-phaser";
+import Ball from "../components/Ball";
+import Block from "../components/Block";
+import Paddle from "../components/Paddle";
+
+export const assets: Assets = {
+  atlas: ["breakout.json"],
+};
+
+export const create = (scene) => {
+  scene.physics.world.setBoundsCollision(true, true, true, true);
+};
 
 export default function Breakout() {
   let ball: Phaser.GameObjects.Sprite &

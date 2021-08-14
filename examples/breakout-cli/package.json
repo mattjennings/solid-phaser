@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "license": "MIT",
   "scripts": {
-    "start": "solid-phaser",
-    "dev": "solid-phaser",
+    "start": "solid-phaser dev",
+    "dev": "solid-phaser dev",
     "build": "solid-phaser build"
   },
   "devDependencies": {

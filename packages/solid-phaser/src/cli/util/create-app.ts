@@ -30,17 +30,22 @@ export function createApp({
 
   if (isInitial) {
     fs.writeFileSync(
-      path.resolve(`${dir}/index.js`),
-      `
-    import Root from './root.js'
-    import * as manifest from './manifest.js'
-    import { start } from './runtime/game.js'
-
-    start({ Root, manifest })
-  `
+      path.resolve(`${dir}/index.jsx`),
+      `import * as manifest from "./manifest.js";
+      import { render } from "solid-js/web";
+      import { Router } from 'solid-phaser/router'
+      
+      const Game = manifest.game.component;
+      
+      render(() => (
+          <Game>
+            <Router initial={manifest.initialScene} scenes={manifest.scenes} />
+          </Game>
+        ),
+        document.getElementById("#root")
+      )  
+`
     );
-
-    copyRuntime(`${dir}/runtime`);
 
     isInitial = false;
   }
@@ -55,10 +60,7 @@ function generateClientManifest(manifestData: ManifestData, dir: string) {
           path: "${scene.path}",
           component: () => import(${JSON.stringify(
             path.relative(dir, scene.component)
-          )}),
-          $loading: ${JSON.stringify(
-            scene.$loading ? scene.$loading : "$loading"
-          )},          
+          )}),        
           initial: ${JSON.stringify(scene.initial)}
         }`;
       })
@@ -131,20 +133,4 @@ function generateApp(manifestData: ManifestData, base: string) {
   //     {/if}
   // 	</Game>
   // `;
-}
-
-function copyRuntime(dest: string) {
-  let prefix = "..";
-  do {
-    // we jump through these hoops so that this function
-    // works whether or not it's been bundled
-    const resolved = path.resolve(__dirname, `${prefix}/dist/runtime`);
-
-    if (fs.existsSync(resolved)) {
-      fs.copySync(resolved, dest);
-      return;
-    }
-
-    prefix = `../${prefix}`;
-  } while (true); // eslint-disable-line
 }

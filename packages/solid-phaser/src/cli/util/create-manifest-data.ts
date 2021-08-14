@@ -21,7 +21,7 @@ export default async function createManifestData({
     (acc, filePath) => {
       const baseName = filePath.split("/").pop();
       const component = posixify(path.relative(cwd, filePath));
-      const route = filePath.replace(`${sceneDir}/`, ""); //.replace(".svelte", "");
+      const route = filePath.replace(`${sceneDir}/`, "");
 
       if (baseName.startsWith("$")) {
         return {
@@ -35,21 +35,14 @@ export default async function createManifestData({
 
       return acc;
     },
-    {
-      $loading: {
-        path: "$loading",
-        component: "./runtime/templates/$loading.svelte",
-      },
-    }
+    {}
   );
 
   const scenes: Record<string, SceneComponentData> = files.reduce(
     (acc, filePath) => {
       const baseName = filePath.split("/").pop();
       const component = posixify(path.relative(cwd, filePath));
-      let route = posixify(
-        filePath.replace(`${sceneDir}/`, "") //.replace('.svelte', '')
-      );
+      let route = posixify(filePath.replace(`${sceneDir}/`, ""));
 
       if (route.endsWith("/index")) {
         route = route.split(/\/index$/)[0];
@@ -61,10 +54,6 @@ export default async function createManifestData({
           [route]: {
             path: route,
             component,
-            $loading: findLoadingPath(
-              templates,
-              path.relative(sceneDir, filePath)
-            ),
             initial: config.initialScene && config.initialScene === route,
           },
         };
@@ -96,25 +85,4 @@ function getFiles(dir: string): string[] {
 
 function posixify(str: string) {
   return str.replace(/\\/g, "/");
-}
-
-/**
- * Recursively looks up until it finds a $loading in the templates matching its route
- */
-function findLoadingPath(
-  templates: Record<string, TemplateComponentData>,
-  filePath: string
-): string {
-  const split = filePath.split("/");
-
-  for (let i = split.length - 1; i >= 0; i--) {
-    const templatePath =
-      i === 0 ? "$loading" : split.slice(0, i).join("/") + "/$loading";
-
-    if (templates[templatePath]) {
-      return templates[templatePath].path;
-    }
-  }
-
-  throw Error("$loading not found");
 }
