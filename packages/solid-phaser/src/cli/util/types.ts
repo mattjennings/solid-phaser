@@ -1,4 +1,4 @@
-import type { Assets } from "../../core";
+import type { Assets } from "../../";
 import type { Component } from "solid-js";
 
 export type SceneComponent = Component<{
