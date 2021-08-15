@@ -1,16 +1,16 @@
-import fs from "fs-extra";
-import path from "path";
-import mkdirp from "mkdirp";
-import { ManifestData } from "./types";
+import fs from 'fs-extra'
+import path from 'path'
+import mkdirp from 'mkdirp'
+import { ManifestData } from './types'
 
-const previous_contents = new Map<string, string>();
-let isInitial = true;
+const previous_contents = new Map<string, string>()
+let isInitial = true
 
 export function writeIfChanged(file: string, code: string) {
   if (code !== previous_contents.get(file)) {
-    previous_contents.set(file, code);
-    mkdirp.sync(path.dirname(file));
-    fs.writeFileSync(file, code);
+    previous_contents.set(file, code)
+    mkdirp.sync(path.dirname(file))
+    fs.writeFileSync(file, code)
   }
 }
 
@@ -18,15 +18,13 @@ export function createApp({
   manifestData,
   dir,
 }: {
-  manifestData: ManifestData;
-  dir: string;
+  manifestData: ManifestData
+  dir: string
 }) {
   writeIfChanged(
     `${dir}/manifest.js`,
     generateClientManifest(manifestData, dir)
-  );
-
-  writeIfChanged(`${dir}/root.js`, generateApp(manifestData, dir));
+  )
 
   if (isInitial) {
     fs.writeFileSync(
@@ -36,18 +34,18 @@ export function createApp({
       import { Router } from 'solid-phaser/router'
       
       const Game = manifest.game.component;
-      
+
       render(() => (
           <Game>
-            <Router initial={manifest.initialScene} scenes={manifest.scenes} />
+            <Router scenes={manifest.scenes} />
           </Game>
         ),
-        document.getElementById("#root")
+        document.getElementById("root")
       )  
 `
-    );
+    )
 
-    isInitial = false;
+    isInitial = false
   }
 }
 
@@ -62,29 +60,30 @@ function generateClientManifest(manifestData: ManifestData, dir: string) {
             path.relative(dir, scene.component)
           )}),        
           initial: ${JSON.stringify(scene.initial)}
-        }`;
+        }`
       })
-      .join(",")}
-  }`;
+      .join(',')}
+  }`
 
   const templates = `{
     ${Object.entries(manifestData.templates)
       .map(([_, template]) => {
         const componentPath = template.component.startsWith(
-          "./runtime/templates"
+          './runtime/templates'
         )
           ? template.component
-          : path.relative(dir, template.component);
+          : path.relative(dir, template.component)
 
         return `${JSON.stringify(template.path)}: {
           path: "${template.path}",
           component: () => import(${JSON.stringify(componentPath)})
-        }`;
+        }`
       })
-      .join(",")}
-  }`;
+      .join(',')}
+  }`
 
   return `
+    import { lazy } from 'solid-js'
 		import Game from ${JSON.stringify(
       path.relative(dir, manifestData.game.component)
     )};
@@ -96,41 +95,5 @@ function generateClientManifest(manifestData: ManifestData, dir: string) {
     export const game = {
       component: Game
     }
-	`;
-}
-
-function generateApp(manifestData: ManifestData, base: string) {
-  return `
-		export default () => {
-      console.log('app')
-      return null
-    }
-	`;
-  // return `
-  // 	<script>
-  //     import { Scene } from 'phelte';
-
-  //     export let Game;
-  //     export let loadingComponent = undefined
-  //     export let component = undefined;
-  //     export let gameProps = undefined;
-  //     export let sceneProps = undefined;
-  //     export let componentProps = {}
-
-  //     $: sceneKey = sceneProps?.key
-  // 	</script>
-
-  // 	<Game {...(gameProps || {})}>
-  //     {#if component}
-  //       {#key sceneKey}
-  //         <Scene {...(sceneProps || {})}>
-  //           <slot slot="loading" let:progress>
-  //             <svelte:component this={loadingComponent} {...componentProps}  progress={progress}  />
-  //           </slot>
-  //           <svelte:component this={component} {...componentProps} />
-  //         </Scene>
-  //       {/key}
-  //     {/if}
-  // 	</Game>
-  // `;
+	`
 }
