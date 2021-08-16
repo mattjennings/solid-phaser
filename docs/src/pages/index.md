@@ -5,62 +5,31 @@ layout: ../layouts/Main.astro
 
 # Introduction
 
-This is still an early proof of concept and is not yet ready for production use. If you still wish to use it, this is how you can get started:
+solid-phaser allows you to create Phaser games with the Solid framework.
 
-```
-npm install solid-phaser
-```
+This is still in the very early stages. The current focus is to experiment with the core API of creating game objects, interacting with them, etc. before going for full Phaser API coverage. Expect breaking changes without warning while it's still in 0.x.x.
 
-```jsx
-import { render } from "solid-js/web";
-import { Game, Scene, Text } from "solid-phaser";
+The [GameObject](/components/game-object) component is designed to be extensible, so for any missing components based on GameObject you should be able to create your own for the time being.
 
-function App() {
+# Getting Started
+
+The example template is the easiest way to get started. It uses our custom build tool (using vite) to help manage scenes and other configuration. There will be docs on this soon.
+
+```jsx codesandbox=solid-phaser
+import Phaser from 'phaser'
+import { Game, Scene, Text } from 'solid-phaser'
+
+export default function Main() {
   return (
-    <Game
-      width={800}
-      height={800}
-      scale={{ mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH }}
-    >
-      <Scene key="main">
-        <Text
-          x={300}
-          y={400}
-          text="Hello World"
-          origin={{ x: 0.5, y: 0.5 }}
-          style={{ fontSize: "48px" }}
-        />
-      </Scene>
-    </Game>
-  );
-}
-
-render(() => <App />, document.getElementById("root"));
-```
-
-```jsx codesandbox=solid-phaser|preview
-import Phaser from "phaser";
-import { Game, Scene, Text } from "solid-phaser";
-
-export default function App() {
-  return (
-    <Game
-      width={800}
-      height={800}
-      scale={{ mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH }}
-    >
-      <Scene key="main">
-        <Text
-          x={300}
-          y={400}
-          text="Hello World"
-          origin={{ x: 0.5, y: 0.5 }}
-          style={{ fontSize: "48px" }}
-        />
-      </Scene>
-    </Game>
-  );
+    <Text
+      x={400}
+      y={400}
+      text="Hello World"
+      origin={{ x: 0.5, y: 0.5 }}
+      style={{
+        fontSize: '48px',
+      }}
+    />
+  )
 }
 ```
-
-The component APIs are generated from the source code, so they will be updated as I go. Breaking changes will happen!
