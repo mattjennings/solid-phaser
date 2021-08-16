@@ -1,24 +1,24 @@
-import Phaser from "phaser";
-import { Accessor, createSignal } from "solid-js";
-import { useScene } from "../Scene";
-import warning from "tiny-warning";
+import Phaser from 'phaser'
+import { Accessor, createSignal } from 'solid-js'
+import { useScene } from '../Scene'
+import warning from 'tiny-warning'
 
 export interface TweenConfig
   extends Omit<
     Phaser.Types.Tweens.TweenBuilderConfig,
-    "targets" | "paused" | "props"
+    'targets' | 'paused' | 'props'
   > {
-  ease?: keyof typeof Phaser.Math.Easing | ((progress: number) => number);
+  ease?: keyof typeof Phaser.Math.Easing | ((progress: number) => number)
 }
 
-type TweenTarget<T> = T | (() => T) | (() => T[]);
+type TweenTarget<T> = T | (() => T) | (() => T[])
 
 type SetTween<T> = (
   value: T | Partial<T> | ((prev: T) => T | Partial<T>),
   config?: TweenConfig
-) => void;
+) => void
 
-type Unwrap<T> = T extends Array<infer U> ? U : T;
+type Unwrap<T> = T extends Array<infer U> ? U : T
 
 /**
  * Creates a Phaser.Tweens.Tween on the scene. It returns a signal but the setter function is
@@ -28,37 +28,37 @@ export function createTween<T>(
   target: TweenTarget<T>,
   config: TweenConfig
 ): [Accessor<T>, SetTween<Unwrap<T>>] {
-  const scene = useScene();
+  const scene = useScene()
 
   const [value, setValue] = createSignal<T>(
     isFunction(target)
       ? // i've gone too far into the typescript and cannot figure this one out
         (target() as unknown as T)
       : target
-  );
+  )
 
-  let tween: Phaser.Tweens.Tween;
+  let tween: Phaser.Tweens.Tween
 
   function initTween(nextValue, nextConfig) {
     if (tween) {
-      tween.remove();
+      tween.remove()
     }
 
-    const _target = isFunction(target) ? target() : target;
-    const isObject = typeof _target === "object";
+    const _target = isFunction(target) ? target() : target
+    const isObject = typeof _target === 'object'
 
-    let targets;
+    let targets
 
     if (isFunction(target)) {
-      targets = target();
+      targets = target()
       warning(
-        typeof targets !== "undefined",
+        typeof targets !== 'undefined',
         `createTween target function returned undefined. If this is for a ref, make sure you are setting the tweened value after mount (e.g. in an onMount or createEffect)`
-      );
+      )
     } else if (isObject) {
-      targets = value();
+      targets = value()
     } else {
-      targets = { value: value() };
+      targets = { value: value() }
     }
 
     tween = scene.tweens.add({
@@ -69,32 +69,32 @@ export function createTween<T>(
       onUpdate: (tween, latest, ...args) => {
         if (isObject) {
           // not sure about this, but value won't update unless we create a new reference
-          setValue({ ...latest });
+          setValue({ ...latest })
         } else if (!isFunction(target)) {
           // don't set value if target is a function, we're mutating it.
-          setValue(latest.value);
+          setValue(latest.value)
         }
-        config.onUpdate?.(tween, isObject ? latest : latest.value, ...args);
+        config.onUpdate?.(tween, isObject ? latest : latest.value, ...args)
       },
 
       // assign values to tween
       ...(isObject ? { ...nextValue } : { value: nextValue }),
-    });
+    })
   }
 
   const update: SetTween<Unwrap<T>> = (next, nextConfig) => {
-    const nextValue = isFunction(next) ? next(value() as any) : next;
+    const nextValue = isFunction(next) ? next(value() as any) : next
 
     if (!value() && isFunction(target)) {
-      setValue(target() as any);
+      setValue(target() as any)
     }
 
-    initTween(nextValue, nextConfig);
-  };
+    initTween(nextValue, nextConfig)
+  }
 
-  return [value, update];
+  return [value, update]
 }
 
 function isFunction<T>(target: T | Function): target is Function {
-  return typeof target === "function";
+  return typeof target === 'function'
 }

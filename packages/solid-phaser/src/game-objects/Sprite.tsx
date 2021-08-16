@@ -1,6 +1,6 @@
-import { createEffect, splitProps } from "solid-js";
-import { RefFunction } from "../types";
-import { ComposedGameObjectProps, GameObject } from "./GameObject";
+import { createEffect, splitProps } from 'solid-js'
+import { RefFunction } from '../types'
+import { ComposedGameObjectProps, GameObject } from './GameObject'
 import {
   AlphaProps,
   BlendModeProps,
@@ -15,7 +15,7 @@ import {
   TintProps,
   TransformProps,
   VisibleProps,
-} from "./props";
+} from './props'
 
 export interface SpriteProps
   extends ComposedGameObjectProps<Phaser.GameObjects.Sprite>,
@@ -32,36 +32,36 @@ export interface SpriteProps
     TintProps,
     TransformProps,
     VisibleProps {
-  play?: string;
-  x?: number;
-  y?: number;
+  play?: string
+  x?: number
+  y?: number
 
-  delay?: number;
-  duration?: number;
-  forward?: boolean;
-  frameRate?: number;
-  msPerFrame?: number;
-  skipMissedFrames?: boolean;
-  repeat?: number;
-  repeatDelay?: number;
-  timeScale?: number;
-  yoyo?: boolean;
+  delay?: number
+  duration?: number
+  forward?: boolean
+  frameRate?: number
+  msPerFrame?: number
+  skipMissedFrames?: boolean
+  repeat?: number
+  repeatDelay?: number
+  timeScale?: number
+  yoyo?: boolean
 }
 
 export function Sprite(props: SpriteProps) {
   const [local, other] = splitProps(props, [
-    "play",
-    "repeat",
-    "delay",
-    "repeatDelay",
-    "duration",
-    "frameRate",
-    "msPerFrame",
-    "timeScale",
-    "yoyo",
-    "skipMissedFrames",
-  ]);
-  let instance: Phaser.GameObjects.Sprite;
+    'play',
+    'repeat',
+    'delay',
+    'repeatDelay',
+    'duration',
+    'frameRate',
+    'msPerFrame',
+    'timeScale',
+    'yoyo',
+    'skipMissedFrames',
+  ])
+  let instance: Phaser.GameObjects.Sprite
 
   createEffect(() => {
     if (local.play) {
@@ -79,17 +79,17 @@ export function Sprite(props: SpriteProps) {
           skipMissedFrames: local.skipMissedFrames,
         },
         true
-      );
+      )
     } else {
-      instance?.stop();
+      instance?.stop()
     }
-  });
+  })
 
   return (
     <GameObject
       ref={(el) => {
-        instance = el;
-        (props.ref as RefFunction)?.(el);
+        instance = el
+        ;(props.ref as RefFunction)?.(el)
       }}
       create={(scene) =>
         new Phaser.GameObjects.Sprite(
@@ -104,5 +104,5 @@ export function Sprite(props: SpriteProps) {
     >
       {props.children}
     </GameObject>
-  );
+  )
 }

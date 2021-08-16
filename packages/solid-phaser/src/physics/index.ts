@@ -1,7 +1,7 @@
-export { default as ArcadeCollider } from "./ArcadeCollider";
-export type { ArcadeColliderProps } from "./ArcadeCollider";
+export { default as ArcadeCollider } from './ArcadeCollider'
+export type { ArcadeColliderProps } from './ArcadeCollider'
 
-export { default as ArcadePhysics } from "./ArcadePhysics";
+export { default as ArcadePhysics } from './ArcadePhysics'
 export type {
   AccelerationProps,
   AngularProps,
@@ -16,4 +16,4 @@ export type {
   MassProps,
   SizeProps,
   VelocityProps,
-} from "./ArcadePhysics";
+} from './ArcadePhysics'

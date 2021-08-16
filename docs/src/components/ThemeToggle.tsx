@@ -1,35 +1,35 @@
-import { createSignal, createEffect, Show } from "solid-js";
-import type { Component } from "solid-js";
+import { createSignal, createEffect, Show } from 'solid-js'
+import type { Component } from 'solid-js'
 
 const ThemeToggle: Component = () => {
-  const themes = ["dark", "light"];
-  const [theme, setTheme] = createSignal(themes[0]);
+  const themes = ['dark', 'light']
+  const [theme, setTheme] = createSignal(themes[0])
 
   createEffect(() => {
-    const user = localStorage.getItem("theme");
-    if (!user) return;
-    setTheme(user);
-  });
+    const user = localStorage.getItem('theme')
+    if (!user) return
+    setTheme(user)
+  })
 
   createEffect(() => {
-    const root = document.documentElement;
-    localStorage.setItem("theme", theme());
+    const root = document.documentElement
+    localStorage.setItem('theme', theme())
 
-    theme() === "dark"
-      ? root.classList.add("dark")
-      : root.classList.remove("dark");
-  });
+    theme() === 'dark'
+      ? root.classList.add('dark')
+      : root.classList.remove('dark')
+  })
 
   return (
     <button
       type="button"
       role="switch"
       aria-label="Toggle Dark Mode"
-      aria-checked={theme() === "dark"}
+      aria-checked={theme() === 'dark'}
       class="unstyled h-4 w-4 sm:h-8 sm:w-8 sm:p-1"
-      onClick={() => setTheme(theme() === "dark" ? "light" : "dark")}
+      onClick={() => setTheme(theme() === 'dark' ? 'light' : 'dark')}
     >
-      <Show when={theme() === "light"}>
+      <Show when={theme() === 'light'}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           class="text-gray-500"
@@ -39,7 +39,7 @@ const ThemeToggle: Component = () => {
           <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
         </svg>
       </Show>
-      <Show when={theme() === "dark"}>
+      <Show when={theme() === 'dark'}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           class="text-yellow-500"
@@ -54,7 +54,7 @@ const ThemeToggle: Component = () => {
         </svg>
       </Show>
     </button>
-  );
-};
+  )
+}
 
-export default ThemeToggle;
+export default ThemeToggle

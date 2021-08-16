@@ -1,4 +1,4 @@
-import Phaser from "phaser";
+import Phaser from 'phaser'
 import {
   createContext,
   JSX,
@@ -6,14 +6,14 @@ import {
   onCleanup,
   splitProps,
   useContext,
-} from "solid-js";
-import { useScene } from "../Scene";
-import { Ref, RefFunction } from "../types";
+} from 'solid-js'
+import { useScene } from '../Scene'
+import { Ref, RefFunction } from '../types'
 import {
   ApplyProps,
   createApplyPropsEffect,
-} from "../util/createApplyPropsEffect";
-import { useGroup } from "./Group";
+} from '../util/createApplyPropsEffect'
+import { useGroup } from './Group'
 import {
   applyAlphaProps,
   applyCropProps,
@@ -22,7 +22,7 @@ import {
   applyTextureProps,
   applyTintProps,
   applyTransformProps,
-} from "./props";
+} from './props'
 
 export interface GameObjectProps<
   Instance extends Phaser.GameObjects.GameObject,
@@ -32,7 +32,7 @@ export interface GameObjectProps<
    * Called when it's time to instantiate the game object. You can return any
    * Phaser GameObject instance.
    */
-  create: (scene: Phaser.Scene) => Instance;
+  create: (scene: Phaser.Scene) => Instance
 
   /**
    * When extra props are passed on to GameObject, they are assigned to the instance and updated
@@ -53,11 +53,11 @@ export interface GameObjectProps<
    */
   applyProps?: ApplyProps<
     Instance,
-    Omit<Partial<Props>, "create" | "applyProps">
-  >;
+    Omit<Partial<Props>, 'create' | 'applyProps'>
+  >
 
-  ref?: Ref<Instance>;
-  children?: JSX.Element;
+  ref?: Ref<Instance>
+  children?: JSX.Element
 
   /**
    * Assigns a name to the instance. This can helpful when you need to find
@@ -65,14 +65,14 @@ export interface GameObjectProps<
    *
    * See: https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.GameObject.html#name__anchor
    */
-  name?: string;
+  name?: string
 
   /**
    * Enables input events on the GameObject. Phaser will use the texture to determine the
    * hit area. If this GameObject does not have a texture then you will need to manually
    * set the hit area by passing in an object
    **/
-  interactive?: boolean | Phaser.Types.Input.InputConfiguration;
+  interactive?: boolean | Phaser.Types.Input.InputConfiguration
 
   /**
    * Assigns the active property to the instance. Setting this to false
@@ -80,94 +80,94 @@ export interface GameObjectProps<
    *
    * See: https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.GameObject.html#active__anchor
    */
-  active?: boolean;
+  active?: boolean
 
   /**
    * Called during the scene's update loop
    */
-  onUpdate?: (self: Instance) => void;
+  onUpdate?: (self: Instance) => void
 
   /**
    * Called during the scene's preupdate loop
    */
-  onPreUpdate?: (self: Instance) => void;
+  onPreUpdate?: (self: Instance) => void
 
   /**
    * Called during the scene's postupdate loop
    */
-  onPostUpdate?: (self: Instance) => void;
+  onPostUpdate?: (self: Instance) => void
 
   onDrag?: (
     self: Instance,
     pointer: Phaser.Input.Pointer,
     dragX: number,
     dragY: number
-  ) => void;
+  ) => void
   onDragEnd?: (
     self: Instance,
     pointer: Phaser.Input.Pointer,
     dragX: number,
     dragY: number
-  ) => void;
+  ) => void
   onDragEnter?: (
     self: Instance,
     pointer: Phaser.Input.Pointer,
     target: Phaser.GameObjects.GameObject
-  ) => void;
+  ) => void
   onDragLeave?: (
     self: Instance,
     pointer: Phaser.Input.Pointer,
     target: Phaser.GameObjects.GameObject
-  ) => void;
+  ) => void
   onDragOver?: (
     self: Instance,
     pointer: Phaser.Input.Pointer,
     target: Phaser.GameObjects.GameObject
-  ) => void;
+  ) => void
   onDragStart?: (
     self: Instance,
     pointer: Phaser.Input.Pointer,
     dragX: number,
     dragY: number
-  ) => void;
+  ) => void
   onDrop?: (
     self: Instance,
     pointer: Phaser.Input.Pointer,
     target: Phaser.GameObjects.GameObject
-  ) => void;
+  ) => void
   onPointerDown?: (
     self: Instance,
     pointer: Phaser.Input.Pointer,
     localX: number,
     localY: number,
     event: Phaser.Types.Input.EventData
-  ) => void;
+  ) => void
   onPointerMove?: (
     self: Instance,
     pointer: Phaser.Input.Pointer,
     localX: number,
     localY: number,
     event: Phaser.Types.Input.EventData
-  ) => void;
+  ) => void
   onPointerOver?: (
     self: Instance,
     pointer: Phaser.Input.Pointer,
     localX: number,
     localY: number,
     event: Phaser.Types.Input.EventData
-  ) => void;
+  ) => void
   onPointerOut?: (
     self: Instance,
     pointer: Phaser.Input.Pointer,
     event: Phaser.Types.Input.EventData
-  ) => void;
+  ) => void
   onPointerUp?: (
     self: Instance,
     pointer: Phaser.Input.Pointer,
     localX: number,
     localY: number,
     event: Phaser.Types.Input.EventData
-  ) => void;
+  ) => void
   onPointerWheel?: (
     self: Instance,
     pointer: Phaser.Input.Pointer,
@@ -175,7 +175,7 @@ export interface GameObjectProps<
     deltaY: number,
     deltaZ: number,
     event: Phaser.Types.Input.EventData
-  ) => void;
+  ) => void
 }
 
 /**
@@ -183,7 +183,7 @@ export interface GameObjectProps<
  **/
 export interface ComposedGameObjectProps<
   Instance extends Phaser.GameObjects.GameObject
-> extends Omit<GameObjectProps<Instance, {}>, "create" | "applyProps"> {}
+> extends Omit<GameObjectProps<Instance, {}>, 'create' | 'applyProps'> {}
 
 /**
  * The base GameObject component. It can be used to create a component for your own Phaser game object.
@@ -195,30 +195,30 @@ export function GameObject<
   Props = Record<string, any>
 >(props: GameObjectProps<Instance, Props> & Props) {
   const [local, restProps] = splitProps(props, [
-    "applyProps",
-    "create",
-    "onUpdate",
-    "onPreUpdate",
-    "onPostUpdate",
-    "onDrag",
-    "onDragEnd",
-    "onDragEnter",
-    "onDragLeave",
-    "onDragOver",
-    "onDragStart",
-    "onDrop",
-    "onPointerDown",
-    "onPointerMove",
-    "onPointerOut",
-    "onPointerOver",
-    "onPointerUp",
-    "onPointerWheel",
-  ]);
+    'applyProps',
+    'create',
+    'onUpdate',
+    'onPreUpdate',
+    'onPostUpdate',
+    'onDrag',
+    'onDragEnd',
+    'onDragEnter',
+    'onDragLeave',
+    'onDragOver',
+    'onDragStart',
+    'onDrop',
+    'onPointerDown',
+    'onPointerMove',
+    'onPointerOut',
+    'onPointerOver',
+    'onPointerUp',
+    'onPointerWheel',
+  ])
 
-  const scene = useScene();
-  const group = useGroup();
+  const scene = useScene()
+  const group = useGroup()
 
-  const instance = local.create(scene);
+  const instance = local.create(scene)
 
   createApplyPropsEffect(
     instance,
@@ -242,131 +242,131 @@ export function GameObject<
         ...applyTransformProps,
         interactive: (
           instance: Phaser.GameObjects.GameObject,
-          value: GameObjectProps<Instance, Props>["interactive"]
+          value: GameObjectProps<Instance, Props>['interactive']
         ) => {
           if (!value) {
-            instance.disableInteractive();
+            instance.disableInteractive()
           } else {
-            if (typeof value === "boolean") {
+            if (typeof value === 'boolean') {
               if (value) {
-                instance.setInteractive();
+                instance.setInteractive()
               }
             } else {
-              instance.setInteractive(value);
+              instance.setInteractive(value)
             }
           }
         },
       },
       local.applyProps ?? {}
     ) as any
-  );
+  )
 
-  (props.ref as RefFunction)?.(instance);
+  ;(props.ref as RefFunction)?.(instance)
 
   if (!scene.children.exists(instance)) {
-    scene.add.existing(instance);
+    scene.add.existing(instance)
   }
 
   if (group) {
-    group.add(instance);
+    group.add(instance)
   }
 
   onCleanup(() => {
-    instance.destroy();
-  });
+    instance.destroy()
+  })
 
   ////////////////// EVENTS //////////////////////
   if (local.onUpdate) {
-    const cb = () => (instance.active ? local.onUpdate(instance) : void 0);
-    scene.events.on("update", cb);
+    const cb = () => (instance.active ? local.onUpdate(instance) : void 0)
+    scene.events.on('update', cb)
   }
 
   if (local.onPreUpdate) {
-    const cb = () => (instance.active ? local.onPreUpdate(instance) : void 0);
-    scene.events.on("preupdate", cb);
+    const cb = () => (instance.active ? local.onPreUpdate(instance) : void 0)
+    scene.events.on('preupdate', cb)
   }
 
   if (local.onPostUpdate) {
-    const cb = () => (instance.active ? local.onPostUpdate(instance) : void 0);
-    scene.events.on("postupdate", cb);
+    const cb = () => (instance.active ? local.onPostUpdate(instance) : void 0)
+    scene.events.on('postupdate', cb)
   }
 
   if (local.onDrag) {
     // @ts-ignore
-    const cb = (...args) => local.onDrag(instance, ...args);
-    instance.on("drag", cb);
+    const cb = (...args) => local.onDrag(instance, ...args)
+    instance.on('drag', cb)
   }
   if (local.onDragEnd) {
     // @ts-ignore
-    const cb = (...args) => local.onDragEnd(instance, ...args);
-    instance.on("dragend", cb);
+    const cb = (...args) => local.onDragEnd(instance, ...args)
+    instance.on('dragend', cb)
   }
   if (local.onDragEnter) {
     // @ts-ignore
-    const cb = (...args) => local.onDragEnter(instance, ...args);
-    instance.on("dragenter", cb);
+    const cb = (...args) => local.onDragEnter(instance, ...args)
+    instance.on('dragenter', cb)
   }
   if (local.onDragLeave) {
     // @ts-ignore
-    const cb = (...args) => local.onDragLeave(instance, ...args);
-    instance.on("dragleave", cb);
+    const cb = (...args) => local.onDragLeave(instance, ...args)
+    instance.on('dragleave', cb)
   }
   if (local.onDragOver) {
     // @ts-ignore
-    const cb = (...args) => local.onDragOver(instance, ...args);
-    instance.on("dragover", cb);
+    const cb = (...args) => local.onDragOver(instance, ...args)
+    instance.on('dragover', cb)
   }
   if (local.onDragStart) {
     // @ts-ignore
-    const cb = (...args) => local.onDragStart(instance, ...args);
-    instance.on("dragstart", cb);
+    const cb = (...args) => local.onDragStart(instance, ...args)
+    instance.on('dragstart', cb)
   }
   if (local.onDrop) {
     // @ts-ignore
-    const cb = (...args) => local.onDrop(instance, ...args);
-    instance.on("drop", cb);
+    const cb = (...args) => local.onDrop(instance, ...args)
+    instance.on('drop', cb)
   }
 
   if (local.onPointerDown) {
     // @ts-ignore
-    const cb = (...args) => local.onPointerDown(instance, ...args);
-    instance.on("pointerdown", cb);
+    const cb = (...args) => local.onPointerDown(instance, ...args)
+    instance.on('pointerdown', cb)
   }
   if (local.onPointerMove) {
     // @ts-ignore
-    const cb = (...args) => local.onPointerMove(instance, ...args);
-    instance.on("pointermove", cb);
+    const cb = (...args) => local.onPointerMove(instance, ...args)
+    instance.on('pointermove', cb)
   }
   if (local.onPointerOut) {
     // @ts-ignore
-    const cb = (...args) => local.onPointerOut(instance, ...args);
-    instance.on("pointerout", cb);
+    const cb = (...args) => local.onPointerOut(instance, ...args)
+    instance.on('pointerout', cb)
   }
   if (local.onPointerOver) {
     // @ts-ignore
-    const cb = (...args) => local.onPointerOver(instance, ...args);
-    instance.on("pointerover", cb);
+    const cb = (...args) => local.onPointerOver(instance, ...args)
+    instance.on('pointerover', cb)
   }
   if (local.onPointerUp) {
     // @ts-ignore
-    const cb = (...args) => local.onPointerUp(instance, ...args);
-    instance.on("pointerup", cb);
+    const cb = (...args) => local.onPointerUp(instance, ...args)
+    instance.on('pointerup', cb)
   }
   if (local.onPointerWheel) {
     // @ts-ignore
-    const cb = (...args) => local.onPointerWheel(instance, ...args);
-    instance.on("wheel", cb);
+    const cb = (...args) => local.onPointerWheel(instance, ...args)
+    instance.on('wheel', cb)
   }
 
   return (
     <GameObjectContext.Provider value={instance}>
       {props.children}
     </GameObjectContext.Provider>
-  );
+  )
 }
 
-const GameObjectContext = createContext<Phaser.GameObjects.GameObject>();
+const GameObjectContext = createContext<Phaser.GameObjects.GameObject>()
 
 export function useGameObject<T extends Phaser.GameObjects.GameObject>() {
-  return useContext(GameObjectContext) as T;
+  return useContext(GameObjectContext) as T
 }
