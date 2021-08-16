@@ -16,8 +16,7 @@ The [GameObject](/components/game-object) component is designed to be extensible
 The example template is the easiest way to get started. It uses our custom build tool (using vite) to help manage scenes and other configuration. There will be docs on this soon.
 
 ```jsx codesandbox=solid-phaser
-import Phaser from 'phaser'
-import { Game, Scene, Text } from 'solid-phaser'
+import { Text } from 'solid-phaser'
 
 export default function Main() {
   return (
