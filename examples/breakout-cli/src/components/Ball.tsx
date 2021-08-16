@@ -3,10 +3,10 @@ import {
   SpriteProps,
   ArcadePhysics,
   ArcadeCollider,
-} from "solid-phaser";
+} from 'solid-phaser'
 
 export interface BallProps extends SpriteProps {
-  onGameOver: () => void;
+  onGameOver: () => void
 }
 
 export default function Ball(props: BallProps) {
@@ -17,13 +17,13 @@ export default function Ball(props: BallProps) {
       Phaser.Types.Physics.Arcade.GameObjectWithDynamicBody
   ) {
     if (self.x < paddle.x) {
-      const diff = paddle.x - self.x;
-      self.body.setVelocityX(-10 * diff);
+      const diff = paddle.x - self.x
+      self.body.setVelocityX(-10 * diff)
     } else if (self.x > paddle.x) {
-      const diff = self.x - paddle.x;
-      self.body.setVelocityX(10 * diff);
+      const diff = self.x - paddle.x
+      self.body.setVelocityX(10 * diff)
     } else {
-      self.body.setVelocityX(2 + Math.random() * 8);
+      self.body.setVelocityX(2 + Math.random() * 8)
     }
   }
 
@@ -35,6 +35,7 @@ export default function Ball(props: BallProps) {
       y={props.y}
       texture="breakout"
       frame="ball1"
+      {...props}
     >
       <ArcadePhysics bounceX={1} bounceY={1}>
         <ArcadeCollider
@@ -42,11 +43,11 @@ export default function Ball(props: BallProps) {
           onCollide={handlePaddleCollide}
           onWorldBounds={(self, blocked) => {
             if (blocked.down) {
-              props.onGameOver();
+              props.onGameOver()
             }
           }}
         />
       </ArcadePhysics>
     </Sprite>
-  );
+  )
 }
