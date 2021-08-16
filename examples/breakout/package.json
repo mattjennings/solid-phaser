@@ -3,10 +3,9 @@
   "version": "0.0.1",
   "license": "MIT",
   "scripts": {
-    "start": "vite",
-    "dev": "vite",
-    "build": "vite build",
-    "serve": "vite preview"
+    "start": "solid-phaser dev",
+    "dev": "solid-phaser dev",
+    "build": "solid-phaser build"
   },
   "devDependencies": {
     "typescript": "~4.2.2",
