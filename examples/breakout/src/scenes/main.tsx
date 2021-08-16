@@ -73,11 +73,11 @@ export default function Breakout() {
 
   return (
     <>
-      <Show when={gameOver() && blocks().length > 0}>
-        <GameOverMessage text="Game Over :(" onClick={() => restart()} />
-      </Show>
-      <Show when={gameOver() && blocks().length === 0}>
-        <GameOverMessage text="You win!!" onClick={() => restart()} />
+      <Show when={gameOver()}>
+        <GameOverMessage
+          text={blocks().length === 0 ? 'You win!!' : 'Game Over :('}
+          onClick={() => restart()}
+        />
       </Show>
 
       <Ball
