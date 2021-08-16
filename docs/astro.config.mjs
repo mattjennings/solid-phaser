@@ -1,4 +1,4 @@
-const site = process.env.SITE;
+const site = process.env.SITE
 
 export default {
   buildOptions: site
@@ -9,33 +9,33 @@ export default {
     : {},
   devOptions: {
     port: 4000,
-    tailwindConfig: "./tailwind.config.js",
+    tailwindConfig: './tailwind.config.js',
   },
 
   markdownOptions: {
     remarkPlugins: [
       [
-        import("remark-codesandbox"),
+        import('remark-codesandbox'),
         {
-          mode: "iframe",
-          autoDeploy: process.env.NODE_ENV === "production",
+          mode: 'iframe',
+          autoDeploy: process.env.NODE_ENV === 'production',
           customTemplates: {
-            "solid-phaser": {
-              extends: "file:../templates/typescript",
-              entry: "src/App.tsx",
+            'solid-phaser': {
+              extends: 'file:../templates/typescript',
+              entry: 'src/scenes/main.tsx',
               query: {
                 codemirror: 1,
                 hidenavigation: 1,
                 runonclick: 1,
               },
             },
-            "solid-phaser|preview": {
-              extends: "solid-phaser",
+            'solid-phaser|preview': {
+              extends: 'solid-phaser',
               query: {
                 codemirror: 1,
                 hidenavigation: 1,
                 runonclick: 1,
-                view: "preview",
+                view: 'preview',
               },
             },
           },
@@ -44,5 +44,5 @@ export default {
     ],
   },
 
-  renderers: ["@astrojs/renderer-solid"],
-};
+  renderers: ['@astrojs/renderer-solid'],
+}
