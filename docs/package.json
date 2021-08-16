@@ -19,6 +19,6 @@
   },
   "dependencies": {
     "phaser": "^3.55.2",
-    "solid-phaser": "workspace:^0.0.1-alpha.0"
+    "solid-phaser": "workspace:^0.0.1-alpha.1"
   }
 }

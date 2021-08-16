@@ -13,7 +13,7 @@
     "vite-plugin-solid": "^2.0.1"
   },
   "dependencies": {
-    "solid-phaser": "^0.0.1-alpha.0",
+    "solid-phaser": "^0.0.1-alpha.1",
     "phaser": "^3.55.2",
     "solid-js": "^1.1.0"
   }
