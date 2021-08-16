@@ -71,7 +71,7 @@ function LoadScene(props) {
   const sceneProps = createMemo(() => {
     if (component()) {
       const { config } = component()
-      return config
+      return config ?? {}
     }
 
     return {}
