@@ -3,10 +3,10 @@ import {
   SpriteProps,
   ArcadePhysics,
   ArcadeCollider,
-} from "solid-phaser";
+} from 'solid-phaser'
 
 export interface BlockProps extends SpriteProps {
-  onCollide: () => void;
+  onCollide: () => void
 }
 
 export default function Block(props: BlockProps) {
@@ -22,5 +22,5 @@ export default function Block(props: BlockProps) {
         <ArcadeCollider with="ball" onCollide={props.onCollide} />
       </ArcadePhysics>
     </Sprite>
-  );
+  )
 }

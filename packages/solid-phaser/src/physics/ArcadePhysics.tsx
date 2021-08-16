@@ -1,8 +1,8 @@
-import Phaser from "phaser";
-import { JSX, onCleanup, splitProps } from "solid-js";
-import { useScene } from "../Scene";
-import { createApplyPropsEffect } from "../util/createApplyPropsEffect";
-import { useGameObject } from "../game-objects/GameObject";
+import Phaser from 'phaser'
+import { JSX, onCleanup, splitProps } from 'solid-js'
+import { useScene } from '../Scene'
+import { createApplyPropsEffect } from '../util/createApplyPropsEffect'
+import { useGameObject } from '../game-objects/GameObject'
 
 export interface ArcadePhysicsProps
   extends AccelerationProps,
@@ -17,23 +17,23 @@ export interface ArcadePhysicsProps
     MassProps,
     SizeProps,
     VelocityProps {
-  static?: boolean;
-  children?: JSX.Element;
+  static?: boolean
+  children?: JSX.Element
 }
 
 export default function ArcadePhysics(props: ArcadePhysicsProps) {
   const instance =
-    useGameObject<Phaser.Types.Physics.Arcade.GameObjectWithBody>();
-  const scene = useScene();
+    useGameObject<Phaser.Types.Physics.Arcade.GameObjectWithBody>()
+  const scene = useScene()
 
-  const [local, other] = splitProps(props, ["static"]);
+  const [local, other] = splitProps(props, ['static'])
 
   scene.physics.world.enable(
     instance,
     local.static
       ? Phaser.Physics.Arcade.STATIC_BODY
       : Phaser.Physics.Arcade.DYNAMIC_BODY
-  );
+  )
 
   if (!local.static) {
     createApplyPropsEffect(instance.body as Phaser.Physics.Arcade.Body, other, {
@@ -56,92 +56,92 @@ export default function ArcadePhysics(props: ArcadePhysicsProps) {
       velocityY: (body, val) => body.setVelocityY(val),
       maxVelocityX: (body, val) => body.setMaxVelocityX(val),
       maxVelocityY: (body, val) => body.setMaxVelocityY(val),
-    });
+    })
   }
 
   onCleanup(() => {
     if (scene.children.exists(instance)) {
-      scene.physics.world.disable(instance);
+      scene.physics.world.disable(instance)
     }
-  });
+  })
 
-  return props.children;
+  return props.children
 }
 
 export interface AccelerationProps {
-  accelerationX?: number;
-  accelerationY?: number;
+  accelerationX?: number
+  accelerationY?: number
 }
 
 export interface AngularProps {
-  angularAcceleration?: number;
-  angularDrag?: number;
-  angularVelocity?: number;
+  angularAcceleration?: number
+  angularDrag?: number
+  angularVelocity?: number
 }
 
 export interface BounceProps {
-  bounceX?: number;
-  bounceY?: number;
-  collideWorldBounds?: boolean;
-  onWorldBounds?: boolean;
+  bounceX?: number
+  bounceY?: number
+  collideWorldBounds?: boolean
+  onWorldBounds?: boolean
 }
 
 export interface DebugProps {
-  debugBodyColor?: number;
-  debugShowBody?: boolean;
-  debugShowVelocity?: boolean;
+  debugBodyColor?: number
+  debugShowBody?: boolean
+  debugShowVelocity?: boolean
 }
 
 export interface DragProps {
-  damping?: number;
-  dragX?: number;
-  dragY?: number;
-  allowDrag?: boolean;
+  damping?: number
+  dragX?: number
+  dragY?: number
+  allowDrag?: boolean
 }
 
 export interface EnableProps {
-  disableBody?: boolean;
+  disableBody?: boolean
 }
 
 export interface FrictionProps {
-  frictionX?: number;
-  frictionY?: number;
+  frictionX?: number
+  frictionY?: number
 }
 
 export interface GravityProps {
-  allowGravity?: boolean;
-  gravityX?: number;
-  gravityY?: number;
+  allowGravity?: boolean
+  gravityX?: number
+  gravityY?: number
 }
 
 export interface ImmovableProps {
-  immovable?: boolean;
+  immovable?: boolean
 }
 
 export interface MassProps {
-  mass?: number;
+  mass?: number
 }
 
 export interface SizeProps {
   circle?: {
-    radius: number;
-    offsetX?: number;
-    offsetY?: number;
-  };
+    radius: number
+    offsetX?: number
+    offsetY?: number
+  }
   offset?: {
-    x?: number;
-    y?: number;
-  };
+    x?: number
+    y?: number
+  }
   size?: {
-    width: number;
-    height: number;
-    center?: boolean;
-  };
+    width: number
+    height: number
+    center?: boolean
+  }
 }
 
 export interface VelocityProps {
-  velocityX?: number;
-  velocityY?: number;
-  maxVelocityX?: number;
-  maxVelocityY?: number;
+  velocityX?: number
+  velocityY?: number
+  maxVelocityX?: number
+  maxVelocityY?: number
 }

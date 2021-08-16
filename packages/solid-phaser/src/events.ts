@@ -1,6 +1,6 @@
-import { onCleanup } from "solid-js";
-import { useGame } from "./Game";
-import { useScene } from "./Scene";
+import { onCleanup } from 'solid-js'
+import { useGame } from './Game'
+import { useScene } from './Scene'
 
 /**
  * Sets up an event listener on scene.input
@@ -9,10 +9,10 @@ export function onInputEvent(
   event: string,
   callback: (...args: unknown[]) => void
 ) {
-  const scene = useScene();
+  const scene = useScene()
 
-  scene.input.on(event, callback);
-  onCleanup(() => scene.input.off(event, callback));
+  scene.input.on(event, callback)
+  onCleanup(() => scene.input.off(event, callback))
 }
 
 /**
@@ -22,10 +22,10 @@ export function onSceneEvent(
   event: string,
   callback: (...args: unknown[]) => void
 ) {
-  const scene = useScene();
+  const scene = useScene()
 
-  scene.events.on(event, callback);
-  onCleanup(() => scene.events.off(event, callback));
+  scene.events.on(event, callback)
+  onCleanup(() => scene.events.off(event, callback))
 }
 
 /**
@@ -35,8 +35,8 @@ export function onGameEvent(
   event: string,
   callback: (...args: unknown[]) => void
 ) {
-  const game = useGame();
+  const game = useGame()
 
-  game.events.on(event, callback);
-  onCleanup(() => game.events.off(event, callback));
+  game.events.on(event, callback)
+  onCleanup(() => game.events.off(event, callback))
 }

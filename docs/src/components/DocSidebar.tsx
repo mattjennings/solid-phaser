@@ -1,42 +1,42 @@
-import { Component, createEffect, createSignal, mergeProps } from "solid-js";
+import { Component, createEffect, createSignal, mergeProps } from 'solid-js'
 
 const DocSidebar: Component<{ headers: any[]; editHref: string }> = (p) => {
-  const props = mergeProps({ headers: [] }, p);
+  const props = mergeProps({ headers: [] }, p)
 
-  const [activeId, setActiveId] = createSignal<string>(undefined);
+  const [activeId, setActiveId] = createSignal<string>(undefined)
 
   createEffect(() => {
-    let itemOffsets = [];
+    let itemOffsets = []
     const getItemOffsets = () => {
-      const titles = document.querySelectorAll("article :is(h2, h3, h4)");
+      const titles = document.querySelectorAll('article :is(h2, h3, h4)')
       itemOffsets = Array.from(titles).map((title) => ({
         id: title.id,
         topOffset: title.getBoundingClientRect().top + window.scrollY,
-      }));
-    };
+      }))
+    }
 
     const onScroll = () => {
       const itemIndex = itemOffsets.findIndex(
         (item) => item.topOffset > window.scrollY + window.innerHeight / 3
-      );
+      )
       if (itemIndex === 0) {
-        setActiveId(undefined);
+        setActiveId(undefined)
       } else if (itemIndex === -1) {
-        setActiveId(itemOffsets[itemOffsets.length - 1].id);
+        setActiveId(itemOffsets[itemOffsets.length - 1].id)
       } else {
-        setActiveId(itemOffsets[itemIndex - 1].id);
+        setActiveId(itemOffsets[itemIndex - 1].id)
       }
-    };
+    }
 
-    getItemOffsets();
-    window.addEventListener("resize", getItemOffsets);
-    window.addEventListener("scroll", onScroll);
+    getItemOffsets()
+    window.addEventListener('resize', getItemOffsets)
+    window.addEventListener('scroll', onScroll)
 
     return () => {
-      window.removeEventListener("resize", getItemOffsets);
-      window.removeEventListener("scroll", onScroll);
-    };
-  });
+      window.removeEventListener('resize', getItemOffsets)
+      window.removeEventListener('scroll', onScroll)
+    }
+  })
 
   return (
     <nav>
@@ -48,7 +48,7 @@ const DocSidebar: Component<{ headers: any[]; editHref: string }> = (p) => {
             .map((header) => (
               <li
                 class={`header-link depth-${header.depth} ${
-                  activeId === header.slug ? "active" : ""
+                  activeId === header.slug ? 'active' : ''
                 }`.trim()}
               >
                 <a href={`#${header.slug}`}>{header.text}</a>
@@ -57,7 +57,7 @@ const DocSidebar: Component<{ headers: any[]; editHref: string }> = (p) => {
         </ul>
       </div>
     </nav>
-  );
-};
+  )
+}
 
-export default DocSidebar;
+export default DocSidebar

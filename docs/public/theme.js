@@ -1,13 +1,13 @@
-(() => {
-  const root = document.documentElement;
+;(() => {
+  const root = document.documentElement
 
   if (
-    localStorage.theme === "light" ||
-    (!("theme" in localStorage) &&
-      window.matchMedia("(prefers-color-scheme: light)").matches)
+    localStorage.theme === 'light' ||
+    (!('theme' in localStorage) &&
+      window.matchMedia('(prefers-color-scheme: light)').matches)
   ) {
-    root.classList.remove("dark");
+    root.classList.remove('dark')
   } else {
-    root.classList.add("dark");
+    root.classList.add('dark')
   }
-})();
+})()

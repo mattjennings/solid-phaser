@@ -1,5 +1,5 @@
-import Phaser from "phaser";
-import { GameObject, ComposedGameObjectProps } from "./GameObject";
+import Phaser from 'phaser'
+import { GameObject, ComposedGameObjectProps } from './GameObject'
 import {
   AlphaProps,
   BlendModeProps,
@@ -14,7 +14,7 @@ import {
   TintProps,
   TransformProps,
   VisibleProps,
-} from "./props";
+} from './props'
 
 export interface TextProps
   extends ComposedGameObjectProps<Phaser.GameObjects.Text>,
@@ -31,8 +31,8 @@ export interface TextProps
     TintProps,
     TransformProps,
     VisibleProps {
-  text?: string | string[];
-  style?: Phaser.Types.GameObjects.Text.TextStyle;
+  text?: string | string[]
+  style?: Phaser.Types.GameObjects.Text.TextStyle
 }
 
 export function Text(props: TextProps) {
@@ -55,5 +55,5 @@ export function Text(props: TextProps) {
     >
       {props.children}
     </GameObject>
-  );
+  )
 }

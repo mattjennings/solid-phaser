@@ -1,0 +1,6 @@
+dist
+build
+coverage
+pnpm-lock.yaml
+.vscode
+.vercel

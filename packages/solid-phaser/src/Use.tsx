@@ -1,11 +1,11 @@
-import { useGameObject } from "./game-objects/GameObject";
+import { useGameObject } from './game-objects/GameObject'
 
 export interface UseProps<
   A extends any[],
   T extends (instance: unknown, ...args: A) => void
 > {
-  action: T;
-  args?: A;
+  action: T
+  args?: A
 }
 
 /**
@@ -22,9 +22,9 @@ export function Use<
   A extends any[],
   T extends (instance: unknown, ...args: A) => void
 >(props: UseProps<A, T>) {
-  const obj = useGameObject();
+  const obj = useGameObject()
 
-  props.action(obj, ...props.args);
+  props.action(obj, ...props.args)
 
-  return null;
+  return null
 }
