@@ -13,12 +13,12 @@ const external = [
   'fs',
 ]
 
-module.exports = ({ name, entry, outdir }) => {
+module.exports = ({ platform, format = 'esm', name, entry, outdir }) => {
   esbuild
     .build({
       plugins: [solidPlugin()],
-      platform: 'node',
-      format: 'cjs',
+      platform,
+      format,
       incremental: process.env.NODE_ENV !== 'production',
       bundle: true,
       outdir,

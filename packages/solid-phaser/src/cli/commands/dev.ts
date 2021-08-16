@@ -2,25 +2,24 @@ import {
   createServer as createViteServer,
   ViteDevServer,
   mergeConfig,
-} from "vite";
-import path from "path";
-import del from "del";
-import createManifestData from "../util/create-manifest-data";
-import { createApp } from "../util/create-app";
-import chokidar from "chokidar";
-import { yellow } from "kleur";
-import { getConfig } from "../config";
+} from 'vite'
+import path from 'path'
+import del from 'del'
+import createManifestData from '../util/create-manifest-data'
+import { createApp } from '../util/create-app'
+import chokidar from 'chokidar'
+import { yellow } from 'kleur'
+import { getConfig } from '../config'
 
 export default async function dev({ cwd = process.cwd(), port = 3000 } = {}) {
-  const config = await getConfig();
-  const dir = path.resolve(cwd, ".solid-phaser");
-  await del(dir);
-  await del("./dist"); // vite will read dist/index.html for some reason
+  const config = await getConfig()
+  const dir = path.resolve(cwd, '.solid-phaser')
+  await del(dir)
+  await del('./dist') // vite will read dist/index.html for some reason
 
   const server = await createViteServer(
     mergeConfig(
       {
-        configFile: false,
         root: cwd,
         server: {
           port,
@@ -28,11 +27,11 @@ export default async function dev({ cwd = process.cwd(), port = 3000 } = {}) {
       },
       config.vite
     )
-  );
+  )
 
-  watcher({ cwd, dir, server });
+  watcher({ cwd, dir, server })
 
-  await server.listen();
+  await server.listen()
 }
 
 async function watcher({
@@ -40,27 +39,27 @@ async function watcher({
   dir,
   server,
 }: {
-  cwd: string;
-  dir: string;
-  server: ViteDevServer;
+  cwd: string
+  dir: string
+  server: ViteDevServer
 }) {
-  const config = await getConfig();
+  const config = await getConfig()
   async function update() {
-    const manifestData = await createManifestData({ cwd, config });
+    const manifestData = await createManifestData({ cwd, config })
     createApp({
       manifestData,
       dir,
-    });
-    console.log(manifestData);
+    })
+    console.log(manifestData)
   }
   const dirs = [
     config.files.scenes,
     config.files.assets,
     config.files.game,
-    "solid-phaser.config.js",
-  ].filter(Boolean);
+    'solid-phaser.config.js',
+  ].filter(Boolean)
 
-  update();
+  update()
 
   // chokidar
   //   .watch(dirs)
