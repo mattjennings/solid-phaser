@@ -1,12 +1,13 @@
-import sade from "sade";
-import dev from "./commands/dev";
-import build from "./commands/build";
-const prog = sade("phelte");
+import sade from 'sade'
+import dev from './commands/dev'
+import build from './commands/build'
 
-prog.version("0.0.1");
+const prog = sade('solid-phaser')
 
-prog.command("dev").option("--port, -p", "Port to listen on").action(dev);
+prog.version('0.0.1')
 
-prog.command("build").action(build);
+prog.command('dev').option('--port, -p', 'Port to listen on').action(dev)
 
-prog.parse(process.argv);
+prog.command('build').action(build)
+
+prog.parse(process.argv)
