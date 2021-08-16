@@ -7,7 +7,10 @@
     "esModuleInterop": true,
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
-    "types": ["vite/client", "jest"]
+    "types": ["vite/client", "jest"],
+    "paths": {
+      "solid-phaser": ["./src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "dist"]
 }
