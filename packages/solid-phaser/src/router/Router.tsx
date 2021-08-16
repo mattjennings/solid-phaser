@@ -6,11 +6,12 @@ import {
   Show,
   createMemo,
 } from 'solid-js'
-import { createSignal, createContext, useContext } from 'solid-js'
+import { createSignal, createContext, useContext, on } from 'solid-js'
 import { Dynamic } from 'solid-js/web'
-// @ts-ignore
-import { Scene, SceneProps } from 'solid-phaser'
+import { Scene } from 'solid-phaser'
+import type { SceneProps } from '../Scene'
 
+export type SceneConfig = Omit<SceneProps, 'key'>
 interface RouterProps {
   children: JSX.Element
   scenes: Record<
@@ -62,14 +63,15 @@ export function Router(props: RouterProps) {
 }
 
 function LoadScene(props) {
-  const [component] = createResource<
-    { default: JSX.Element } & Partial<SceneProps>
-  >(() => props.component())
+  const [component] = createResource<{
+    default: () => JSX.Element
+    config?: SceneConfig
+  }>(() => props.component())
 
   const sceneProps = createMemo(() => {
     if (component()) {
-      const { default: _, $HotComponent: __, ...p } = component()
-      return p
+      const { config } = component()
+      return config
     }
 
     return {}
@@ -77,9 +79,13 @@ function LoadScene(props) {
 
   return (
     <Show when={component()?.default}>
-      <Scene key={props.key} {...sceneProps()}>
-        <Dynamic component={component()?.default} />
-      </Scene>
+      <Show when={props.key}>
+        {(key) => (
+          <Scene key={key} {...sceneProps()}>
+            <Dynamic component={component()?.default} />
+          </Scene>
+        )}
+      </Show>
     </Show>
   )
 }
