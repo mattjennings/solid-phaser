@@ -22,6 +22,7 @@ export interface ArcadeColliderProps<
   allowCollision?: (self: Self, other: Other) => boolean
 
   onCollide?: (self: Self, other: Other) => any
+  worldBounds?: boolean
   onWorldBounds?: (
     self: Self,
     blocked: { up: boolean; down: boolean; left: boolean; right: boolean }
@@ -67,6 +68,7 @@ export default function ArcadeCollider<
     'overlap',
     'allowCollision',
     'onCollide',
+    'worldBounds',
   ])
 
   createApplyPropsEffect(collider, colliderProps, {
@@ -82,15 +84,16 @@ export default function ArcadeCollider<
     onCollide: (collider, val) => {
       collider.collideCallback = val
     },
+    worldBounds: (collider, val) => {
+      const body = instance.body as Phaser.Physics.Arcade.Body
+
+      body.onWorldBounds = val
+      body.setCollideWorldBounds(val)
+    },
   })
 
   // onWorldBounds
   onMount(() => {
-    ;(instance.body as Phaser.Physics.Arcade.Body).setCollideWorldBounds(
-      !!props.onWorldBounds
-    )
-    // @ts-ignore - so the worldbounds event gets emitted
-    instance.body.onWorldBounds = !!props.onWorldBounds
     if (props.onWorldBounds) {
       const cb = (body, up, down, left, right) => {
         if (body === instance.body) {

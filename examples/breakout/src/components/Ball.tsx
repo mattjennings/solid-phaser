@@ -5,7 +5,7 @@ import {
   ArcadeCollider,
 } from 'solid-phaser'
 
-export interface BallProps extends SpriteProps {
+export interface BallProps extends Omit<SpriteProps, 'texture'> {
   onGameOver: () => void
 }
 
@@ -37,10 +37,11 @@ export default function Ball(props: BallProps) {
       frame="ball1"
       {...props}
     >
-      <ArcadePhysics bounceX={1} bounceY={1}>
+      <ArcadePhysics bounce={{ x: 1, y: 1 }}>
         <ArcadeCollider
           with="paddle"
           onCollide={handlePaddleCollide}
+          worldBounds
           onWorldBounds={(self, blocked) => {
             if (blocked.down) {
               props.onGameOver()

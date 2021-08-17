@@ -9,7 +9,7 @@ export interface BlockProps extends SpriteProps {
   onCollide: () => void
 }
 
-export default function Block(props: BlockProps) {
+export default function Block(props: Omit<BlockProps, 'texture'>) {
   return (
     <Sprite
       name="block"
