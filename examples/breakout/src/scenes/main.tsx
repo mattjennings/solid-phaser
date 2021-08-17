@@ -1,4 +1,4 @@
-import { createEffect, createSignal, Index, Show } from 'solid-js'
+import { createEffect, createSignal, For, Show } from 'solid-js'
 import { onInputEvent, onSceneEvent } from 'solid-phaser'
 import { SceneConfig, useRouter } from 'solid-phaser/router'
 import Ball from '../components/Ball'
@@ -10,7 +10,6 @@ export const config: SceneConfig = {
   assets: {
     atlas: ['breakout.json'],
   },
-
   create: (scene) => {
     scene.physics.world.setBoundsCollision(true, true, true, true)
   },
@@ -49,10 +48,14 @@ export default function Breakout() {
   const [ballLaunched, setBallLaunched] = createSignal(false)
   const [gameOver, setGameOver] = createSignal(false)
 
-  // stop ball when game is over
   createEffect(() => {
+    // stop ball when game is over
     if (gameOver()) {
       ball.body.setVelocity(0)
+    }
+    // if no blocks left, you win
+    if (blocks().length === 0) {
+      setGameOver(true)
     }
   })
 
@@ -88,18 +91,18 @@ export default function Breakout() {
         visible={!gameOver()}
       />
       <Paddle ref={paddle} x={400} y={700} />
-      <Index each={blocks()}>
+      <For each={blocks()}>
         {(block, index) => (
           <Block
-            x={block().x + 116}
-            y={block().y + 200}
-            frame={block().frame}
+            x={block.x + 116}
+            y={block.y + 200}
+            frame={block.frame}
             onCollide={() =>
-              setBlocks((prev) => prev.filter((_, i) => i !== index))
+              setBlocks((prev) => prev.filter((_, i) => i !== index()))
             }
           />
         )}
-      </Index>
+      </For>
     </>
   )
 }

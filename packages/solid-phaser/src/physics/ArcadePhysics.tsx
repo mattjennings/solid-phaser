@@ -38,33 +38,33 @@ export default function ArcadePhysics(props: ArcadePhysicsProps) {
 
   if (!local.static) {
     createApplyPropsEffect(instance.body as Phaser.Physics.Arcade.Body, other, {
-      acceleration: (body, val) =>
-        body.setAcceleration(
-          val.x ?? body.acceleration.x,
-          val.y ?? body.acceleration.y
-        ),
-      bounce: (body, val) =>
-        body.setBounce(val.x ?? body.bounce.x, val.y ?? body.bounce.y),
-      drag: (body, val) =>
-        body.setDrag(val.x ?? body.drag.x, val.y ?? body.drag.y),
-      friction: (body, val) =>
-        body.setFriction(val.x ?? body.friction.x, val.y ?? body.friction.y),
-      gravity: (body, val) =>
-        body.setGravity(val.x ?? body.gravity.x, val.y ?? body.gravity.y),
-      circle: (body, { radius, offset }) =>
-        body.setCircle(radius, offset.x, offset.y),
-      size: (body, { width, height, center }) => {
-        body.setSize(width ?? body.width, height ?? body.height, center)
-      },
+      acceleration: (body, val) => body.setAcceleration(val, val),
+      accelerationX: (body, val) => body.setAccelerationX(val),
+      accelerationY: (body, val) => body.setAccelerationY(val),
+      bounce: (body, val) => body.setBounce(val, val),
+      bounceX: (body, val) => body.setBounceX(val),
+      bounceY: (body, val) => body.setBounceY(val),
+      drag: (body, val) => body.setDrag(val, val),
+      dragX: (body, val) => body.setDragX(val),
+      dragY: (body, val) => body.setDragY(val),
+      friction: (body, val) => body.setFriction(val, val),
+      frictionX: (body, val) => body.setFrictionX(val),
+      frictionY: (body, val) => body.setFrictionY(val),
+      gravity: (body, val) => body.setGravity(val, val),
+      gravityX: (body, val) => body.setGravityX(val),
+      gravityY: (body, val) => body.setGravityY(val),
+      circle: (body, { radius, offsetX, offsetY }) =>
+        body.setCircle(radius, offsetX, offsetY),
+      size: (body, { width, height, center }) =>
+        body.setSize(width, height, center),
       offset: (body, { x, y }) =>
         body.setOffset(x ?? body.offset.x, y ?? body.offset.y),
-      velocity: (body, val) =>
-        body.setVelocity(val.x ?? body.velocity.x, val.y ?? body.velocity.y),
-      maxVelocity: (body, val) =>
-        body.setMaxVelocity(
-          val.x ?? body.maxVelocity.x,
-          val.y ?? body.maxVelocity.y
-        ),
+      velocity: (body, val) => body.setVelocity(val, val),
+      velocityX: (body, val) => body.setVelocityX(val),
+      velocityY: (body, val) => body.setVelocityY(val),
+      maxVelocity: (body, val) => body.setMaxVelocity(val, val),
+      maxVelocityX: (body, val) => body.setMaxVelocityX(val),
+      maxVelocityY: (body, val) => body.setMaxVelocityY(val),
     })
   }
 
@@ -79,9 +79,19 @@ export default function ArcadePhysics(props: ArcadePhysicsProps) {
 
 export interface AccelerationProps {
   /**
-   * Sets the Body's acceleration in pixels per second squared
+   * Sets the Body's X and Y acceleration in pixels per second squared
    */
-  acceleration?: XY
+  acceleration?: number
+
+  /**
+   * Sets the Body's horizontal acceleration in pixels per second squared
+   */
+  accelerationX?: number
+
+  /**
+   * Sets the Body's vertical acceleration in pixels per second squared
+   */
+  accelerationY?: number
 }
 
 export interface AngularProps {
@@ -103,9 +113,19 @@ export interface AngularProps {
 
 export interface BounceProps {
   /**
-   * Sets the Body's bounce.
+   * Sets the Body's X and Y bounce.
    */
-  bounce?: XY
+  bounce?: number
+
+  /**
+   * Sets the Body's horizontal bounce.
+   */
+  bounceX?: number
+
+  /**
+   * Sets the Body's vertical bounce.
+   */
+  bounceY?: number
 }
 
 export interface DebugProps {
@@ -129,9 +149,19 @@ export interface DragProps {
   damping?: number
 
   /**
+   * Sets the Body's X and Y drag in pixels per second squared
+   */
+  drag?: number
+
+  /**
    * Sets the Body's horizontal drag in pixels per second squared
    */
-  drag?: XY
+  dragX?: number
+
+  /**
+   * Sets the Body's vertical drag in pixels per second squared
+   */
+  dragY?: number
 
   /**
    * Enables or disables drag.
@@ -145,9 +175,19 @@ export interface EnableProps {
 
 export interface FrictionProps {
   /**
-   * Sets the Body's friction.
+   * Sets the Body's X and Y friction.
    */
-  friction?: XY
+  friction?: number
+
+  /**
+   * Sets the Body's horizontal friction.
+   */
+  frictionX?: number
+
+  /**
+   * Sets the Body's vertical friction.
+   */
+  frictionY?: number
 }
 
 export interface GravityProps {
@@ -155,10 +195,21 @@ export interface GravityProps {
    * Enables or disables gravity's effect on this Body.
    */
   allowGravity?: boolean
+
   /**
-   * Sets the Body's gravity in pixels per second squared
+   * Sets the Body's X and Y gravity in pixels per second squared
    */
-  gravity?: XY
+  gravity?: number
+
+  /**
+   * Sets the Body's horizontal gravity in pixels per second squared
+   */
+  gravityX?: number
+
+  /**
+   * Sets the Body's vertical gravity in pixels per second squared
+   */
+  gravityY?: number
 }
 
 export interface ImmovableProps {
@@ -183,9 +234,14 @@ export interface SizeProps {
     radius: number
 
     /**
-     * The horizontal and vertical offset of the Body from its Game Object, in source pixels.
+     * The horizontal  offset of the Body from its Game Object, in source pixels.
      */
-    offset?: XY
+    offsetX?: number
+
+    /**
+     * The vertical offset of the Body from its Game Object, in source pixels.
+     */
+    offsetY?: number
   }
 
   /**
@@ -219,11 +275,32 @@ export interface SizeProps {
 
 export interface VelocityProps {
   /**
-   * Sets the Body's velocity in pixels per second
+   * Sets the Body's X and Y velocity in pixels per second
    */
-  velocity?: XY
+  velocity?: number
+
   /**
-   * Sets the Body's maximum velocity
+   * Sets the Body's horizontal velocity in pixels per second
    */
-  maxVelocity?: XY
+  velocityX?: number
+
+  /**
+   * Sets the Body's vertical velocity in pixels per second
+   */
+  velocityY?: number
+
+  /**
+   * Sets the Body's X and Y maximum velocity
+   */
+  maxVelocity?: number
+
+  /**
+   * Sets the Body's horizontal maximum velocity
+   */
+  maxVelocityX?: number
+
+  /**
+   * Sets the Body's vertical maximum velocity
+   */
+  maxVelocityY?: number
 }

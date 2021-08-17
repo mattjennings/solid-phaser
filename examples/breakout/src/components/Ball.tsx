@@ -37,7 +37,7 @@ export default function Ball(props: BallProps) {
       frame="ball1"
       {...props}
     >
-      <ArcadePhysics bounce={{ x: 1, y: 1 }}>
+      <ArcadePhysics bounce={1}>
         <ArcadeCollider
           with="paddle"
           onCollide={handlePaddleCollide}

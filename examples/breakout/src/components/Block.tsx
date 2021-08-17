@@ -6,7 +6,7 @@ import {
 } from 'solid-phaser'
 
 export interface BlockProps extends SpriteProps {
-  onCollide: () => void
+  onCollide: (self, other) => void
 }
 
 export default function Block(props: Omit<BlockProps, 'texture'>) {
