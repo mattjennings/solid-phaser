@@ -54,9 +54,6 @@ export function Router(props: RouterProps) {
 
   const key = createMemo(() => `${location()}-${hash()}`)
   const component = createMemo(() => props.scenes[location()].component)
-  createEffect(() => {
-    console.log(key())
-  })
 
   return (
     <RouterContext.Provider value={{ goto, restart }}>

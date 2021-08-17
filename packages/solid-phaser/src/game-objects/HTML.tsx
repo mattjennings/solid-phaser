@@ -59,8 +59,8 @@ export function HTML(props: HTMLProps) {
           el
         )
 
-        // needs to be set on mount so element can be moved
-        // from where solid renders it to the game's dom container
+        // needs to be re-set on mount so element can be moved into
+        // the game's container div
         onMount(() => {
           instance.setElement(el)
         })
