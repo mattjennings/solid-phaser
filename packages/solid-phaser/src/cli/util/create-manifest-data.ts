@@ -7,6 +7,8 @@ import {
   TemplateComponentData,
 } from './types'
 
+const RE_SCENE_FILE = /(.jsx?|.tsx)$/
+
 export default async function createManifestData({
   cwd,
   config,
@@ -38,19 +40,19 @@ export default async function createManifestData({
     {}
   )
 
-  const scenes: Record<string, SceneComponentData> = files.reduce(
-    (acc, filePath) => {
+  const scenes: Record<string, SceneComponentData> = files
+    .filter((file) => file.match(RE_SCENE_FILE))
+    .reduce((acc, filePath) => {
       const baseName = filePath.split('/').pop()
       const component = posixify(path.relative(cwd, filePath))
-      let route = posixify(
-        filePath.replace(`${sceneDir}/`, '').replace(/.(t|j)sx?/g, '')
-      )
+      let file = posixify(filePath.replace(`${sceneDir}/`, ''))
 
-      if (route.endsWith('/index')) {
-        route = route.split(/\/index$/)[0]
+      if (file.endsWith('/index')) {
+        file = file.split(/\/index$/)[0]
       }
 
-      if (!baseName.startsWith('_') && !baseName.startsWith('$')) {
+      const route = file.replace(RE_SCENE_FILE, '')
+      if (!baseName.startsWith('_')) {
         return {
           ...acc,
           [route]: {
@@ -62,9 +64,7 @@ export default async function createManifestData({
       }
 
       return acc
-    },
-    {}
-  )
+    }, {})
 
   return {
     game: {

@@ -2,7 +2,7 @@ import { UserConfig as ViteConfig, mergeConfig } from 'vite'
 import path from 'path'
 import deepmerge from 'deepmerge'
 import solid from 'vite-plugin-solid'
-
+import fs from 'fs'
 export interface SolidPhaserConfig {
   initialScene?: string
   files: {
@@ -76,9 +76,18 @@ async function getSolidPhaserConfig(): Promise<SolidPhaserConfig> {
   }
 
   try {
-    const configPath = path.join(process.cwd(), `solid-phaser.config.js`)
-    const config = await import(configPath)
-    return deepmerge(defaultConfig, config.default)
+    const js = path.join(process.cwd(), `solid-phaser.config.js`)
+    const mjs = path.join(process.cwd(), `solid-phaser.config.mjs`)
+
+    if (fs.existsSync(js)) {
+      const config = await import(js)
+      return deepmerge(defaultConfig, config.default)
+    }
+
+    if (fs.existsSync(mjs)) {
+      const config = await import(mjs)
+      return deepmerge(defaultConfig, config.default)
+    }
     // eslint-disable-next-line no-empty
   } catch (e) {}
 

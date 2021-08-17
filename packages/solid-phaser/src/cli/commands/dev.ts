@@ -50,7 +50,6 @@ async function watcher({
       manifestData,
       dir,
     })
-    console.log(manifestData)
   }
   const dirs = [
     config.files.scenes,
