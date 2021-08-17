@@ -1,4 +1,5 @@
 import { Tilemap } from 'solid-phaser'
+import ParallaxBackground from '../components/ParallaxBackground'
 
 export default () => {
   return (
@@ -16,6 +17,7 @@ export default () => {
           }
         }}
       > */}
+      <ParallaxBackground texture="tilemaps/bay-area/background" />
       <Tilemap.TileLayer id="background" />
       <Tilemap.TileLayer id="foreground" />
       <Tilemap.TileLayer
