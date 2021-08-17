@@ -50,6 +50,7 @@ export interface SpriteProps
 
 export function Sprite(props: SpriteProps) {
   const [local, other] = splitProps(props, [
+    'ref',
     'play',
     'repeat',
     'delay',
@@ -89,7 +90,7 @@ export function Sprite(props: SpriteProps) {
     <GameObject
       ref={(el) => {
         instance = el
-        ;(props.ref as RefFunction)?.(el)
+        ;(local.ref as RefFunction)?.(el)
       }}
       create={(scene) =>
         new Phaser.GameObjects.Sprite(
