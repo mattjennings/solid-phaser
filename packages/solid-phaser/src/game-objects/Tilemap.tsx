@@ -1,4 +1,11 @@
-import { JSX, onCleanup, createContext, useContext, splitProps } from 'solid-js'
+import {
+  JSX,
+  onCleanup,
+  createContext,
+  useContext,
+  splitProps,
+  mergeProps,
+} from 'solid-js'
 import { GameObject, ComposedGameObjectProps } from './GameObject'
 import {
   AlphaProps,
@@ -56,7 +63,14 @@ export interface TilemapProps {
   children?: JSX.Element
 }
 
-export function Tilemap(props: TilemapProps) {
+export function Tilemap(p: TilemapProps) {
+  const props = mergeProps(
+    {
+      useLayerOrder: true,
+      startingDepth: 0,
+    },
+    p
+  )
   const scene = useScene()
 
   let instance: Phaser.Tilemaps.Tilemap
@@ -87,6 +101,10 @@ export function Tilemap(props: TilemapProps) {
     )
   }
 
+  const layerOrder = (data.layers as Phaser.Tilemaps.LayerData[]).map(
+    (layer) => layer.name
+  )
+
   ;(props.ref as RefFunction)?.(instance)
 
   Object.entries(props.tilesets).forEach(([name, tilesetKey]) => {
@@ -113,6 +131,14 @@ export function Tilemap(props: TilemapProps) {
   onCleanup(() => {
     instance.destroy()
   })
+
+  // set some properties on the instance for use by layer components
+  // @ts-ignore
+  instance.layerOrder = layerOrder
+  // @ts-ignore
+  instance.useLayerOrder = props.useLayerOrder
+  // @ts-ignore
+  instance.startingDepth = props.startingDepth
 
   return (
     <TilemapContext.Provider value={instance}>
@@ -200,7 +226,7 @@ function TileLayer(props: TileLayerProps) {
   if (tilemap.useLayerOrder && typeof depth === 'undefined') {
     depth =
       // @ts-ignore
-      tilemap.layerOrder.findIndex((layerName) => layerName === id) +
+      tilemap.layerOrder.findIndex((layerName) => layerName === props.id) +
       // @ts-ignore
       tilemap.startingDepth
   }
