@@ -1,0 +1,50 @@
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  user-select: none;
+  color: white;
+}
+
+.title {
+  padding-top: 10%;
+  font-size: clamp(16px, 1vmax, 32px);
+  color: #ffa500;
+}
+
+.menu {
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+  font-size: clamp(12px, 0.75vmax, 16px);
+}
+
+.menu:hover {
+  text-decoration: underline;
+}
+
+.controls {
+  flex-grow: 1;
+  display: flex;
+  align-items: flex-end;
+  color: white;
+  padding-bottom: 10px;
+  font-size: clamp(8px, 0.5vmax, 12px);
+}
+
+/* for HTML components */
+.fullscreen {
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+}

@@ -1,0 +1,20 @@
+{
+  "name": "megabot",
+  "version": "0.0.1",
+  "license": "MIT",
+  "scripts": {
+    "start": "solid-phaser dev",
+    "dev": "solid-phaser dev",
+    "build": "solid-phaser build"
+  },
+  "devDependencies": {
+    "typescript": "~4.2.2",
+    "vite": "^2.4.4",
+    "vite-plugin-solid": "^2.0.1"
+  },
+  "dependencies": {
+    "solid-phaser": "0.0.1-alpha.2",
+    "phaser": "^3.55.2",
+    "solid-js": "^1.1.0"
+  }
+}

@@ -1,5 +1,4 @@
 import { Game } from 'solid-phaser'
-import './index.css'
 
 export default (props) => (
   <Game

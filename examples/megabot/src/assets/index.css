@@ -1,0 +1,17 @@
+@font-face {
+  font-family: 'Joystix';
+  src: url('/fonts/joystix monospace.ttf') format('truetype');
+}
+
+body {
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: black;
+  font-family: 'Joystix', Monospace, sans-serif;
+}
+
+h1 {
+  margin: 0;
+}
