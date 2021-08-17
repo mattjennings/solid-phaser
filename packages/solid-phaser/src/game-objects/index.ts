@@ -1,7 +1,8 @@
 export * from './GameObject'
-export * from './Text'
-export * from './Sprite'
-export * from './Tilemap'
 export * from './HTML'
+export * from './Sprite'
+export * from './Text'
+export * from './TileSprite'
+export * from './Tilemap'
 
 export * from './props'

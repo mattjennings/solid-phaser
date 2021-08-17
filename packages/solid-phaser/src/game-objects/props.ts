@@ -77,7 +77,7 @@ export const applyScrollFactorProps: ApplyProps<
 }
 
 export type TextureProps = {
-  texture?: string
+  texture: string
   frame?: string | number
 }
 
