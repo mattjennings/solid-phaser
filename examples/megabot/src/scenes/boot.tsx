@@ -43,7 +43,7 @@ export const config: SceneConfig = {
 export default function Boot() {
   const { goto } = useRouter()
 
-  goto('titlescreen')
+  goto('test')
 
-  return <></>
+  return null
 }
