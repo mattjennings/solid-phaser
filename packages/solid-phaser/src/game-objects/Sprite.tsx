@@ -17,8 +17,9 @@ import {
   VisibleProps,
 } from './props'
 
-export interface SpriteProps
-  extends ComposedGameObjectProps<Phaser.GameObjects.Sprite>,
+export interface SpriteProps<
+  Instance extends Phaser.GameObjects.Sprite = Phaser.GameObjects.Sprite
+> extends ComposedGameObjectProps<Instance>,
     AlphaProps,
     BlendModeProps,
     ComputedSizeProps,
@@ -48,7 +49,9 @@ export interface SpriteProps
   yoyo?: boolean
 }
 
-export function Sprite(props: SpriteProps) {
+export function Sprite<
+  Instance extends Phaser.GameObjects.Sprite = Phaser.GameObjects.Sprite
+>(props: SpriteProps<Instance>) {
   const [local, other] = splitProps(props, [
     'ref',
     'play',
@@ -62,7 +65,7 @@ export function Sprite(props: SpriteProps) {
     'yoyo',
     'skipMissedFrames',
   ])
-  let instance: Phaser.GameObjects.Sprite
+  let instance: Instance
 
   createEffect(() => {
     if (local.play) {
@@ -99,7 +102,7 @@ export function Sprite(props: SpriteProps) {
           props.y,
           props.texture,
           props.frame
-        )
+        ) as Instance
       }
       {...other}
     >

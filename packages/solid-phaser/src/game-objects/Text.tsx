@@ -16,8 +16,9 @@ import {
   VisibleProps,
 } from './props'
 
-export interface TextProps
-  extends ComposedGameObjectProps<Phaser.GameObjects.Text>,
+export interface TextProps<
+  Instance extends Phaser.GameObjects.Text = Phaser.GameObjects.Text
+> extends ComposedGameObjectProps<Instance>,
     AlphaProps,
     BlendModeProps,
     ComputedSizeProps,
@@ -35,7 +36,9 @@ export interface TextProps
   style?: Phaser.Types.GameObjects.Text.TextStyle
 }
 
-export function Text(props: TextProps) {
+export function Text<
+  Instance extends Phaser.GameObjects.Text = Phaser.GameObjects.Text
+>(props: TextProps<Instance>) {
   return (
     <GameObject
       ref={props.ref}
