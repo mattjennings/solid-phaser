@@ -1,12 +1,7 @@
-import {
-  JSX,
-  onCleanup,
-  createContext,
-  useContext,
-  splitProps,
-  mergeProps,
-} from 'solid-js'
-import { GameObject, ComposedGameObjectProps } from './GameObject'
+import { createContext, JSX, mergeProps, onCleanup, useContext } from 'solid-js'
+import { useScene } from '../Scene'
+import { Ref, RefFunction } from '../types'
+import { ComposedGameObjectProps, GameObject } from './GameObject'
 import {
   AlphaProps,
   BlendModeProps,
@@ -23,8 +18,6 @@ import {
   VisibleProps,
   XY,
 } from './props'
-import { useScene } from '../Scene'
-import { Ref, RefFunction } from '../types'
 
 const TilemapContext = createContext<Phaser.Tilemaps.Tilemap>(null)
 export const useTilemap = () => useContext(TilemapContext)
@@ -101,10 +94,6 @@ export function Tilemap(p: TilemapProps) {
     )
   }
 
-  const layerOrder = (data.layers as Phaser.Tilemaps.LayerData[]).map(
-    (layer) => layer.name
-  )
-
   ;(props.ref as RefFunction)?.(instance)
 
   Object.entries(props.tilesets).forEach(([name, tilesetKey]) => {
@@ -134,7 +123,9 @@ export function Tilemap(p: TilemapProps) {
 
   // set some properties on the instance for use by layer components
   // @ts-ignore
-  instance.layerOrder = layerOrder
+  instance.layerOrder = (data.layers as Phaser.Tilemaps.LayerData[]).map(
+    (layer) => layer.name
+  )
   // @ts-ignore
   instance.useLayerOrder = props.useLayerOrder
   // @ts-ignore
@@ -216,7 +207,7 @@ export interface TileLayerProps
   skipCull?: boolean
 }
 
-function TileLayer(props: TileLayerProps) {
+Tilemap.TileLayer = function TileLayer(props: TileLayerProps) {
   const tilemap = useTilemap()
 
   const tilesets = tilemap.tilesets
@@ -233,7 +224,13 @@ function TileLayer(props: TileLayerProps) {
 
   return (
     <GameObject
-      create={() => tilemap.createLayer(props.id, tilesets, props.x, props.y)}
+      create={() => {
+        return tilemap.createLayer(props.id, tilesets, props.x, props.y)
+      }}
+      destroy={(instance) => {
+        // don't remove from tilemap, otherwise layer cannot be mounted again later
+        instance.destroy(false)
+      }}
       applyProps={{
         collision: (instance, val) => instance.setCollision(val),
         collisionBetween: (instance, val) =>
@@ -250,5 +247,3 @@ function TileLayer(props: TileLayerProps) {
     />
   )
 }
-
-Tilemap.TileLayer = TileLayer
