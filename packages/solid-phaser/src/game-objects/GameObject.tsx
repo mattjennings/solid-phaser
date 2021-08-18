@@ -91,17 +91,17 @@ export interface GameObjectProps<
   /**
    * Called during the scene's update loop
    */
-  onUpdate?: (self: Instance) => void
+  onUpdate?: (self: Instance, time: number, delta: number) => void
 
   /**
    * Called during the scene's preupdate loop
    */
-  onPreUpdate?: (self: Instance) => void
+  onPreUpdate?: (self: Instance, time: number, delta: number) => void
 
   /**
    * Called during the scene's postupdate loop
    */
-  onPostUpdate?: (self: Instance) => void
+  onPostUpdate?: (self: Instance, time: number, delta: number) => void
 
   onDrag?: (
     self: Instance,
@@ -289,17 +289,20 @@ export function GameObject<
 
   ////////////////// EVENTS //////////////////////
   if (local.onUpdate) {
-    const cb = () => (instance.active ? local.onUpdate(instance) : void 0)
+    const cb = (time, delta) =>
+      instance.active ? local.onUpdate(instance, time, delta) : void 0
     scene.events.on('update', cb)
   }
 
   if (local.onPreUpdate) {
-    const cb = () => (instance.active ? local.onPreUpdate(instance) : void 0)
+    const cb = (time, delta) =>
+      instance.active ? local.onPreUpdate(instance, time, delta) : void 0
     scene.events.on('preupdate', cb)
   }
 
   if (local.onPostUpdate) {
-    const cb = () => (instance.active ? local.onPostUpdate(instance) : void 0)
+    const cb = (time, delta) =>
+      instance.active ? local.onPostUpdate(instance, time, delta) : void 0
     scene.events.on('postupdate', cb)
   }
 
