@@ -36,6 +36,9 @@ export function createApplyPropsEffect<
   const [deferredProps, otherProps] = splitProps(trimmed as any, deferred ?? [])
 
   function update(prop, value) {
+    if (!instance) {
+      return
+    }
     const applyFn = applyProps?.[prop]
 
     if (applyFn) {
