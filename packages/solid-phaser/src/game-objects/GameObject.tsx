@@ -1,6 +1,7 @@
 import Phaser from 'phaser'
 import {
   createContext,
+  createEffect,
   JSX,
   mergeProps,
   onCleanup,
@@ -33,6 +34,11 @@ export interface GameObjectProps<
    * Phaser GameObject instance.
    */
   create: (scene: Phaser.Scene) => Instance
+  /**
+   * Called when the component unmounts and the instance needs to be destroyed. By default,
+   * it calls the GameObject's destroy method
+   */
+  destroy?: (instance: Instance, scene: Phaser.Scene) => void
 
   /**
    * When extra props are passed on to GameObject, they are assigned to the instance and updated
@@ -197,6 +203,7 @@ export function GameObject<
   const [local, restProps] = splitProps(props, [
     'applyProps',
     'create',
+    'destroy',
     'onUpdate',
     'onPreUpdate',
     'onPostUpdate',
@@ -260,19 +267,24 @@ export function GameObject<
       local.applyProps ?? {}
     ) as any
   )
-
   ;(props.ref as RefFunction)?.(instance)
 
-  if (!scene.children.exists(instance)) {
-    scene.add.existing(instance)
-  }
+  if (instance) {
+    if (!scene.children.exists(instance)) {
+      scene.add.existing(instance)
+    }
 
-  if (group) {
-    group.add(instance)
+    if (group) {
+      group.add(instance)
+    }
   }
 
   onCleanup(() => {
-    instance.destroy()
+    if (local.destroy) {
+      local.destroy(instance, scene)
+    } else {
+      instance?.destroy(true)
+    }
   })
 
   ////////////////// EVENTS //////////////////////
