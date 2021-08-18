@@ -71,25 +71,28 @@ export default function ArcadeCollider<
     'worldBounds',
   ])
 
-  createApplyPropsEffect(collider, colliderProps, {
-    with: (collider, val) => {
-      collider.object2 = createObjectsArray(scene, val)
-    },
-    overlap: (collider, val) => {
-      collider.overlapOnly = val
-    },
-    allowCollision: (collider, val) => {
-      collider.processCallback = val
-    },
-    onCollide: (collider, val) => {
-      collider.collideCallback = val
-    },
-    worldBounds: (collider, val) => {
-      const body = instance.body as Phaser.Physics.Arcade.Body
+  // wait until onMount to update the collider
+  onMount(() => {
+    createApplyPropsEffect(collider, colliderProps, {
+      with: (collider, val) => {
+        collider.object2 = createObjectsArray(scene, val)
+      },
+      overlap: (collider, val) => {
+        collider.overlapOnly = val
+      },
+      allowCollision: (collider, val) => {
+        collider.processCallback = val
+      },
+      onCollide: (collider, val) => {
+        collider.collideCallback = val
+      },
+      worldBounds: (collider, val) => {
+        const body = instance.body as Phaser.Physics.Arcade.Body
 
-      body.onWorldBounds = val
-      body.setCollideWorldBounds(val)
-    },
+        body.onWorldBounds = val
+        body.setCollideWorldBounds(val)
+      },
+    })
   })
 
   // onWorldBounds
