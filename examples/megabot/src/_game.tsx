@@ -8,8 +8,9 @@ export default (props) => {
       physics={{
         default: 'arcade',
         arcade: {
-          debugBodyColor: 0x00ff00,
-          debugShowBody: true,
+          debug: true,
+          // debugBodyColor: 0x00ff00,
+          // debugShowBody: true,
           gravity: {
             y: 2000,
           },
