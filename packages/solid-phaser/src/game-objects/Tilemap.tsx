@@ -8,7 +8,7 @@ import {
   splitProps,
   useContext,
 } from 'solid-js'
-import { Spawner, SpawnerValue } from '../Spawner'
+import { Spawner, SpawnerProps, SpawnerValue } from '../Spawner'
 import { useScene } from '../Scene'
 import { Ref, RefFunction } from '../types'
 import { ComposedGameObjectProps, GameObject } from './GameObject'
@@ -28,7 +28,6 @@ import {
   VisibleProps,
   XY,
 } from './props'
-import { SpawnProps, SpawnerProps } from 'solid-phaser'
 
 const TilemapContext = createContext<Phaser.Tilemaps.Tilemap>(null)
 export const useTilemap = () => useContext(TilemapContext)
