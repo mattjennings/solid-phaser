@@ -1,6 +1,6 @@
 import { splitProps } from 'solid-js'
 import {
-  SpawnedProps,
+  SpawnProps,
   Arc,
   ArcProps,
   Tween,
@@ -8,7 +8,7 @@ import {
   ArcadeCollider,
 } from 'solid-phaser'
 
-export interface PlayerBulletProps extends Partial<ArcProps>, SpawnedProps {
+export interface PlayerBulletProps extends Partial<ArcProps>, SpawnProps {
   velocityX: number
 }
 export default function PlayerBullet(props: PlayerBulletProps) {

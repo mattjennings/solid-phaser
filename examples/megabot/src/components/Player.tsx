@@ -9,11 +9,14 @@ import {
   useSpawner,
   onSceneEvent,
   useTilemap,
-  createGameEffect,
+  track,
+  SpawnProps,
 } from 'solid-phaser'
+import Explosion from './Explosion'
 import PlayerBullet from './PlayerBullet'
+import PlayerExplosion from './PlayerExplosion'
 
-export default function Player(props: Partial<SpriteProps>) {
+export default function Player(props: Partial<SpriteProps & SpawnProps>) {
   let ref: Phaser.GameObjects.Sprite & { body: Phaser.Physics.Arcade.Body }
   const [state, setState] = createStore({
     x: props.x,
@@ -23,6 +26,10 @@ export default function Player(props: Partial<SpriteProps>) {
     isShooting: false,
     dead: false,
   })
+  const velocityX = track(() => ref.body.velocity.x)
+  const velocityY = track(() => ref.body.velocity.y)
+  const isOnGround = track(() => ref.body.blocked.down)
+
   const scene = useScene()
   const spawner = useSpawner()
   const tilemap = useTilemap()
@@ -80,44 +87,37 @@ export default function Player(props: Partial<SpriteProps>) {
     }
     // die if fell below floor
     if (deathY && ref.y > deathY) {
-      // die()
+      die()
     }
   })
 
   // set animation
-  createGameEffect(
-    [
-      () => ref.body.blocked.down,
-      () => ref.body.velocity.x,
-      () => state.isShooting,
-    ],
-    (current, prev) => {
-      const [isOnFloor, vx, isShooting] = current ?? []
-      const [_, __, wasShooting] = prev ?? []
+  createEffect(
+    on([isOnGround, velocityX, () => state.isShooting], (current, prev) => {
+      const [, , wasShooting] = prev ?? []
 
       const progress = ref.anims.getProgress()
-      if (isOnFloor) {
-        if (vx !== 0) {
-          play(isShooting ? 'RunShoot' : 'Run')
+      if (isOnGround()) {
+        if (velocityX() !== 0) {
+          play(state.isShooting ? 'RunShoot' : 'Run')
         } else {
-          play(isShooting ? 'IdleShoot' : 'Idle')
+          play(state.isShooting ? 'IdleShoot' : 'Idle')
         }
       } else {
         play('Jump')
       }
 
-      if (isShooting && !wasShooting) {
+      if (state.isShooting && !wasShooting) {
         ref.anims.setProgress(progress)
-      } else if (wasShooting && !isShooting) {
+      } else if (wasShooting && !state.isShooting) {
         ref.anims.setProgress(progress)
       }
-    }
+    })
   )
 
   // flip direction based on velocity
-  createGameEffect(
-    () => ref.body.velocity.x,
-    (vx) => {
+  createEffect(
+    on(velocityX, (vx) => {
       // moving left
       if (vx < 0) {
         ref.flipX = true
@@ -126,7 +126,7 @@ export default function Player(props: Partial<SpriteProps>) {
       else if (vx > 0) {
         ref.flipX = false
       }
-    }
+    })
   )
 
   function shoot() {
@@ -152,18 +152,18 @@ export default function Player(props: Partial<SpriteProps>) {
     })
   }
 
-  // function die() {
-  //   if (!dead) {
-  //     dead = true
-  //     spawner.spawn(PlayerExplosion, {
-  //       x,
-  //       y: y - 12,
-  //       onDestroy: () => {
-  //         dispatch('destroy', { reason: 'player-dead' })
-  //       },
-  //     })
-  //   }
-  // }
+  function die() {
+    if (!state.dead) {
+      setState('dead', true)
+      spawner.spawn(PlayerExplosion, {
+        x: ref.x,
+        y: ref.y - 12,
+        onDestroy: () => {
+          props.onDestroy({ reason: 'player-dead' })
+        },
+      })
+    }
+  }
 
   function play(
     animation: string,

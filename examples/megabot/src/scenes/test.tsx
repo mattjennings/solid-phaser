@@ -36,11 +36,11 @@ export default () => {
           //   }
           // }}
           >
-            <Player depth={0} x={100} y={200} />
-            {/* <TilemapObjectLayer
-            id="spawns"
-            components={{ Player, EnemySpawner }}
-          /> */}
+            {/* <Player depth={0} x={100} y={200} /> */}
+            <Tilemap.ObjectLayer
+              id="spawns"
+              components={{ Player, EnemySpawner: () => null }}
+            />
           </Spawner>
         </Tilemap>
       </Show>
