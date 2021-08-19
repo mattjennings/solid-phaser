@@ -23,7 +23,7 @@ export interface SpawnerValue {
    */
   spawn: <T>(
     component: Component<T>,
-    props: Omit<T, 'children' | keyof SpawnProps>
+    props: Omit<T, 'children' | 'spawnId'>
   ) => number
 
   /**
@@ -36,7 +36,7 @@ export interface SpawnProps {
   /**
    * Called by the component to destroy itself
    **/
-  onDestroy: (detail?: any) => void
+  onDestroy?: (detail?: any) => void
 
   /**
    * ID of the spawned component
@@ -88,6 +88,7 @@ export function Spawner(props: SpawnerProps) {
               spawnId={instance.id}
               onDestroy={(detail) => {
                 destroy(instance.id, detail)
+                instance.props?.onDestroy?.(detail)
               }}
             />
           )
