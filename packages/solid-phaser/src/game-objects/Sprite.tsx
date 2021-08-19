@@ -47,6 +47,7 @@ export interface SpriteProps<
   repeatDelay?: number
   timeScale?: number
   yoyo?: boolean
+  startFrame?: number
 }
 
 export function Sprite<
@@ -64,6 +65,7 @@ export function Sprite<
     'timeScale',
     'yoyo',
     'skipMissedFrames',
+    'startFrame',
   ])
   let instance: Instance
 
@@ -81,6 +83,7 @@ export function Sprite<
           timeScale: local.timeScale,
           yoyo: local.yoyo,
           skipMissedFrames: local.skipMissedFrames,
+          startFrame: local.startFrame,
         },
         true
       )
