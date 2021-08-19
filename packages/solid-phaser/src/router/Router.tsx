@@ -52,13 +52,12 @@ export function Router(props: RouterProps) {
     setHash(Date.now())
   }
 
-  const key = createMemo(() => `${location()}-${hash()}`)
   const component = createMemo(() => props.scenes[location()].component)
 
   return (
     <RouterContext.Provider value={{ goto, restart }}>
-      <Show when={key()}>
-        {(key) => <LoadScene key={key} component={component()} />}
+      <Show when={location()}>
+        {(key) => <LoadScene key={key} hash={hash()} component={component()} />}
       </Show>
     </RouterContext.Provider>
   )
@@ -82,7 +81,10 @@ function LoadScene(props) {
   return (
     <Show when={component()?.default}>
       <Scene key={props.key} {...sceneProps()}>
-        <Dynamic component={component()?.default} />
+        {/* when hash changes, only remount child component */}
+        <Show when={props.hash}>
+          {(_) => <Dynamic component={component()?.default} />}
+        </Show>
       </Scene>
     </Show>
   )
