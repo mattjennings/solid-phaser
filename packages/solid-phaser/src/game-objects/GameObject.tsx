@@ -1,7 +1,6 @@
 import Phaser from 'phaser'
 import {
   createContext,
-  createEffect,
   JSX,
   mergeProps,
   onCleanup,
@@ -84,6 +83,11 @@ export interface GameObjectProps<
    * See: https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.GameObject.html#active__anchor
    */
   active?: boolean
+
+  /**
+   * Called after object is created and added to the scene
+   */
+  onCreate?: (self: Instance) => void
 
   /**
    * Called during the scene's update loop
@@ -205,6 +209,7 @@ export function GameObject<
     'create',
     'destroy',
     'onUpdate',
+    'onCreate',
     'onPreUpdate',
     'onPostUpdate',
     'onDrag',
@@ -278,6 +283,8 @@ export function GameObject<
       group.add(instance)
     }
   }
+
+  local.onCreate?.(instance)
 
   onCleanup(() => {
     if (local.destroy) {
