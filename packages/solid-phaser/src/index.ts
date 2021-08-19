@@ -9,6 +9,7 @@ export * from './util/assets'
 export * from './types'
 export * from './animation'
 export * from './Use'
+export * from './Spawner'
 export * from './FPS'
 
 export * from './createGameEffect'
