@@ -1,4 +1,4 @@
-import { createEffect, createSignal, on } from 'solid-js'
+import { createEffect, createRoot, createSignal, on } from 'solid-js'
 import { createStore, produce } from 'solid-js/store'
 import {
   Sprite,
@@ -143,7 +143,7 @@ export default function Player(props: Partial<SpriteProps & SpawnProps>) {
     )
 
     const direction = ref.flipX ? -1 : 1
-    spawner.spawn(PlayerBullet, {
+    spawn(PlayerBullet, {
       x: Math.round(ref.x + 16 * direction),
       // add velocityY to line up with hand when jumping
       y: Math.round(ref.y - 12 + ref.body.velocity.y / 60),
@@ -152,10 +152,16 @@ export default function Player(props: Partial<SpriteProps & SpawnProps>) {
     })
   }
 
+  function spawn(Component, props) {
+    createRoot(() => {
+      Component({ ...props })
+    })
+  }
+
   function die() {
     if (!state.dead) {
       setState('dead', true)
-      props.onDestroy({ reason: 'player-dead' })
+      props.destroy({ reason: 'player-dead' })
       spawner.spawn(PlayerExplosion, {
         x: ref.x,
         y: ref.y - 12,

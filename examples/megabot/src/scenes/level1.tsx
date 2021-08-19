@@ -4,6 +4,8 @@ import ParallaxBackground from '../components/ParallaxBackground'
 import Player from '../components/Player'
 import tilemap from '../assets/tilemaps/bay-area/tilemap.json'
 import { useRouter } from 'solid-phaser/router'
+import Enemy from '../components/Enemy'
+import EnemySpawner from '../components/EnemySpawner'
 
 export default () => {
   const { restart } = useRouter()
@@ -21,8 +23,6 @@ export default () => {
         width={400}
         height={225}
       >
-        <FPS x={0} y={0} style={{ color: 'white' }} />
-
         <Tilemap
           key="tilemaps/bay-area/tilemap"
           useLayerOrder

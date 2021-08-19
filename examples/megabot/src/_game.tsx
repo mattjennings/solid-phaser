@@ -3,6 +3,7 @@ import { Game } from 'solid-phaser'
 export default (props) => {
   return (
     <Game
+      // ref={(game) => (window.game = game)}
       width={400}
       height={225}
       physics={{

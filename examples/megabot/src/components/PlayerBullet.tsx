@@ -6,23 +6,34 @@ import {
   Tween,
   ArcadePhysics,
   ArcadeCollider,
+  useScene,
 } from 'solid-phaser'
 
 export interface PlayerBulletProps extends Partial<ArcProps>, SpawnProps {
   velocityX: number
 }
 export default function PlayerBullet(props: PlayerBulletProps) {
-  const [, rest] = splitProps(props, ['velocityX', 'onDestroy', 'spawnId'])
+  let ref
+  const scene = useScene()
+  const [, rest] = splitProps(props, ['velocityX', 'destroy', 'spawnId'])
+
+  scene.sound.play('sfx/shoot')
 
   return (
-    <Arc radius={2} fillColor={0xfffc96} {...rest}>
+    <Arc
+      ref={ref}
+      name="player-bullet"
+      radius={2}
+      fillColor={0xfffc96}
+      {...rest}
+    >
       <Tween
         initial={{ alpha: 1 }}
         animate={{ alpha: 0 }}
         delay={500}
         duration={500}
         onComplete={() => {
-          props.onDestroy()
+          ref.destroy()
         }}
       />
       <ArcadePhysics
@@ -34,7 +45,7 @@ export default function PlayerBullet(props: PlayerBulletProps) {
         with="enemy"
         overlap
         onCollide={() => {
-          props.onDestroy()
+          // props.onDestroy()
         }}
       />
     </Arc>
