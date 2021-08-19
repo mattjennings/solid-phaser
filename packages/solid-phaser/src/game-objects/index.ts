@@ -1,3 +1,4 @@
+export * from './Arc'
 export * from './GameObject'
 export * from './HTML'
 export * from './Sprite'
