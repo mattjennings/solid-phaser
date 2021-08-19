@@ -22,7 +22,7 @@ export interface ArcadePhysicsProps
   children?: JSX.Element
 }
 
-export default function ArcadePhysics(props: ArcadePhysicsProps) {
+export function ArcadePhysics(props: ArcadePhysicsProps) {
   const instance =
     useGameObject<Phaser.Types.Physics.Arcade.GameObjectWithBody>()
   const scene = useScene()

@@ -29,7 +29,7 @@ export interface ArcadeColliderProps<
   ) => any
 }
 
-export default function ArcadeCollider<
+export function ArcadeCollider<
   Self extends Phaser.Types.Physics.Arcade.GameObjectWithBody,
   Other extends Phaser.Types.Physics.Arcade.GameObjectWithBody
 >(props: ArcadeColliderProps<Self, Other>) {
