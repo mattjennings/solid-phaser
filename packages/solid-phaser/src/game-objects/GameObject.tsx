@@ -57,10 +57,7 @@ export interface GameObjectProps<
    * }}
    * ```
    */
-  applyProps?: ApplyProps<
-    Instance,
-    Omit<Partial<Props>, 'create' | 'applyProps'>
-  >
+  applyProps?: ApplyProps<Instance, Partial<Props>>
 
   ref?: Ref<Instance>
   children?: JSX.Element
@@ -189,7 +186,10 @@ export interface GameObjectProps<
  **/
 export interface ComposedGameObjectProps<
   Instance extends Phaser.GameObjects.GameObject
-> extends Omit<GameObjectProps<Instance, {}>, 'create' | 'applyProps'> {}
+> extends Omit<
+    GameObjectProps<Instance, {}>,
+    'create' | 'destroy' | 'applyProps'
+  > {}
 
 /**
  * The base GameObject component. It can be used to create a component for your own Phaser game object.
