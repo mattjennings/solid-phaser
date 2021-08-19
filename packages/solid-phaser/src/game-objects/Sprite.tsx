@@ -1,4 +1,4 @@
-import { createEffect, splitProps } from 'solid-js'
+import { createEffect, onMount, splitProps } from 'solid-js'
 import { RefFunction } from '../types'
 import { ComposedGameObjectProps, GameObject } from './GameObject'
 import {
@@ -48,6 +48,43 @@ export interface SpriteProps<
   timeScale?: number
   yoyo?: boolean
   startFrame?: number
+
+  onAnimationComplete?: (
+    animation: Phaser.Animations.Animation,
+    frame: Phaser.Animations.AnimationFrame,
+    gameObject: Instance,
+    frameKey: string
+  ) => void
+  onAnimationRepeat?: (
+    animation: Phaser.Animations.Animation,
+    frame: Phaser.Animations.AnimationFrame,
+    gameObject: Instance,
+    frameKey: string
+  ) => void
+  onAnimationRestart?: (
+    animation: Phaser.Animations.Animation,
+    frame: Phaser.Animations.AnimationFrame,
+    gameObject: Instance,
+    frameKey: string
+  ) => void
+  onAnimationStart?: (
+    animation: Phaser.Animations.Animation,
+    frame: Phaser.Animations.AnimationFrame,
+    gameObject: Instance,
+    frameKey: string
+  ) => void
+  onAnimationStop?: (
+    animation: Phaser.Animations.Animation,
+    frame: Phaser.Animations.AnimationFrame,
+    gameObject: Instance,
+    frameKey: string
+  ) => void
+  onAnimationUpdate?: (
+    animation: Phaser.Animations.Animation,
+    frame: Phaser.Animations.AnimationFrame,
+    gameObject: Instance,
+    frameKey: string
+  ) => void
 }
 
 export function Sprite<
@@ -66,6 +103,12 @@ export function Sprite<
     'yoyo',
     'skipMissedFrames',
     'startFrame',
+    'onAnimationComplete',
+    'onAnimationRepeat',
+    'onAnimationRestart',
+    'onAnimationStart',
+    'onAnimationStop',
+    'onAnimationUpdate',
   ])
   let instance: Instance
 
@@ -92,6 +135,26 @@ export function Sprite<
     }
   })
 
+  onMount(() => {
+    if (local.onAnimationComplete) {
+      instance.on('animationcomplete', local.onAnimationComplete)
+    }
+    if (local.onAnimationRepeat) {
+      instance.on('animationrepeat', local.onAnimationRepeat)
+    }
+    if (local.onAnimationRestart) {
+      instance.on('animationrestart', local.onAnimationRestart)
+    }
+    if (local.onAnimationStart) {
+      instance.on('animationstart', local.onAnimationStart)
+    }
+    if (local.onAnimationStop) {
+      instance.on('animationstop', local.onAnimationStop)
+    }
+    if (local.onAnimationUpdate) {
+      instance.on('animationupdate', local.onAnimationUpdate)
+    }
+  })
   return (
     <GameObject
       ref={(el) => {
