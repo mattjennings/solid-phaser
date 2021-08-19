@@ -21,7 +21,6 @@ export default () => {
             tileset: 'tilemaps/bay-area/tileset',
           }}
         >
-          <Player depth={0} x={100} y={100} />
           <ParallaxBackground texture="tilemaps/bay-area/background" />
           <Tilemap.TileLayer id="background" />
           <Tilemap.TileLayer id="foreground" />
@@ -37,6 +36,7 @@ export default () => {
           //   }
           // }}
           >
+            <Player depth={0} x={100} y={200} />
             {/* <TilemapObjectLayer
             id="spawns"
             components={{ Player, EnemySpawner }}

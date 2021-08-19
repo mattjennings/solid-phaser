@@ -1,4 +1,4 @@
-import { createEffect, createSignal } from 'solid-js'
+import { createEffect, createSignal, on } from 'solid-js'
 import { createStore, produce } from 'solid-js/store'
 import {
   Sprite,
@@ -9,20 +9,18 @@ import {
   useSpawner,
   onSceneEvent,
   useTilemap,
+  createGameEffect,
 } from 'solid-phaser'
+import PlayerBullet from './PlayerBullet'
 
 export default function Player(props: Partial<SpriteProps>) {
-  let self: Phaser.GameObjects.Sprite & { body: Phaser.Physics.Arcade.Body }
+  let ref: Phaser.GameObjects.Sprite & { body: Phaser.Physics.Arcade.Body }
   const [state, setState] = createStore({
     x: props.x,
     y: props.y,
-    flipX: false,
     velocity: { x: 0, y: 0 },
-    animation: 'Idle',
     shootTimer: null as Phaser.Time.TimerEvent,
     isShooting: false,
-    progress: 0,
-    isOnFloor: true,
     dead: false,
   })
   const scene = useScene()
@@ -30,16 +28,15 @@ export default function Player(props: Partial<SpriteProps>) {
   const tilemap = useTilemap()
 
   // the line where the player will die if they fall. This is set in tilemap properties
-  // const deathY = (
-  //   tilemap.properties as Array<{
-  //     name: string
-  //     value: any
-  //   }>
-  // ).find((p) => p.name === 'deathY')?.value
-  const deathY = 0
+  const deathY = (
+    tilemap.properties as Array<{
+      name: string
+      value: any
+    }>
+  ).find((p) => p.name === 'deathY')?.value
 
   const X_SPEED = 100 / 16
-  const JUMP_VELOCITY = 450
+  const JUMP_VELOCITY = 350
 
   const keys = {
     left: scene.input.keyboard.addKey('left', true, true),
@@ -48,13 +45,6 @@ export default function Player(props: Partial<SpriteProps>) {
     jump: scene.input.keyboard.addKey('SPACE'),
     shoot: scene.input.keyboard.addKey('S'),
   }
-
-  // sync state with updated values from instance
-  onSceneEvent(Phaser.Scenes.Events.PRE_UPDATE, () => {
-    setState('isOnFloor', self.body.blocked.down)
-    setState('velocity', 'x', self.body.velocity.x)
-    setState('velocity', 'y', self.body.velocity.y)
-  })
 
   onSceneEvent('update', (time, delta: number) => {
     if (state.dead) {
@@ -66,104 +56,101 @@ export default function Player(props: Partial<SpriteProps>) {
       (!keys.left.isDown && !keys.right.isDown) ||
       (keys.left.isDown && keys.right.isDown)
     ) {
-      setState('velocity', 'x', 0)
+      ref.body.setVelocityX(0)
     } else if (keys.left.isDown) {
-      setState('velocity', 'x', -X_SPEED * delta)
-      setState('flipX', true)
+      ref.body.setVelocityX(-X_SPEED * delta)
     } else if (keys.right.isDown) {
-      setState('velocity', 'x', X_SPEED * delta)
-      setState('flipX', false)
+      ref.body.setVelocityX(X_SPEED * delta)
     }
 
     // jump
-    if (Phaser.Input.Keyboard.JustDown(keys.jump) && state.isOnFloor) {
-      setState('velocity', 'y', -JUMP_VELOCITY)
-      setState('animation', 'Jump')
+    if (Phaser.Input.Keyboard.JustDown(keys.jump) && ref.body.blocked.down) {
+      ref.body.setVelocityY(-JUMP_VELOCITY)
+      play('Jump')
     } else if (
       Phaser.Input.Keyboard.JustUp(keys.jump) &&
-      self.body.velocity.y < 0
+      ref.body.velocity.y < 0
     ) {
-      setState('velocity', 'y', 1)
+      ref.body.setVelocityY(1)
     }
 
     // shoot
     if (Phaser.Input.Keyboard.JustDown(keys.shoot)) {
-      // shoot()
+      shoot()
     }
     // die if fell below floor
-    if (deathY && self.y > deathY) {
+    if (deathY && ref.y > deathY) {
       // die()
     }
   })
 
-  createEffect(() => {
-    if (state.isOnFloor) {
-      if (state.velocity.x !== 0) {
-        setState('animation', 'Run')
+  // set animation
+  createGameEffect(
+    [
+      () => ref.body.blocked.down,
+      () => ref.body.velocity.x,
+      () => state.isShooting,
+    ],
+    (current, prev) => {
+      const [isOnFloor, vx, isShooting] = current ?? []
+      const [_, __, wasShooting] = prev ?? []
+
+      const progress = ref.anims.getProgress()
+      if (isOnFloor) {
+        if (vx !== 0) {
+          play(isShooting ? 'RunShoot' : 'Run')
+        } else {
+          play(isShooting ? 'IdleShoot' : 'Idle')
+        }
       } else {
-        setState('animation', 'Idle')
+        play('Jump')
       }
-    } else {
-      setState('animation', 'Jump')
+
+      if (isShooting && !wasShooting) {
+        ref.anims.setProgress(progress)
+      } else if (wasShooting && !isShooting) {
+        ref.anims.setProgress(progress)
+      }
     }
-  })
+  )
 
-  // // @ts-ignore - run updateShootingAnimation whenever isShooting changes
-  // $: isShooting, updateShootingAnimation()
+  // flip direction based on velocity
+  createGameEffect(
+    () => ref.body.velocity.x,
+    (vx) => {
+      // moving left
+      if (vx < 0) {
+        ref.flipX = true
+      }
+      // moving right
+      else if (vx > 0) {
+        ref.flipX = false
+      }
+    }
+  )
 
-  // function shoot() {
-  //   isShooting = true
-  //   shootTimer?.destroy()
-  //   shootTimer = scene.time.addEvent({
-  //     callback: () => {
-  //       isShooting = false
-  //     },
-  //     delay: 500,
-  //   })
+  function shoot() {
+    setState('isShooting', true)
+    state.shootTimer?.destroy()
+    setState(
+      'shootTimer',
+      scene.time.addEvent({
+        callback: () => {
+          setState('isShooting', false)
+        },
+        delay: 500,
+      })
+    )
 
-  //   const direction = flipX ? -1 : 1
-  //   spawner.spawn(PlayerBullet, {
-  //     x: Math.round(x + 12 * direction),
-  //     // add velocityY to line up with hand when jumping
-  //     y: Math.round(y - 12 + velocityY / 60),
-  //     velocityX: 200 * direction,
-  //     depth,
-  //   })
-  // }
-
-  // function updateShootingAnimation() {
-  //   switch (animation) {
-  //     case 'Run':
-  //       if (isShooting) {
-  //         progress = instance.anims.currentFrame.progress
-  //         animation = 'RunShoot'
-  //       }
-  //       break
-  //     case 'Idle':
-  //       if (isShooting) {
-  //         animation = 'Shot'
-  //         progress = instance.anims.currentFrame.progress
-  //       }
-  //       break
-  //     case 'RunShoot':
-  //       if (!isShooting) {
-  //         animation = 'Run'
-  //         progress = instance.anims.currentFrame.progress
-  //       }
-  //       break
-  //     case 'Shot':
-  //       if (!isShooting) {
-  //         animation = 'Idle'
-  //         progress = instance.anims.currentFrame.progress
-  //       }
-  //       break
-  //   }
-  // }
-
-  // function playAnimation(key: string) {
-  //   animation = key
-  //   updateShootingAnimation()
-  // }
+    const direction = ref.flipX ? -1 : 1
+    spawner.spawn(PlayerBullet, {
+      x: Math.round(ref.x + 16 * direction),
+      // add velocityY to line up with hand when jumping
+      y: Math.round(ref.y - 12 + ref.body.velocity.y / 60),
+      velocityX: 200 * direction,
+      depth: props.depth,
+    })
+  }
 
   // function die() {
   //   if (!dead) {
@@ -177,20 +164,31 @@ export default function Player(props: Partial<SpriteProps>) {
   //     })
   //   }
   // }
+
+  function play(
+    animation: string,
+    opts?: Partial<Phaser.Types.Animations.PlayAnimationConfig>
+  ) {
+    return ref.play(
+      {
+        key: animation,
+        repeat: -1,
+        ...opts,
+      },
+      true
+    )
+  }
+
   return (
     <Sprite
-      ref={self}
+      ref={ref}
       name="player"
       texture="sprites/player"
-      play={state.animation}
-      flipX={state.flipX}
+      play="Idle"
       origin={{ y: 1 }}
-      repeat={-1}
       {...props}
     >
       <ArcadePhysics
-        velocityX={state.velocity.x}
-        velocityY={state.velocity.y}
         size={{
           width: 10,
           height: 20,
