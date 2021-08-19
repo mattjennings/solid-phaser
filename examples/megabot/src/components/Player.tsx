@@ -155,12 +155,10 @@ export default function Player(props: Partial<SpriteProps & SpawnProps>) {
   function die() {
     if (!state.dead) {
       setState('dead', true)
+      props.onDestroy({ reason: 'player-dead' })
       spawner.spawn(PlayerExplosion, {
         x: ref.x,
         y: ref.y - 12,
-        onDestroy: () => {
-          props.onDestroy({ reason: 'player-dead' })
-        },
       })
     }
   }
