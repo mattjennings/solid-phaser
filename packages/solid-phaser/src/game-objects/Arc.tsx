@@ -1,50 +1,15 @@
 import Phaser from 'phaser'
-import { GameObject, ComposedGameObjectProps } from './GameObject'
-import {
-  AlphaProps,
-  BlendModeProps,
-  ComputedSizeProps,
-  CropProps,
-  DepthProps,
-  FlipProps,
-  MaskProps,
-  OriginProps,
-  PipelineProps,
-  ScrollFactorProps,
-  TintProps,
-  TransformProps,
-  VisibleProps,
-} from './props'
+import { ComposedGameObjectProps } from './GameObject'
+import { Shape, ShapeProps } from './Shape'
 
 export interface ArcProps<
   Instance extends Phaser.GameObjects.Arc = Phaser.GameObjects.Arc
 > extends ComposedGameObjectProps<Instance>,
-    AlphaProps,
-    BlendModeProps,
-    ComputedSizeProps,
-    CropProps,
-    DepthProps,
-    FlipProps,
-    MaskProps,
-    OriginProps,
-    PipelineProps,
-    ScrollFactorProps,
-    TintProps,
-    TransformProps,
-    VisibleProps,
+    ShapeProps,
     Partial<
       Pick<
         Phaser.GameObjects.Arc,
-        | 'radius'
-        | 'startAngle'
-        | 'endAngle'
-        | 'anticlockwise'
-        | 'fillColor'
-        | 'fillAlpha'
-        | 'strokeAlpha'
-        | 'strokeColor'
-        | 'isFilled'
-        | 'isStroked'
+        'radius' | 'startAngle' | 'endAngle' | 'anticlockwise'
       >
     > {}
 
@@ -52,8 +17,7 @@ export function Arc<
   Instance extends Phaser.GameObjects.Arc = Phaser.GameObjects.Arc
 >(props: ArcProps<Instance>) {
   return (
-    <GameObject
-      ref={props.ref}
+    <Shape
       create={(scene) =>
         new Phaser.GameObjects.Arc(
           scene,
@@ -70,6 +34,6 @@ export function Arc<
       {...props}
     >
       {props.children}
-    </GameObject>
+    </Shape>
   )
 }

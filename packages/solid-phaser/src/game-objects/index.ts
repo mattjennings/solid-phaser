@@ -1,5 +1,9 @@
-export * from './Arc'
 export * from './GameObject'
+
+export * from './Shape'
+export * from './Arc'
+export * from './Rectangle'
+
 export * from './HTML'
 export * from './Sprite'
 export * from './Text'
