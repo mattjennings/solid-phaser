@@ -7,7 +7,7 @@ import {
   Component,
 } from 'solid-js'
 import { Dynamic } from 'solid-js/web'
-import { Ref, RefFunction } from 'solid-phaser'
+import { Ref, RefFunction } from './types'
 
 const SpawnerContext = createContext<SpawnerValue>()
 export const useSpawner = () => useContext(SpawnerContext)
@@ -36,7 +36,7 @@ export interface SpawnProps {
   /**
    * Called by the component to destroy itself
    **/
-  onDestroy?: (detail?: any) => void
+  onDestroy?: (detail: null | any) => void
 
   /**
    * ID of the spawned component
@@ -47,7 +47,10 @@ export interface SpawnProps {
 export interface SpawnerProps {
   ref?: Ref<SpawnerValue>
   children?: JSX.Element
-  onDestroy?: (instance: unknown, id: number, detail?: any) => void
+  onDestroy?: (
+    instance: { id: number; props: any; component: () => JSX.Element },
+    detail: null | any
+  ) => void
 }
 
 export function Spawner(props: SpawnerProps) {
@@ -71,8 +74,8 @@ export function Spawner(props: SpawnerProps) {
 
   function destroy(id: number, detail?: any) {
     const index = instances().findIndex((i) => i.id === id)
+    props.onDestroy?.(instances()[index], detail ?? null)
     setInstances((prev) => [...prev.slice(0, index), ...prev.slice(index + 1)])
-    props.onDestroy?.(instances()[index], id, detail)
   }
 
   const value = { instances: instances(), spawn, destroy }
