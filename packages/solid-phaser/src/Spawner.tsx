@@ -7,8 +7,12 @@ import {
   Component,
 } from 'solid-js'
 import { Dynamic } from 'solid-js/web'
+import { Ref, RefFunction } from 'solid-phaser'
 
-interface SpawnerContextValue {
+const SpawnerContext = createContext<SpawnerValue>()
+export const useSpawner = () => useContext(SpawnerContext)
+
+export interface SpawnerValue {
   instances: Array<{
     id: number
     props: any
@@ -19,7 +23,7 @@ interface SpawnerContextValue {
    */
   spawn: <T>(
     component: Component<T>,
-    props: Omit<T, 'children' | keyof SpawnedProps>
+    props: Omit<T, 'children' | keyof SpawnProps>
   ) => number
 
   /**
@@ -28,11 +32,11 @@ interface SpawnerContextValue {
   destroy: (id: number) => void
 }
 
-export interface SpawnedProps {
+export interface SpawnProps {
   /**
    * Called by the component to destroy itself
    **/
-  onDestroy: () => void
+  onDestroy: (detail?: any) => void
 
   /**
    * ID of the spawned component
@@ -40,15 +44,16 @@ export interface SpawnedProps {
   spawnId: number
 }
 
-const SpawnerContext = createContext<SpawnerContextValue>()
-export const useSpawner = () => useContext(SpawnerContext)
+export interface SpawnerProps {
+  ref?: Ref<SpawnerValue>
+  children?: JSX.Element
+  onDestroy?: (instance: unknown, id: number, detail?: any) => void
+}
 
-export function Spawner(props: { children?: JSX.Element }) {
+export function Spawner(props: SpawnerProps) {
   let nextId = 0
   // let [nextId, setNextId] = createSignal(0)
-  const [instances, setInstances] = createSignal<
-    SpawnerContextValue['instances']
-  >([])
+  const [instances, setInstances] = createSignal<SpawnerValue['instances']>([])
 
   function spawn(component, props) {
     const id = ++nextId
@@ -64,12 +69,16 @@ export function Spawner(props: { children?: JSX.Element }) {
     return id
   }
 
-  function destroy(id: number) {
-    setInstances((p) => p.filter((i) => i.id !== id))
+  function destroy(id: number, detail?: any) {
+    const index = instances().findIndex((i) => i.id === id)
+    setInstances((prev) => [...prev.slice(0, index), ...prev.slice(index + 1)])
+    props.onDestroy?.(instances()[index], id, detail)
   }
 
+  const value = { instances: instances(), spawn, destroy }
+  ;(props.ref as RefFunction)?.(value)
   return (
-    <SpawnerContext.Provider value={{ instances: instances(), spawn, destroy }}>
+    <SpawnerContext.Provider value={value}>
       <For each={instances()}>
         {(instance) => {
           return (
@@ -77,8 +86,8 @@ export function Spawner(props: { children?: JSX.Element }) {
               component={instance.component}
               {...instance.props}
               spawnId={instance.id}
-              onDestroy={() => {
-                destroy(instance.id)
+              onDestroy={(detail) => {
+                destroy(instance.id, detail)
               }}
             />
           )

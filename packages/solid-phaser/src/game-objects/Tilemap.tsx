@@ -1,4 +1,14 @@
-import { createContext, JSX, mergeProps, onCleanup, useContext } from 'solid-js'
+import {
+  Component,
+  createContext,
+  JSX,
+  mergeProps,
+  onCleanup,
+  onMount,
+  splitProps,
+  useContext,
+} from 'solid-js'
+import { Spawner, SpawnerValue } from '../Spawner'
 import { useScene } from '../Scene'
 import { Ref, RefFunction } from '../types'
 import { ComposedGameObjectProps, GameObject } from './GameObject'
@@ -18,6 +28,7 @@ import {
   VisibleProps,
   XY,
 } from './props'
+import { SpawnProps, SpawnerProps } from 'solid-phaser'
 
 const TilemapContext = createContext<Phaser.Tilemaps.Tilemap>(null)
 export const useTilemap = () => useContext(TilemapContext)
@@ -246,4 +257,65 @@ Tilemap.TileLayer = function TileLayer(props: TileLayerProps) {
       depth={depth}
     />
   )
+}
+
+export interface ObjectLayerProps extends Omit<SpawnerProps, 'ref'> {
+  /**
+   * The mapping for components that this layer will render
+   *
+   * @type {object}
+   */
+  components: Record<string, Component<any>>
+
+  /**
+   * The layer array index value, or the layer name from Tiled
+   */
+  id: number | string
+
+  /**
+   * The depth for each component in this layer
+   */
+  depth?: number
+
+  children?: JSX.Element
+}
+Tilemap.ObjectLayer = function ObjectLayer(props: ObjectLayerProps) {
+  const [local, rest] = splitProps(props, ['components', 'depth', 'id'])
+  const tilemap = useTilemap()
+  let spawner: SpawnerValue
+
+  let depth = props.depth
+
+  // @ts-ignore
+  if (tilemap.useLayerOrder && typeof depth === 'undefined') {
+    depth =
+      // @ts-ignore
+      tilemap.layerOrder.findIndex((layerName) => layerName === props.id) +
+      // @ts-ignore
+      tilemap.startingDepth
+  }
+
+  const layer = tilemap.objects.find((layer) => layer.name === props.id)
+
+  onMount(() => {
+    const components = props.components
+    layer.objects.forEach(({ x, y, properties }) => {
+      const { component, ...props } = properties.reduce(
+        (total, prop) => ({ ...total, [prop.name]: prop.value }),
+        {}
+      )
+      if (component && components[component]) {
+        const c = components[component]
+
+        spawner.spawn(c, {
+          x,
+          y,
+          depth,
+          ...props,
+        })
+      }
+    })
+  })
+
+  return <Spawner ref={spawner} {...rest} />
 }
