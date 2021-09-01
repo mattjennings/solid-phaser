@@ -1,5 +1,5 @@
 import { Accessor, createSignal } from 'solid-js'
-import { onGameEvent } from 'solid-phaser'
+import { onGameEvent } from './events'
 
 /**
  * Tracks the returned value in the function every frame and returns
