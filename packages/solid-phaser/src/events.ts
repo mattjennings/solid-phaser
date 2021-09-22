@@ -7,7 +7,7 @@ import { useScene } from './Scene'
  */
 export function onInputEvent(
   event: string,
-  callback: (...args: unknown[]) => void
+  callback: (...args: any[]) => void
 ) {
   const scene = useScene()
 
@@ -20,7 +20,7 @@ export function onInputEvent(
  */
 export function onSceneEvent(
   event: string,
-  callback: (...args: unknown[]) => void
+  callback: (...args: any[]) => void
 ) {
   const scene = useScene()
 
@@ -31,10 +31,7 @@ export function onSceneEvent(
 /**
  * Sets up an event listener on game.events
  */
-export function onGameEvent(
-  event: string,
-  callback: (...args: unknown[]) => void
-) {
+export function onGameEvent(event: string, callback: (...args: any[]) => void) {
   const game = useGame()
 
   game.events.on(event, callback)
