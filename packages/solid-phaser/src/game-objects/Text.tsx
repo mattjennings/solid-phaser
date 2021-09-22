@@ -41,7 +41,6 @@ export function Text<
 >(props: TextProps<Instance>) {
   return (
     <GameObject
-      ref={props.ref}
       create={(scene) =>
         new Phaser.GameObjects.Text(
           scene,
