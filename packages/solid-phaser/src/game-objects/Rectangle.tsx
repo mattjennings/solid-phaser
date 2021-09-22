@@ -1,11 +1,9 @@
 import Phaser from 'phaser'
-import { ComposedGameObjectProps } from './GameObject'
-import { Shape, ShapeProps } from './Shape'
+import { ComposedShapeProps, Shape } from './Shape'
 
 export interface RectangleProps<
   Instance extends Phaser.GameObjects.Rectangle = Phaser.GameObjects.Rectangle
-> extends ComposedGameObjectProps<Instance>,
-    ShapeProps,
+> extends ComposedShapeProps<Instance>,
     Partial<Pick<Phaser.GameObjects.Rectangle, 'width' | 'height'>> {}
 
 export function Rectangle<

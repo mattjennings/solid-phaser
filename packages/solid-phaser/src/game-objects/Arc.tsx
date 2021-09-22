@@ -1,11 +1,11 @@
 import Phaser from 'phaser'
 import { ComposedGameObjectProps } from './GameObject'
-import { Shape, ShapeProps } from './Shape'
+import { ComposedShapeProps, Shape, ShapeProps } from './Shape'
 
 export interface ArcProps<
   Instance extends Phaser.GameObjects.Arc = Phaser.GameObjects.Arc
 > extends ComposedGameObjectProps<Instance>,
-    ShapeProps,
+    ComposedShapeProps<Instance>,
     Partial<
       Pick<
         Phaser.GameObjects.Arc,
